@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Router } from '@reach/router';
+import { Database } from './database';
+import { IntakeForm } from './intake-form';
+import { SignIn } from './sign-in';
+import Typography from '@material-ui/core/Typography'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <>
+    <Typography variant='h2'>PYCS Database Application!</Typography>
+    <Router>
+      <IntakeForm path='/'/>
+      <SignIn path='sign-in'/>
+      <Database path='database'/>
+    </Router>
+  </>
+)
 
 export default App;
