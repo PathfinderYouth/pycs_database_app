@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
 import { NavDrawer, TopNavBar } from './components';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+// TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
+// Tried passing this value as props to both components but didn't work, not sure why.
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -15,20 +16,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    marginTop: '40px',
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
+    marginTop: '64px', //TODO find a better way than using px.
   },
 
 }));
@@ -36,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 // container that holds all database UI objects
 export const Database = () => {
   const classes = useStyles();
+
   const [drawerState, setDrawerState] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -51,10 +40,7 @@ export const Database = () => {
       <TopNavBar handleDrawerOpen={handleDrawerOpen} handleDrawerState={drawerState} />
       <NavDrawer handleDrawerClose={handleDrawerClose} handleDrawerState={drawerState} />
       <div
-        className={clsx(classes.content, {
-          [classes.contentShift]: drawerState,
-        })}>
-        {/* TODO: Appbar goes here */}
+        className={classes.content}>
         <Typography variant="h3">Database UI</Typography>
         {/* Components go here */}
         <div>

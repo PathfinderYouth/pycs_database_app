@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
 
   menuButton: {
     marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
   },
 
   title: {
@@ -32,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   appBar: {
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -52,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
 export const TopNavBar = props => {
 
   const classes = useStyles();
-  const theme = useTheme();
   const title = 'Pathfinder Youth Centre Society Participant Database';
 
   const [anchorEl, setAnchorEl] = React.useState(null);
