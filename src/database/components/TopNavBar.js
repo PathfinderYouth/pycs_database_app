@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
 
@@ -25,22 +26,39 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+
+  hide: {
+    display: 'none',
+  },
+
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+
 }));
 
-export const TopNavBar = () => {
+export const TopNavBar = props => {
 
   const classes = useStyles();
+  const theme = useTheme();
   const title = 'Pathfinder Youth Centre Society Participant Database';
 
-  const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
-
-  const handleMenu = (event) => {
+  const handleLogoutMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -49,9 +67,19 @@ export const TopNavBar = () => {
   };
 
   return (
-    <AppBar position="fixed">
+    <AppBar 
+      position="fixed" 
+      className={clsx(classes.appBar, {
+      [classes.appBarShift]: props.handleDrawerState,
+    })}>
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+        <IconButton 
+          edge="start" 
+          className={clsx(classes.menuButton, props.handleDrawerState && classes.hide)}
+          color="inherit" 
+          aria-label="menu"
+          onClick={props.handleDrawerOpen}
+          >
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
@@ -66,7 +94,7 @@ export const TopNavBar = () => {
             aria-label="more options"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleMenu}
+            onClick={handleLogoutMenu}
             color="inherit"
           >
             <MoreVertIcon />
@@ -90,7 +118,6 @@ export const TopNavBar = () => {
             <MenuItem onClick={handleClose}>Log out</MenuItem>
           </Menu>
         </div>
-
 
       </Toolbar>
     </AppBar>
