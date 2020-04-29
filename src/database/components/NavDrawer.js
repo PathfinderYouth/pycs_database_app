@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-between',
     },
   },
-
 }));
 
 export const NavDrawer = (props) => {
@@ -65,23 +64,25 @@ export const NavDrawer = (props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   const drawer = (
     <div>
       <div className={classes.drawerHeader}>
         <Typography>UserLogin@pycs.org</Typography>
 
-        {matches ? <IconButton
-          aria-label="more options"
-          aria-controls="menu-appbar"
-          aria-haspopup="true"
-          onClick={props.handleDrawerClose}
-          color="inherit"
-        >
-          <ArrowBackIcon />
-        </IconButton> : null}
-
+        {matches ? (
+          <IconButton
+            aria-label="more options"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={props.handleDrawerClose}
+            color="inherit"
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        ) : null}
       </div>
       <Divider />
       <div className={classes.container}>
@@ -136,5 +137,4 @@ export const NavDrawer = (props) => {
       </nav>
     </div>
   );
-
 };

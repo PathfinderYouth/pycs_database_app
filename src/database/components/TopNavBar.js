@@ -12,11 +12,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-
   root: {
     flexGrow: 1,
   },
@@ -24,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
 
   title: {
@@ -43,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
-  
+
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: drawerWidth,
@@ -52,18 +50,17 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-
 }));
 
-export const TopNavBar = props => {
-
+export const TopNavBar = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  // TODO Maybe can use ellipsis instead of different titles. 
+  // TODO Maybe can use ellipsis instead of different titles.
   // Using different titles because it will overflow and make app bar bigger when no space for all the texts
   const mediaSm = useMediaQuery(theme.breakpoints.down('sm'));
   const mediaXs = useMediaQuery(theme.breakpoints.down('xs'));
-  const title = 'Pathfinder Youth Centre Society Participant Database';
+  const title =
+    'Pathfinder Youth Centre Society Participant Database';
   const titleSm = 'Participants Database';
   const titleXs = 'Participants';
 
@@ -79,19 +76,23 @@ export const TopNavBar = props => {
   };
 
   return (
-    <AppBar 
-      position="fixed" 
+    <AppBar
+      position="fixed"
       className={clsx(classes.appBar, {
-      [classes.appBarShift]: props.handleDrawerState,
-    })}>
+        [classes.appBarShift]: props.handleDrawerState,
+      })}
+    >
       <Toolbar>
-        <IconButton 
-          edge="start" 
-          className={clsx(classes.menuButton, props.handleDrawerState && classes.hide)} //TODODODODODODODODO remove hide?
-          color="inherit" 
+        <IconButton
+          edge="start"
+          className={clsx(
+            classes.menuButton,
+            props.handleDrawerState && classes.hide,
+          )} //TODODODODODODODODO remove hide?
+          color="inherit"
           aria-label="menu"
           onClick={props.handleDrawerOpen}
-          >
+        >
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
@@ -130,9 +131,7 @@ export const TopNavBar = props => {
             <MenuItem onClick={handleClose}>Log out</MenuItem>
           </Menu>
         </div>
-
       </Toolbar>
     </AppBar>
   );
-
-}
+};

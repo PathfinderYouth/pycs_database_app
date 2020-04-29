@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     marginTop: '64px', //TODO find a better way than using px.
   },
-
 }));
 
 // container that holds all database UI objects
@@ -29,18 +28,23 @@ export const Database = () => {
 
   const handleDrawerOpen = () => {
     setDrawerState(true);
-  }
+  };
 
   const handleDrawerClose = () => {
     setDrawerState(false);
-  }
+  };
 
   return (
     <div className={classes.root}>
-      <TopNavBar handleDrawerOpen={handleDrawerOpen} handleDrawerState={drawerState} />
-      <NavDrawer handleDrawerClose={handleDrawerClose} handleDrawerState={drawerState} />
-      <div
-        className={classes.content}>
+      <TopNavBar
+        handleDrawerOpen={handleDrawerOpen}
+        handleDrawerState={drawerState}
+      />
+      <NavDrawer
+        handleDrawerClose={handleDrawerClose}
+        handleDrawerState={drawerState}
+      />
+      <div className={classes.content}>
         <Typography variant="h3">Database UI</Typography>
         {/* Components go here */}
         <div>
@@ -50,5 +54,5 @@ export const Database = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };
