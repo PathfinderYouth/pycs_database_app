@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography'
 
 const App = () => (
   <>
-    <Typography variant='h2'>PYCS Database Application!</Typography>
     <Router>
       <IntakeForm path='/'/>
       <SignIn path='sign-in'/>
