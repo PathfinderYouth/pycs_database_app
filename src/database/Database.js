@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
-import { NavDrawer } from './components';
+import { NavDrawer, TopNavBar } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    marginTop: '40px'
   },
 }));
 
@@ -19,7 +20,8 @@ export const Database = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <NavDrawer />
+      <TopNavBar />
+      {/* <NavDrawer /> */}
       <div className={classes.content}>
         {/* TODO: Appbar goes here */}
         <Typography variant="h3">Database UI</Typography>
