@@ -1,8 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
-import { NavDrawer } from './NavDrawer';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { NavDrawer } from './components';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +21,7 @@ export const Database = () => {
     <div className={classes.root}>
       <NavDrawer />
       <div className={classes.content}>
+        {/* TODO: Appbar goes here */}
         <Typography variant="h3">Database UI</Typography>
         {/* Components go here */}
         <div>

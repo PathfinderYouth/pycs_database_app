@@ -19,7 +19,6 @@ export const RecordSearchBar = () => {
     <>
       <Typography gutterBottom>Find a participant record:</Typography>
       <TextField
-        label="SIN or name"
         variant="outlined"
         InputProps={{
           startAdornment: (
