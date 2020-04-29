@@ -2,40 +2,38 @@ export const intakeFormInitialValues = {
   // basic information
   nameGiven: '',
   nameLast: '',
-  birthYear: 0,
-  birthMonth: 0,
-  birthDay: 0,
   programAppliedFor: '', // 'new employment beginnings' or 'bean around books'
   addressStreet: '',
   addressCity: '',
   addressProvince: '',
   addressPostalCode: '',
   timeLivedAtAddress: '',
-  phoneHome: 0,
-  phoneCell: 0,
+  phoneHome: '',
+  phoneCell: '',
   bestNumberToCall: '', // 'home' or 'cell'
+  birthDate: '',
   emergencyContacts: {
     eContact1: {
       name: '',
       relationship: '',
-      phoneHome: 0,
-      phoneWork: 0,
-      phoneCell: 0
+      phoneHome: '',
+      phoneWork: '',
+      phoneCell: '',
     },
     eContact2: {
       name: '',
       relationship: '',
-      phoneHome: 0,
-      phoneWork: 0,
-      phoneCell: 0
-    }
+      phoneHome: '',
+      phoneWork: '',
+      phoneCell: '',
+    },
   },
 
   // medical information
   doctorName: '',
-  doctorPhone: 0,
-  bcCareCardNumber: 0,
-  numDependants: 0,
+  doctorPhone: '',
+  bcCareCardNumber: '',
+  numDependants: '',
   medicalConditions: '',
   allergies: '',
   fears: '',
@@ -45,35 +43,37 @@ export const intakeFormInitialValues = {
   // applicant's current status
   formOfTransportation: '',
   housingSituation: '',
-  rent: 0,
+  rent: '',
   physicalActivities: '',
-  bankAccount: false,
+  hasBankAccount: '',
   bankAccountType: '', // chequing, savings, both
-  sin: 0,
+  sin: '',
   citizenshipStatus: '', // canadian citizen, permanent resident, or native canadian
-  entitledToWork: false,
-  healthConcerns: false,
-  healthConcernsSpecifics: '',
-  driversLicenseValid: false,
+  isEntitledToWork: '',
+  hasHealthConcerns: '',
+  healthConcerns: '',
+  hasValidDriversLicense: '',
   driversLicenseType: '', // learner's, new driver, or full license
-  accessToVehicle: false,
+  hasAccessToVehicle: '',
   learnedAboutPathfinder: '',
   /* Family and/or friends, Teacher/Counselor, Our Poster,
   Probation Officer, Social Worker, Government Agency,
-  Employment Office, Case Manager Website, Community Agency,
+  Employment Office, Case Manager, Website, Community Agency,
   Drug Counselor, or Other */
+  learnedAboutPathfinderOther: '',
   formOfIncome: '',
   /* None, Employment Insurance, Social Assistance,
   Part-time Job, Full-time job, Family Support,
   Band Funding, or Other, */
+  formOfIncomeOther: '',
   levelOfEducation: '',
-  /* Less than Grade 9, Grade 9, Grade 10, Grade 11, some grade 12,
+  /* Less than Grade 9, Grade 9, Grade 1'', Grade 11, some grade 12,
   Grade 12 Diploma, Trade Certificate/Diploma,
   Some university/College, University Degree/ College Diploma */
   nameAndLocationOfSchool: '',
-  employmentProgramTraining: false,
+  hasEmploymentProgramTraining: '',
   employmentProgramInfo: '',
-  employmentProgramComplete: false,
+  employmentProgramComplete: '',
   sixMonthsHistory: '',
   presentSituationAspects: [],
   /* Max two of: 
@@ -115,12 +115,34 @@ export const intakeFormInitialValues = {
   admiresMost: '',
   hobbies: '',
   personality: '', // Shy/Introvert, Sociable, Extroverted, or Quiet/Reserved
-  children: false,
-  childrenInfo: '',
-  numberOfJobInterviews: 0,
-  volunteered: false,
+  hasSiblings: '',
+  siblings: '',
+  hasChildren: '',
+  children: '',
+  numberOfJobInterviews: '',
+  hasVolunteered: '',
   volunteerInfo: '',
-  travelledOutsideBC: false,
-  rehab: false,
-  resume: false
-}
+  hasTravelledOutsideBC: '',
+  inRehabOrAddictionsServices: '',
+  hasResume: '',
+  whyApplied: '',
+  whyShouldBeAccepted: '',
+  employmentGoals: '',
+  skillsAndExperienceHopes: ''
+};
+
+export const provinces = [
+  'Alberta',
+  'British Columbia',
+  'Manitoba',
+  'New Brunswick',
+  'Newfoundland & Labrador',
+  'Northwest Territories',
+  'Nova Scotia',
+  'Nunavut',
+  'Ontario',
+  'Prince Edward Island',
+  'Quebec',
+  'Sasketchewan',
+  'Yukon Territory',
+];

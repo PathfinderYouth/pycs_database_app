@@ -11,7 +11,7 @@ export const IntakeFormPage = () => (
       // placeholder onSubmit function
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
+          console.log(JSON.stringify(values, null, 2));
           setSubmitting(false);
         }, 400);
       }}
