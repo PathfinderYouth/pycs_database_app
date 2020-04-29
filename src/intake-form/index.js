@@ -1,2 +1,2 @@
 export * from './components';
-export * from './IntakeForm';
+export * from './IntakeFormPage';
