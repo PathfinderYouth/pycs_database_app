@@ -10,6 +10,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 
 const drawerWidth = 240;
 
@@ -21,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
@@ -56,7 +58,14 @@ const useStyles = makeStyles((theme) => ({
 export const TopNavBar = props => {
 
   const classes = useStyles();
+  const theme = useTheme();
+  // TODO Maybe can use ellipsis instead of different titles. 
+  // Using different titles because it will overflow and make app bar bigger when no space for all the texts
+  const mediaSm = useMediaQuery(theme.breakpoints.down('sm'));
+  const mediaXs = useMediaQuery(theme.breakpoints.down('xs'));
   const title = 'Pathfinder Youth Centre Society Participant Database';
+  const titleSm = 'Participants Database';
+  const titleXs = 'Participants';
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -78,7 +87,7 @@ export const TopNavBar = props => {
       <Toolbar>
         <IconButton 
           edge="start" 
-          className={clsx(classes.menuButton, props.handleDrawerState && classes.hide)}
+          className={clsx(classes.menuButton, props.handleDrawerState && classes.hide)} //TODODODODODODODODO remove hide?
           color="inherit" 
           aria-label="menu"
           onClick={props.handleDrawerOpen}
@@ -86,7 +95,7 @@ export const TopNavBar = props => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          {title}
+          {mediaSm ? (mediaXs ? titleXs : titleSm) : title}
         </Typography>
         <IconButton aria-label="Add entry" color="inherit">
           <AddIcon />
