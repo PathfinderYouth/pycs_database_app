@@ -14,16 +14,22 @@ export const intakeFormInitialValues = {
   phoneHome: 0,
   phoneCell: 0,
   bestNumberToCall: '', // 'home' or 'cell'
-  eContact1Name: '',
-  eContact1Relationship: '',
-  eContact1PhoneHome: 0,
-  eContact1PhoneWork: 0,
-  eContact1PhoneCell: 0,
-  eContact2Name: '',
-  eContact2Relationship: '',
-  eContact2PhoneHome: 0,
-  eContact2PhoneWork: 0,
-  eContact2PhoneCell: 0,
+  emergencyContacts: {
+    eContact1: {
+      name: '',
+      relationship: '',
+      phoneHome: 0,
+      phoneWork: 0,
+      phoneCell: 0
+    },
+    eContact2: {
+      name: '',
+      relationship: '',
+      phoneHome: 0,
+      phoneWork: 0,
+      phoneCell: 0
+    }
+  },
 
   // medical information
   doctorName: '',
