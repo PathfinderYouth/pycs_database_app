@@ -13,15 +13,15 @@ const CONFIG = {
   measurementId: "G-MHTVV1X9ZH"
 };
 
-const PARTICIPANTS = "participants";
-const PENDING = "pending";
+// TODO: converter, query, order, limit, paging, indices, cached
 
 export default class FirebaseFacade {
   static instance;
   
   /**
    * Get an instance of FirebaseFacade.
-   * @returns {FirebaseFacade} instance of FirebaseFacade
+   * @returns {FirebaseFacade}
+   *  Instance of FirebaseFacade
    */
   static getInstance() {
     if (!FirebaseFacade.instance) {
@@ -30,79 +30,117 @@ export default class FirebaseFacade {
     return FirebaseFacade.instance;
   }
   
-  constructor(brand) {
+  constructor() {
     if (FirebaseFacade.instance) {
       throw new Error("FirebaseFacade is a singleton class");
     }
     
     firebase.initializeApp(CONFIG);
     this.db = firebase.firestore();
+    this.permRef = this.db.collection("participants");
+    this.pendingRef = this.db.collection("pending");
   }
   
   /**
    * Add a new participant document into pending collection
-   * @param {object} participant Javascript object containing participant info
-   * @param {function (DocumentReference)} onSuccess Callback function when
-   *  success
-   * @param {function (Error)} onFail Callback function when fail
+   * @param {participant: object}
+   *  Object containing participant info
+   * @param {onSuccess?: (docId: string) => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
    */
-  addPending(participant, onSuccess, onFail) {
-    // TODO: using sin as key => docRef.set(optional merge)
-    this.db.collection(PENDING)
-      .add(participant)
+  addPending(participant, onSuccess, onError) {
+    this.pendingRef.add(participant)
       .then((docRef) => {
         if (onSuccess) {
-          // TODO: create object instead of providing a DocumentReference
-          onSuccess(docRef);
+          // Could use docRef.data() to get doc content instead
+          onSuccess(docRef.id);
         }
         
         // TODO: Log creation action
       })
       .catch((error) => {
-        if (onFail) {
-          onFail(error);
+        if (onError) {
+          onError(error);
         }
       });
   }
   
   /**
    * Get a participant document from pending collection
-   * @param {string} sin SIN number
+   * @param {docId: string}
+   *  Document id
+   * @param {onNext: (doc: Document) => void}
+   *  Callback function when document changes
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   * @returns {() => void}
+   *  Unsubscribe function
    */
-  getPending(sin) {
-    // TODO: implement
+  getPending(docId, onNext, onError) {
+    return this.pendingRef.doc(docId)
+      .onSnapshot({
+        next: (docSnap) => {
+          let doc = docSnap.data();
+          if (doc) {
+            onNext(doc);
+            return;
+          }
+          if (onError) {
+            onError(new Error("Document not exist"));
+          }
+        },
+        error: (error) =>{
+          if (onError) {
+            onError(error);
+          }
+        }
+      });
   }
   
   /**
    * Get all participant documents from pending collection
-   * @param {function (QuerySnapshot)} onSuccess Callback function when success
-   * @param {function (error)} onFail Callback function when fail
+   * @param {onChildNext: (doc: Document, newIndex: number,
+   *                       oldIndex: number, type: string) => void}
+   *  Callback function when document changes in the collection
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   * @returns {() => void}
+   *  Unsubscribe function
    */
-  getPendingList(onSuccess, onFail) {
-    this.db.collection(PENDING).get()
-      .then((querySnapshot) => {
-        if (onSuccess) {
-          // TODO: create list of objects instead of providing a querySnapshot
-          onSuccess(querySnapshot);
-        }
-      })
-      .catch((error) => {
-        if (onFail) {
-          onFail(error);
+  getPendingList(onChildNext, onError) {
+    let initialized = false;
+    
+    return this.pendingRef
+      .onSnapshot({
+        next: (querySnap) => {
+          querySnap.docChanges().forEach((docChg) => {
+            let doc = docChg.doc.data();
+            onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
+          });
+        },
+        error: (error) => {
+          if (onError) {
+            onError(error);
+          }
         }
       });
   }
   
   /**
    * Update a participant document in pending collection
-   * @param {string} sin SIN number
-   * @param {object} partialData Javascript object containing updated values
-   * @param {function ()} onSuccess Callback function when success
-   * @param {function (error)} onFail Callback function when fail
+   * @param {docId: string}
+   *  Document id
+   * @param {partialData: object}
+   *  Object containing updated values
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
    */
-  updatePending(sin, partialData, onSuccess, onFail) {
-    this.db.doc(`${PENDING}/${sin}`)
-      .update(partialData)
+  updatePending(docId, partialData, onSuccess, onError) {
+    this.pendingRef.doc(docId).update(partialData)
       .then(() => {
         if (onSuccess) {
           onSuccess();
@@ -110,17 +148,35 @@ export default class FirebaseFacade {
         
         // TODO: Log update action
       })
-      .catch(() => {
-        if (onFail) {
-          onFail(error);
+      .catch((error) => {
+        if (onError) {
+          onError(error);
         }
       });
   }
   
   /**
    * Delete a participant document from pending collection
+   * @param {docId: string}
+   *  Document id
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
    */
-  deletePending() {
-    // TODO: implement
+  deletePending(docId, onSuccess, onError) {
+    this.pendingRef.doc(docId).delete()
+      .then(() => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        
+        // TODO: Log delete action
+      })
+      .catch((error) => {
+        if (onError) {
+          onError(error);
+        }
+      });
   }
 }
