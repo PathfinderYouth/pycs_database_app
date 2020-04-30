@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
+
 import { NavDrawer, TopNavBar } from './components';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { RecordListContainer } from './components';
 
 // TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
 // Tried passing this value as props to both components but didn't work, not sure why.
@@ -19,6 +21,20 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '64px', //TODO find a better way than using px.
   },
 }));
+
+// for testing table view
+const records = [
+  {lastName: "McTest",
+  firstName: "Test",
+  address: "123 1st St",
+  city: "Surrey",
+  id: 1},
+  {lastName: "McBob",
+  firstName: "Bob",
+  address: "125 2nd St",
+  city: "Surrey",
+  id: 2}
+]
 
 // container that holds all database UI objects
 export const Database = () => {
@@ -51,6 +67,7 @@ export const Database = () => {
           <Link to="/">
             <Typography>Back to the intake form</Typography>
           </Link>
+          <RecordListContainer records={records}></RecordListContainer>
         </div>
       </div>
     </div>
