@@ -13,6 +13,9 @@ const CONFIG = {
   measurementId: "G-MHTVV1X9ZH"
 };
 
+const FieldValue = firebase.firestore.FieldValue;
+const Timestamp = firebase. firestore. Timestamp;
+
 // TODO: converter, query, order, limit, paging, indices, cached
 
 export default class FirebaseFacade {
@@ -51,14 +54,21 @@ export default class FirebaseFacade {
    *  Callback function when fail
    */
   addPending(participant, onSuccess, onError) {
-    this.pendingRef.add(participant)
+    let form = Object.assign({}, participant, {
+      history: FieldValue.arrayUnion({
+        user: "System",
+        type: "created",
+        comment: "Received registration data from paticipant.",
+        timestamp: Timestamp.now()
+      })
+    });
+    
+    this.pendingRef.add(form)
       .then((docRef) => {
         if (onSuccess) {
           // Could use docRef.data() to get doc content instead
           onSuccess(docRef.id);
         }
-        
-        // TODO: Log creation action
       })
       .catch((error) => {
         if (onError) {
@@ -132,15 +142,24 @@ export default class FirebaseFacade {
    * Update a participant document in pending collection
    * @param {docId: string}
    *  Document id
-   * @param {partialData: object}
+   * @param {data: object}
    *  Object containing updated values
    * @param {onSuccess?: () => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  updatePending(docId, partialData, onSuccess, onError) {
-    this.pendingRef.doc(docId).update(partialData)
+  updatePending(docId, data, onSuccess, onError) {
+    let form = Object.assign({}, data, {
+      history: FieldValue.arrayUnion({
+        user: "TODO",
+        type: "updated",
+        comment: "TODO",
+        timestamp: Timestamp.now()
+      })
+    });
+    
+    this.pendingRef.doc(docId).update(form)
       .then(() => {
         if (onSuccess) {
           onSuccess();
@@ -170,8 +189,6 @@ export default class FirebaseFacade {
         if (onSuccess) {
           onSuccess();
         }
-        
-        // TODO: Log delete action
       })
       .catch((error) => {
         if (onError) {

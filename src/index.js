@@ -18,18 +18,28 @@ class Test extends React.Component {
     this.state = {
       test: null
     }
+    this.testFunc = this.testFunc.bind(this);
   }
   
   testFunc() {
-    db.addPending(participant);
-    db.getPendingList();
+    // db.addPending(participant);
+    // db.getPending("SitXGZEY54EHqD0HlwpZ", (doc) => this.setState({test: JSON.stringify(doc)}));
+    let list = []
+    db.getPendingList((doc) => {
+      list.push(doc);
+      this.setState({
+        test: list.map(i => {
+          return <li>{JSON.stringify(i)}</li>
+        })
+      });
+    });
   }
   
   render() {
     return (
       <div>
         <button onClick={this.testFunc}>Click Me</button>
-        <div>{this.state.test}</div>
+        <ul>{this.state.test}</ul>
       </div>
     )
   }
