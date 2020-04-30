@@ -10,28 +10,16 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import './style/TopNavBar.css';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
-  },
-
-  title: {
-    flexGrow: 1,
-  },
-
-  hide: {
-    display: 'none',
   },
 
   appBar: {
@@ -55,14 +43,8 @@ const useStyles = makeStyles((theme) => ({
 export const TopNavBar = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  // TODO Maybe can use ellipsis instead of different titles.
-  // Using different titles because it will overflow and make app bar bigger when no space for all the texts
-  const mediaSm = useMediaQuery(theme.breakpoints.down('sm'));
-  const mediaXs = useMediaQuery(theme.breakpoints.down('xs'));
   const title =
     'Pathfinder Youth Centre Society Participant Database';
-  const titleSm = 'Participants Database';
-  const titleXs = 'Participants';
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -85,18 +67,15 @@ export const TopNavBar = (props) => {
       <Toolbar>
         <IconButton
           edge="start"
-          className={clsx(
-            classes.menuButton,
-            props.handleDrawerState && classes.hide,
-          )}
+          className={classes.menuButton}
           color="inherit"
           aria-label="menu"
           onClick={props.handleDrawerOpen}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          {mediaSm ? (mediaXs ? titleXs : titleSm) : title}
+        <Typography variant="h6" className="title" noWrap>
+          {title}
         </Typography>
         <IconButton aria-label="Add entry" color="inherit">
           <AddIcon />

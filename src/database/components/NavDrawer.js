@@ -12,13 +12,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import './style/NavDrawer.css';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
   drawer: {
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
@@ -34,25 +32,17 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: drawerWidth,
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
   container: {
     padding: theme.spacing(2),
   },
   drawerHeader: {
-    marginTop: '64px', //TODO find a better way than using px.
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
     padding: theme.spacing(1, 2),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 
     [theme.breakpoints.down('sm')]: {
       // Add attributes for phone size.
-      marginTop: '0px', //TODO find a better way than using px.
+      marginTop: '0em', //TODO find a better way than using px.
       justifyContent: 'space-between',
     },
   },
@@ -69,7 +59,7 @@ export const NavDrawer = (props) => {
 
   const drawer = (
     <div>
-      <div className={classes.drawerHeader}>
+      <div className={`${classes.drawerHeader} drawerHeaderCss`}>
         <Typography>UserLogin@pycs.org</Typography>
 
         {matches ? (
@@ -102,7 +92,7 @@ export const NavDrawer = (props) => {
   );
 
   return (
-    <div className={classes.root}>
+    <div className="root">
       <CssBaseline />
       <nav className={classes.drawer} aria-label="mailbox folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
