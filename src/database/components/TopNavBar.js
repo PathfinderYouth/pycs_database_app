@@ -88,7 +88,7 @@ export const TopNavBar = (props) => {
           className={clsx(
             classes.menuButton,
             props.handleDrawerState && classes.hide,
-          )} //TODODODODODODODODO remove hide?
+          )}
           color="inherit"
           aria-label="menu"
           onClick={props.handleDrawerOpen}
