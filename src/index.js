@@ -24,15 +24,15 @@ class Test extends React.Component {
   testFunc() {
     // db.addPending(participant);
     // db.getPending("SitXGZEY54EHqD0HlwpZ", (doc) => this.setState({test: JSON.stringify(doc)}));
-    let list = []
-    db.getPendingList((doc) => {
-      list.push(doc);
-      this.setState({
-        test: list.map(i => {
-          return <li>{JSON.stringify(i)}</li>
-        })
-      });
-    });
+    // let list = []
+    // db.getPendingList((doc) => {
+      // list.push(doc);
+      // this.setState({
+        // test: list.map(i => {
+          // return <li>{JSON.stringify(i)}</li>
+        // })
+      // });
+    // });
   }
   
   render() {
