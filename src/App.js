@@ -1,14 +1,14 @@
 import React from 'react';
 import { Router } from '@reach/router';
 import { Database } from './database';
-import { IntakeForm } from './intake-form';
+import { IntakeFormPage } from './intake-form';
 import { SignIn } from './sign-in';
-import Typography from '@material-ui/core/Typography'
+import './App.css';
 
 const App = () => (
   <>
     <Router>
-      <IntakeForm path='/'/>
+      <IntakeFormPage path='/'/>
       <SignIn path='sign-in'/>
       <Database path='database'/>
     </Router>
