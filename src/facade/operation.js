@@ -1,5 +1,4 @@
 import * as firebase from "firebase/app";
-import "firebase/auth";
 import "firebase/firestore";
 
 const CONFIG = {
@@ -24,27 +23,26 @@ const STATUS = {
 
 // TODO: converter, query, order, limit, paging, indices, cached
 
-export default class FirebaseFacade {
+export default class Operation {
   static instance;
   
   /**
-   * Get an instance of FirebaseFacade.
-   * @returns {FirebaseFacade}
-   *  Instance of FirebaseFacade
+   * Get an instance of Operation.
+   * @returns {Operation}
+   *  Instance of Operation
    */
   static getInstance() {
-    if (!FirebaseFacade.instance) {
-      FirebaseFacade.instance = new FirebaseFacade();
+    if (!Operation.instance) {
+      Operation.instance = new Operation();
     }
-    return FirebaseFacade.instance;
+    return Operation.instance;
   }
   
   constructor() {
-    if (FirebaseFacade.instance) {
-      throw new Error("FirebaseFacade is a singleton class");
+    if (Operation.instance) {
+      throw new Error("Operation is a singleton class");
     }
     
-    firebase.initializeApp(CONFIG);
     this.db = firebase.firestore();
     this.permanentRef = this.db.collection("participants");
     this.pendingRef = this.db.collection("pending");
@@ -353,11 +351,11 @@ export default class FirebaseFacade {
         }
         
         doc.status = STATUS.approved;
-        doc.history = FieldValue.arrayUnion({
+        doc.history.push({
           user: "TODO",
           event: "TODO: Approved",
           timestamp: Timestamp.now()
-        })
+        });
         
         transaction.set(newDocRef, doc);
         transaction.delete(oldDocRef);
