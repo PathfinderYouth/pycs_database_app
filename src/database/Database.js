@@ -3,6 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
 import { NavDrawer } from './components';
 import { makeStyles } from '@material-ui/core/styles';
+import { RecordListContainer } from './components';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +14,20 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
+
+// for testing table view
+const records = [
+  {lastName: "McTest",
+  firstName: "Test",
+  address: "123 1st St",
+  city: "Surrey",
+  id: 1},
+  {lastName: "McBob",
+  firstName: "Bob",
+  address: "125 2nd St",
+  city: "Surrey",
+  id: 2}
+]
 
 // container that holds all database UI objects
 export const Database = () => {
@@ -28,6 +43,7 @@ export const Database = () => {
           <Link to="/">
             <Typography>Back to the intake form</Typography>
           </Link>
+          <RecordListContainer records={records}></RecordListContainer>
         </div>
       </div>
     </div>

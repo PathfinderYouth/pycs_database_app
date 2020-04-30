@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,15 +8,30 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 
-export default recordListContainer = (props) => {
+export const RecordListContainer = (props) => {
+  const headers = ['Last Name', 'First Name', 'Address', 'City']
+
   return (
     <TableContainer component={Paper}>
-      <Table className='recordContainer'>
+      <Table className='recordsTable'>
         <TableHead>
-          
+          {headers.map(header => {
+              return <TableCell><Typography>{header}</Typography></TableCell>
+            })}
         </TableHead>
+        <TableBody>
+          {props.records.map(record => {
+            console.log(record)
+            return <TableRow className='recordTableRow' key={record.id}>
+              <TableCell><Typography>{record.lastName}</Typography></TableCell>
+              <TableCell><Typography>{record.firstName}</Typography></TableCell>
+              <TableCell><Typography>{record.address}</Typography></TableCell>
+              <TableCell><Typography>{record.city}</Typography></TableCell>
+            </TableRow>
+          })}
+        </TableBody>
       </Table>
     </TableContainer>
-  )
+  );
     
-}
+};
