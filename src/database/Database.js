@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
-<<<<<<< HEAD
-
 import { NavDrawer, TopNavBar } from './components';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { RecordListContainer } from './components';
@@ -10,11 +8,6 @@ import { RecordListContainer } from './components';
 // TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
 // Tried passing this value as props to both components but didn't work, not sure why.
 const drawerWidth = 240;
-=======
-import { NavDrawer } from './components';
-import { makeStyles } from '@material-ui/core/styles';
-import { RecordListContainer } from './components';
->>>>>>> 7db95123ed5a63cbbbba98a38a86cdbbf995f1e9
 
 const useStyles = makeStyles((theme) => ({
   root: {
