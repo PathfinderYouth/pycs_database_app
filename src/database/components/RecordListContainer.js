@@ -6,7 +6,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 export const RecordListContainer = (props) => {
   const headers = ['Last Name', 'First Name', 'Address', 'City']
@@ -21,7 +21,6 @@ export const RecordListContainer = (props) => {
         </TableHead>
         <TableBody>
           {props.records.map(record => {
-            console.log(record)
             return <TableRow className='recordTableRow' key={record.id}>
               <TableCell><Typography>{record.lastName}</Typography></TableCell>
               <TableCell><Typography>{record.firstName}</Typography></TableCell>
