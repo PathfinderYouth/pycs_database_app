@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import Operation from './operation';
+import Authentication from './authentication';
 
 const CONFIG = {
   apiKey: 'AIzaSyDDYYHzgfZh5XCBLgEaPSHaI1RnBYAanrw',
@@ -30,12 +31,17 @@ export function operation() {
   return Operation.getInstance();
 }
 
-export function auth() {
+/**
+ * Get an instance of Authentication.
+ * @returns {Authentication}
+ *  Instance of Authentication
+ */
+export function authentication() {
   init();
-  return 'auth.getInstance()';
+  return Authentication.getInstance();
 }
 
 export default {
   operation: operation,
-  auth: auth,
+  authentication: authentication,
 };
