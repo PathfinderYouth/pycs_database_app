@@ -1,6 +1,9 @@
 import React from "react";
 import authen from "../authentication";
 
+/**
+ * Display PYCS database home page
+ */
 const DatabaseHome = () => {
   return (
     <div>
