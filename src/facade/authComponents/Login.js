@@ -2,6 +2,13 @@ import React, { useCallback, useContext } from "react";
 import { withRouter, Redirect } from "react-router";
 import authen, { AuthContext } from "../authentication";
 
+/**
+ * Create login UI and use callback to handle login event
+ * @param {history: History} 
+ * a reference to the History object for routing context manipulating the browser session history
+ * @returns {React.Component}
+ * interactive login component
+ */
 const Login = ({ history }) => {
   const handleLogin = useCallback(
     async (event) => {

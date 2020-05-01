@@ -44,12 +44,22 @@ firebase.initializeApp(CONFIG);
 const authen = firebase.auth();
 export default authen;
 
+// create authcontext to poplute data into React component tree
 export const AuthContext = React.createContext();
 
+/**
+ * Provider component stores authentication status
+ * @param {children: child React.Component}
+ * child React components associated with current user
+ * @returns {AuthContext Provider}
+ * pass current user of firebase on auth state change
+ *
+ */
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [pending, setPending] = useState(true);
 
+  // React hook to signup changes to firebase object
   useEffect(() => {
     authen.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -72,8 +82,17 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+/**
+ * a wrapper for regular route
+ * @param {component: RouteComponent}
+ * a regular Route component
+ * @returns {currentUser?: RouteComponent: Redirect}
+ * returns Route component if a user is logged in, redirects to login ui otherwise
+ */
 export const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
+  // useContext hook accepts AuthContext
   const { currentUser } = useContext(AuthContext);
+
   return (
     <Route
       {...rest}
