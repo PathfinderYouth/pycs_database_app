@@ -5,15 +5,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import service from './facade/service';
 
-const  participant = {
-  first: "Robert",
-  last: "Vu"
-}
-
-const  participantChange = {
-  last: "Zhang"
-}
-
 const db = service.operation();
 
 class Test extends React.Component {
@@ -26,12 +17,18 @@ class Test extends React.Component {
   }
   
   testFunc() {
-    // db.addPermanent(participant);
-    // db.getPermanent("Ch0mMkjDoORt8kEmOjeT", (doc) => this.setState({test: JSON.stringify(doc)}));
-    // db.updatePermanent("Ch0mMkjDoORt8kEmOjeT", participantChange);
-    // db.deletePermanent("Ch0mMkjDoORt8kEmOjeT");
-    // db.undoDeletePermanent("Ch0mMkjDoORt8kEmOjeT");
-    // db.approvePending("tVdCcIeZhJkYdX4GQYe0")
+    // db.addNew({first: "A", last: "A"});
+    // db.addNew({first: "B", last: "B"});
+    // db.addNew({first: "C", last: "C"});
+    // db.addPermanent({first: "D", last: "D"});
+    // db.addPermanent({first: "E", last: "E"});
+    // db.getPermanent("", (doc) => this.setState({test: JSON.stringify(doc)}));
+    // db.updatePermanent("", participantChange);
+    // db.deletePermanent("");
+    // db.undoDeletePermanent("");
+    // db.moveToPermanent("");
+    // db.approvePending("");
+    // db.declinePending("");
     let list = []
     db.getAllDocuments((doc) => {
       list.push(doc);

@@ -20,6 +20,11 @@ function init(){
   }
 }
 
+/**
+ * Get an instance of Operation.
+ * @returns {Operation}
+ *  Instance of Operation
+ */
 export function operation() {
   init();
   return Operation.getInstance();
