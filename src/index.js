@@ -55,7 +55,8 @@ class Test extends React.Component {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Test />
+    {/* <Test /> */}
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
