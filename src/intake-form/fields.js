@@ -67,7 +67,7 @@ export const intakeFormInitialValues = {
   Band Funding, or Other, */
   formOfIncomeOther: '',
   levelOfEducation: '',
-  /* Less than Grade 9, Grade 9, Grade 1'', Grade 11, some grade 12,
+  /* Less than Grade 9, Grade 9, Grade 10, Grade 11, some grade 12,
   Grade 12 Diploma, Trade Certificate/Diploma,
   Some university/College, University Degree/ College Diploma */
   nameAndLocationOfSchool: '',
