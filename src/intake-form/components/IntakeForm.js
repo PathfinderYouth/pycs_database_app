@@ -8,6 +8,7 @@ import { FormStepBasics } from './FormStepBasics';
 import { FormStepMedical } from './FormStepMedical';
 import { FormStepCurrentStatus } from './FormStepCurrentStatus';
 import { FormStepQuestions } from './FormStepQuestions';
+import { FormStepConfirmation } from './FormStepConfirmation';
 import './IntakeForm.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,14 +21,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const IntakeForm = (props) => {
-  /* 
-  1 - Start page
-  2 - Basic info
-  3 - Medical info
-  4 - Current status
-  5 - Questions
-  6 - Confirmation page
-  */
+  const classes = useStyles();
+  const { form } = props;
+  const { handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleClickBack = () => {
@@ -42,6 +38,14 @@ export const IntakeForm = (props) => {
     }
   };
 
+  /* 
+  1 - Start page
+  2 - Basic info
+  3 - Medical info
+  4 - Current status
+  5 - Questions
+  6 - Confirmation page
+  */
   const getFormStep = (form, step) => {
     switch (step) {
       case 2:
@@ -53,19 +57,16 @@ export const IntakeForm = (props) => {
       case 5:
         return <FormStepQuestions form={form} />;
       case 6:
-        return <p>Confirmation</p>;
+        return <FormStepConfirmation />;
       default:
         return <FormStepStart form={form} />;
     }
   };
 
-  const classes = useStyles();
-  const { form } = props;
-  const { handleSubmit, isSubmitting } = form;
   return (
     <div className={`${classes.root} container`}>
-      <div>
-        <Link href="#">
+      <div className="topLeftLink">
+        <Link href="https://pathfinderyouthsociety.org/">
           <Typography>
             &lt; Back to pathfinderyouthsociety.org
           </Typography>
@@ -74,40 +75,47 @@ export const IntakeForm = (props) => {
       <div className="formContainer">
         <div className="form">{getFormStep(form, currentStep)}</div>
       </div>
-      <div className="bottomBar">
-        <div className="buttonBack">
-          {currentStep !== 1 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClickBack}
-            >
-              Back
-            </Button>
-          )}
+      {currentStep !== 6 && (
+        <div className="bottomBar">
+          <div className="buttonBack">
+            {currentStep !== 1 && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleClickBack}
+              >
+                Back
+              </Button>
+            )}
+          </div>
+          <div className="buttonNext">
+            {currentStep < 5 && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleClickNext}
+              >
+                Next
+              </Button>
+            )}
+            {currentStep === 5 && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  handleSubmit(form.values, form);
+                  // TODO: only proceed to next step if pushing to database was successful,
+                  // otherwise, show an error message somehow
+                  handleClickNext();
+                }}
+                disabled={isSubmitting}
+              >
+                Submit
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="buttonNext">
-          {currentStep < 5 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClickNext}
-            >
-              Next
-            </Button>
-          )}
-          {currentStep === 5 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              Submit
-            </Button>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
