@@ -69,7 +69,7 @@ export default class Authentication {
       .then((userCred) => {
         if (onSucess) {
           let authObj = {
-            type: userCred.opertionType,
+            type: userCred.operationType,
             additional: userCred.additionalUserInfo,
             userName: userCred.user.displayName,
             email: userCred.email,
