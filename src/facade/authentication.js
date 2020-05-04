@@ -34,7 +34,7 @@ export default class Authentication {
    * @param {onError?: () => void}
    *  Callback function when fail
    */
-  logIn(email, password, onSucess, onError) {
+  logIn(email, password, onSuccess, onError) {
     this.authen
       .signInWithEmailAndPassword(email, password)
       .then((userCred) => {
