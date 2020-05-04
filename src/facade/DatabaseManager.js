@@ -14,24 +14,24 @@ const STATUS = {
 
 // TODO: converter, query, order, limit, paging, indices, cached
 
-export default class Operation {
+export default class DatabaseManager {
   static instance;
 
   /**
-   * Get an instance of Operation.
-   * @returns {Operation}
-   *  Instance of Operation
+   * Get an instance of DatabaseManager.
+   * @returns {DatabaseManager}
+   *  Instance of DatabaseManager
    */
   static getInstance() {
-    if (!Operation.instance) {
-      Operation.instance = new Operation();
+    if (!DatabaseManager.instance) {
+      DatabaseManager.instance = new DatabaseManager();
     }
-    return Operation.instance;
+    return DatabaseManager.instance;
   }
 
   constructor() {
-    if (Operation.instance) {
-      throw new Error('Operation is a singleton class');
+    if (DatabaseManager.instance) {
+      throw new Error('DatabaseManager is a singleton class');
     }
 
     this.db = firebase.firestore();
@@ -40,9 +40,9 @@ export default class Operation {
   }
 
   /**
-   * Helper method to get single document
+   * Private helper method to get single document
    */
-  _getSingle(ref, docId, onNext, onError) {
+  _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
       next: docSnap => {
         let doc = docSnap.data();
@@ -60,7 +60,7 @@ export default class Operation {
   }
 
   /**
-   * Helper method to get list of documents
+   * Private helper method to get list of documents
    */
   _getList(ref, onChildNext, onError, status) {
     if (status) {
@@ -120,7 +120,7 @@ export default class Operation {
    *  Unsubscribe function
    */
   getNew(docId, onNext, onError) {
-    return this._getSingle(this.newRef, docId, onNext, onError);
+    return this._getSingleParticipant(this.newRef, docId, onNext, onError);
   }
 
   /**
@@ -209,7 +209,7 @@ export default class Operation {
    *  Unsubscribe function
    */
   getPermanent(docId, onNext, onError) {
-    return this._getSingle(this.permanentRef, docId, onNext, onError);
+    return this._getSingleParticipant(this.permanentRef, docId, onNext, onError);
   }
 
   /**

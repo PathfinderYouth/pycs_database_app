@@ -1,24 +1,24 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
-export default class Authentication {
+export default class AuthenticationManager {
   static instance;
 
   /**
-   * Get an instance of Authentication.
-   * @returns {Authentication}
-   *  Instance of Authentication
+   * Get an instance of AuthenticationManager.
+   * @returns {AuthenticationManager}
+   *  Instance of AuthenticationManager
    */
   static getInstance() {
-    if (!Authentication.instance) {
-      Authentication.instance = new Authentication();
+    if (!AuthenticationManager.instance) {
+      AuthenticationManager.instance = new AuthenticationManager();
     }
-    return Authentication.instance;
+    return AuthenticationManager.instance;
   }
 
   constructor() {
-    if (Authentication.instance) {
-      throw new Error('Authentication is a singleton class');
+    if (AuthenticationManager.instance) {
+      throw new Error('AuthenticationManager is a singleton class');
     }
     this.authen = firebase.auth();
   }

@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
-import Operation from './operation';
-import Authentication from './authentication';
+import DatabaseManager from './DatabaseManager';
+import AuthenticationManager from './AuthenticationManager';
 
 const CONFIG = {
   apiKey: 'AIzaSyDDYYHzgfZh5XCBLgEaPSHaI1RnBYAanrw',
@@ -26,9 +26,9 @@ function init() {
  * @returns {Operation}
  *  Instance of Operation
  */
-export function operation() {
+export function getDatabase() {
   init();
-  return Operation.getInstance();
+  return DatabaseManager.getInstance();
 }
 
 /**
@@ -36,12 +36,12 @@ export function operation() {
  * @returns {Authentication}
  *  Instance of Authentication
  */
-export function authentication() {
+export function getAuthentication() {
   init();
-  return Authentication.getInstance();
+  return AuthenticationManager.getInstance();
 }
 
 export default {
-  operation: operation,
-  authentication: authentication,
+  getDatabase: getDatabase,
+  getAuthentication: getAuthentication,
 };
