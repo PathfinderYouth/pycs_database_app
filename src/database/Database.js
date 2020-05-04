@@ -9,7 +9,7 @@ import { RecordListContainer } from './components';
 // Tried passing this value as props to both components but didn't work, not sure why.
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
   },
@@ -21,25 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// for testing table view
-const records = [
-  {lastName: "McTest",
-  firstName: "Test",
-  address: "123 1st St",
-  city: "Surrey",
-  id: 1},
-  {lastName: "McBob",
-  firstName: "Bob",
-  address: "125 2nd St",
-  city: "Surrey",
-  id: 2}
-]
-
 // container that holds all database UI objects
 export const Database = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
+  const [listType] = useState('new'); // Use setListType to change type of list
 
   const handleDrawerOpen = () => {
     setDrawerState(true);
@@ -66,7 +53,7 @@ export const Database = () => {
           <Link to="/">
             <Typography>Back to the intake form</Typography>
           </Link>
-          <RecordListContainer records={records}></RecordListContainer>
+          <RecordListContainer type={listType} />
         </div>
       </div>
     </div>
