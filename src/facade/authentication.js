@@ -45,7 +45,7 @@ export default class Authentication {
             userName: userCred.user.displayName,
             email: userCred.email,
           };
-          onSucess(authObj);
+          onSuccess(authObj);
         }
       })
       .catch(onError);
