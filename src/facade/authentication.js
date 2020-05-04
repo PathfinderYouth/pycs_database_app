@@ -63,18 +63,18 @@ export default class Authentication {
    * @param {onError?: () => void}
    *  Callback function when fail
    */
-  signUp(email, password, onSucess, onError) {
+  signUp(email, password, onSuccess, onError) {
     this.authen
       .createUserWithEmailAndPassword(email, password)
       .then((userCred) => {
-        if (onSucess) {
+        if (onSuccess) {
           let authObj = {
             type: userCred.operationType,
             additional: userCred.additionalUserInfo,
             userName: userCred.user.displayName,
             email: userCred.email,
           };
-          onSucess(authObj);
+          onSuccess(authObj);
         }
       })
       .catch(onError);

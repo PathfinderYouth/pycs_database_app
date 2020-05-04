@@ -52,7 +52,7 @@ export default class Operation {
         }
 
         if (onError) {
-          onError(new Error('Document not exist'));
+          onError(new Error('Document does not exist'));
         }
       },
       error: onError,
@@ -92,7 +92,7 @@ export default class Operation {
       status: STATUS.new,
       history: FieldValue.arrayUnion({
         user: 'System',
-        event: 'Received registration data from paticipant.',
+        event: 'Received registration data from participant.',
         timestamp: Timestamp.now(),
       }),
     });
@@ -308,7 +308,7 @@ export default class Operation {
       return transaction.get(oldDocRef).then(docSnap => {
         let doc = docSnap.data();
         if (!doc) {
-          throw new Error('Document not exist');
+          throw new Error('Document does not exist');
         }
 
         doc.status = STATUS.pending;
