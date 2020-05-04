@@ -26,7 +26,7 @@ export const Database = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
-  const [listType] = useState('new'); // Use setListType to change type of list
+  const [documentState] = useState('all'); // Use setDocumentState to change type of list
 
   const handleDrawerOpen = () => {
     setDrawerState(true);
