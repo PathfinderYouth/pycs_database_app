@@ -38,7 +38,7 @@ export default class Authentication {
     this.authen
       .signInWithEmailAndPassword(email, password)
       .then((userCred) => {
-        if (onSucess) {
+        if (onSuccess) {
           let authObj = {
             type: userCred.opertionType,
             additional: userCred.additionalUserInfo,
