@@ -5,7 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import './FormSteps.css';
 
 export const FormStepStart = (props) => {
-  const { values, handleChange, handleBlur } = props.form;
+  const { values, errors, touched, handleChange, handleBlur } = props.form;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  // console.log(errors)
+  // console.log(touched)
+>>>>>>> 6bfc3a5... Setting up initial validation schema
+=======
+>>>>>>> f522405... Adding more validation tests
+  
   return (
     <div className="startPageContainer">
       <div className="startPageContents">
@@ -31,6 +40,8 @@ export const FormStepStart = (props) => {
             onChange={handleChange}
             onBlur={handleBlur}
             variant="outlined"
+            error={!!errors['nameGiven'] && touched['nameGiven']}
+            helperText={(!!errors['nameGiven'] && touched['nameGiven']) && errors['nameGiven']}
             required
           />
           <TextField
@@ -40,6 +51,8 @@ export const FormStepStart = (props) => {
             onChange={handleChange}
             onBlur={handleBlur}
             variant="outlined"
+            error={!!errors['nameLast'] && touched['nameLast']}
+            helperText={(!!errors['nameLast'] && touched['nameLast']) && errors['nameLast']}
             required
           />
         </div>

@@ -1,7 +1,9 @@
 export const intakeFormInitialValues = {
-  // basic information
+  // start page
   nameGiven: '',
   nameLast: '',
+
+  // basic information
   programAppliedFor: '', // 'new employment beginnings' or 'bean around books'
   addressStreet: '',
   addressCity: '',
@@ -11,6 +13,7 @@ export const intakeFormInitialValues = {
   phoneHome: '',
   phoneCell: '',
   bestNumberToCall: '', // 'home' or 'cell'
+  email: '',
   birthDate: '',
   emergencyContacts: {
     eContact1: {
@@ -128,7 +131,7 @@ export const intakeFormInitialValues = {
   whyApplied: '',
   whyShouldBeAccepted: '',
   employmentGoals: '',
-  skillsAndExperienceHopes: ''
+  skillsAndExperienceHopes: '',
 };
 
 export const provinces = [
@@ -146,3 +149,21 @@ export const provinces = [
   'Sasketchewan',
   'Yukon Territory',
 ];
+
+export const requiredFields = [
+  [
+    'nameGiven', 'nameLast'
+  ],
+  [
+    'programAppliedFor', 'birthDate', 'contactMethod', 'phoneHome', 'phoneCell', 'email'
+  ],
+  [
+    'bcCareCardNumber'
+  ],
+  [
+    'sin'
+  ],
+  [
+    'whyApplied', 'whyShouldBeAccepted'
+  ]
+]
