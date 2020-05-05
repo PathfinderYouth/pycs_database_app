@@ -94,8 +94,6 @@ export const RecordListContainer = (props) => {
     //TODO
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
