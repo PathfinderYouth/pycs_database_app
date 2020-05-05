@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
 import { NavDrawer, TopNavBar } from './components';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { RecordListContainer } from './components';
-import { observer, inject } from 'mobx-react';
-import { participantStore } from '../injectables';
 
 // TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
 // Tried passing this value as props to both components but didn't work, not sure why.
@@ -25,54 +23,52 @@ const useStyles = makeStyles((theme) => ({
 
 // for testing table view
 const records = [
-  {
-    lastName: 'McTest',
-    firstName: 'Test',
-    address: '123 1st St',
-    city: 'Surrey',
-    id: 1,
-  },
-  {
-    lastName: 'McBob',
-    firstName: 'Bob',
-    address: '125 2nd St',
-    city: 'Surrey',
-    id: 2,
-  },
-];
+  {lastName: "McTest",
+  firstName: "Test",
+  address: "123 1st St",
+  city: "Surrey",
+  id: 1},
+  {lastName: "McBob",
+  firstName: "Bob",
+  address: "125 2nd St",
+  city: "Surrey",
+  id: 2}
+]
 
 // container that holds all database UI objects
-export const Database = inject('participantStore')(
-  observer(() => {
-    const classes = useStyles();
+export const Database = () => {
+  const classes = useStyles();
 
-    const [drawerState, setDrawerState] = useState(false);
+  const [drawerState, setDrawerState] = useState(false);
 
-    const handleDrawerOpen = () => {
-      setDrawerState(true);
-    };
+  const handleDrawerOpen = () => {
+    setDrawerState(true);
+  };
 
-    const handleDrawerClose = () => {
-      setDrawerState(false);
-    };
+  const handleDrawerClose = () => {
+    setDrawerState(false);
+  };
 
-    return (
-      <div className={classes.root}>
-        <TopNavBar
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerState={drawerState}
-        />
-        <NavDrawer
-          handleDrawerClose={handleDrawerClose}
-          handleDrawerState={drawerState}
-        />
-        <div className={classes.content}>
-          <Typography variant="h3">Database UI</Typography>
-          <RecordListContainer
-            records={participantStore.getParticipants()}
-          ></RecordListContainer>
+  return (
+    <div className={classes.root}>
+      <TopNavBar
+        handleDrawerOpen={handleDrawerOpen}
+        handleDrawerState={drawerState}
+      />
+      <NavDrawer
+        handleDrawerClose={handleDrawerClose}
+        handleDrawerState={drawerState}
+      />
+      <div className={classes.content}>
+        <Typography variant="h3">Database UI</Typography>
+        {/* Components go here */}
+        <div>
+          <Link to="/">
+            <Typography>Back to the intake form</Typography>
+          </Link>
+          <RecordListContainer records={records}></RecordListContainer>
         </div>
       </div>
-    );
-  }),
-);
+    </div>
+  );
+};
