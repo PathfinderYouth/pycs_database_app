@@ -30,15 +30,16 @@ export const FormStepConfirmation = () => {
           >
             In order to complete your application, Pathfinder requires
             participants to fill out an additional form from the
-            government of Canada for statistical purposes. Please
-            download, fill out, and sign this form, then either email
-            it to <Link
-              href="mailto:info@pathfinderyouthsocity.org"
+            government of Canada. Please download, fill out, and sign
+            this form, then either email it to{' '}
+            <Link
+              href="mailto:pathfinderyouthsociety@shaw.ca"
               target="_blank"
               rel="noreferrer"
             >
-              info@pathfinderyouthsocity.org
-            </Link> or bring a physical copy with you when you when you come
+              pathfinderyouthsociety@shaw.ca
+            </Link>{' '}
+            or bring a physical copy with you when you when you come
             in for your interview.
           </Typography>
         </div>
