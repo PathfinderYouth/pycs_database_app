@@ -17,7 +17,7 @@ export const FormStepConfirmation = () => {
           Self-Enrollment System
         </Typography>
         <Typography variant="h5">
-          Your application has been successfully receieved.
+          Your application has been successfully received.
         </Typography>
         <Typography>
           You will be contacted soon for an interview.
@@ -27,7 +27,7 @@ export const FormStepConfirmation = () => {
           <Typography>
             In order to complete your application, Pathfinder requires
             participants to fill out an additional form from the
-            government of Canada. Please download the form using the
+            Government of Canada. Please download the form using the
             link below, and then either:
           </Typography>
           <ul>
