@@ -23,21 +23,35 @@ export const FormStepConfirmation = () => {
           You will be contacted soon for an interview.
         </Typography>
         <div className="formTextContainer">
-          <Typography align="center">
+          <Typography variant="h5">Next steps</Typography>
+          <Typography>
             In order to complete your application, Pathfinder requires
             participants to fill out an additional form from the
-            government of Canada. Please download, fill out, and sign
-            this form, then either email it to{' '}
-            <Link
-              href="mailto:pathfinderyouthsociety@shaw.ca"
-              target="_blank"
-              rel="noreferrer"
-            >
-              pathfinderyouthsociety@shaw.ca
-            </Link>{' '}
-            or bring a physical copy with you when you when you come
-            in for your interview.
+            government of Canada. Please download the form using the
+            link below, and then either:
           </Typography>
+          <ul>
+            <li>
+              <Typography>
+                Fill it out, including your signature, and email it to{' '}
+                <Link
+                  href="mailto:pathfinderyouthsociety@shaw.ca"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  pathfinderyouthsociety@shaw.ca
+                </Link>
+                , or
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Print it, fill it out, including your signature, and
+                bring it with you when you when you come in for your
+                interview
+              </Typography>
+            </li>
+          </ul>
         </div>
         <Typography gutterBottom variant="h4">
           <Link
