@@ -1,45 +1,47 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
-import { NavDrawer, TopNavBar } from './components';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { RecordListContainer } from './components';
-
-// TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
-// Tried passing this value as props to both components but didn't work, not sure why.
-const drawerWidth = 240;
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  NavDrawer,
+  TopNavBar,
+  RecordListContainer,
+  RecordDialog,
+} from './components';
+import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-
   content: {
-    flexGrow: 1,
     padding: theme.spacing(3),
-    marginTop: '64px', //TODO find a better way than using px.
   },
 }));
 
 // for testing table view
 const records = [
-  {lastName: "McTest",
-  firstName: "Test",
-  address: "123 1st St",
-  city: "Surrey",
-  id: 1},
-  {lastName: "McBob",
-  firstName: "Bob",
-  address: "125 2nd St",
-  city: "Surrey",
-  id: 2}
-]
+  {
+    lastName: 'McTest',
+    firstName: 'Test',
+    address: '123 1st St',
+    city: 'Surrey',
+    id: 1,
+  },
+  {
+    lastName: 'McBob',
+    firstName: 'Bob',
+    address: '125 2nd St',
+    city: 'Surrey',
+    id: 2,
+  },
+];
 
 // container that holds all database UI objects
 export const Database = () => {
   const classes = useStyles();
 
   const [drawerState, setDrawerState] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  // Get record id clicked from RecordListContainer.js and passed to RecordDialog.js
+  const [recordListClicked, setRecordListClicked] = useState(null);
 
   const handleDrawerOpen = () => {
     setDrawerState(true);
@@ -49,24 +51,48 @@ export const Database = () => {
     setDrawerState(false);
   };
 
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} root`}>
       <TopNavBar
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerState={drawerState}
+        handleDialogOpen={handleDialogOpen}
+        handleDialogClose={handleDialogClose}
       />
       <NavDrawer
         handleDrawerClose={handleDrawerClose}
         handleDrawerState={drawerState}
       />
-      <div className={classes.content}>
+      {openDialog ? (
+        <RecordDialog
+          openDialog={openDialog}
+          handleDialogClose={handleDialogClose}
+          recordListClicked={recordListClicked}
+          records={records}
+        />
+      ) : null}
+
+      <div className={`${classes.content} content`}>
         <Typography variant="h3">Database UI</Typography>
         {/* Components go here */}
         <div>
           <Link to="/">
             <Typography>Back to the intake form</Typography>
           </Link>
-          <RecordListContainer records={records}></RecordListContainer>
+          <RecordListContainer
+            records={records}
+            handleDialogOpen={handleDialogOpen}
+            handleDialogClose={handleDialogClose}
+            setRecordListClicked={setRecordListClicked}
+          ></RecordListContainer>
         </div>
       </div>
     </div>
