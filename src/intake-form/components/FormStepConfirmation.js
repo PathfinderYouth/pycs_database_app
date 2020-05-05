@@ -23,11 +23,7 @@ export const FormStepConfirmation = () => {
           You will be contacted soon for an interview.
         </Typography>
         <div className="formTextContainer">
-          <Typography
-            variant="body2"
-            align="center"
-            color="textSecondary"
-          >
+          <Typography align="center">
             In order to complete your application, Pathfinder requires
             participants to fill out an additional form from the
             government of Canada. Please download, fill out, and sign
