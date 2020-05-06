@@ -23,9 +23,9 @@ function init() {
 }
 
 /**
- * Get an instance of Operation.
- * @returns {Operation}
- *  Instance of Operation
+ * Get an instance of DatabaseManager.
+ * @returns {DatabaseManager}
+ *  Instance of DatabaseManager
  */
 export function getDatabase() {
   init();
@@ -33,9 +33,9 @@ export function getDatabase() {
 }
 
 /**
- * Get an instance of Authentication.
- * @returns {Authentication}
- *  Instance of Authentication
+ * Get an instance of AuthenticationManager.
+ * @returns {AuthenticationManager}
+ *  Instance of AuthenticationManager
  */
 export function getAuthentication() {
   init();
