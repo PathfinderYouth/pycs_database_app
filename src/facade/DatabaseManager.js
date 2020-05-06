@@ -68,7 +68,7 @@ export default class DatabaseManager {
         ref = ref.where(field, '==', filter[field]);
       }
     }
-    
+
     for (const field in sorter) {
       ref = ref.orderBy(field, sorter[field] ? sorter[field] : undefined);
     }
@@ -218,7 +218,8 @@ export default class DatabaseManager {
    *  Unsubscribe function
    */
   getPermanent(docId, onNext, onError) {
-    return this._getSingleParticipant(this.permanentRef, docId, onNext, onError);
+    let ref = this.permanentRef;
+    return this._getSingleParticipant(ref, docId, onNext, onError);
   }
 
   /**
