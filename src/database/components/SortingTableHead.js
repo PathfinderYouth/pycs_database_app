@@ -16,7 +16,7 @@ export const SortingTableHead = (props) => {
       <TableRow>
         {headerCells.map((headCell) => {
           const { id, label } = headCell;
-          let isOrderBy = orderBy === id;
+          const isOrderBy = orderBy === id;
           return (
             <TableCell
               key={id}
