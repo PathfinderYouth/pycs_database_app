@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import DatabaseManager from './DatabaseManager';
 import AuthenticationManager from './AuthenticationManager';
+import UserListManager from './UserListManager';
 
 const CONFIG = {
   apiKey: 'AIzaSyDDYYHzgfZh5XCBLgEaPSHaI1RnBYAanrw',
@@ -41,7 +42,18 @@ export function getAuthentication() {
   return AuthenticationManager.getInstance();
 }
 
+/**
+ * Get an instance of UserListManager.
+ * @returns {UserListManager}
+ *  Instance of UserListManager
+ */
+export function getUserList() {
+  init();
+  return UserListManager.getInstance();
+}
+
 export default {
   getDatabase: getDatabase,
   getAuthentication: getAuthentication,
+  getUserList: getUserList,
 };
