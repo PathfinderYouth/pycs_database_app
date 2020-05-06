@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { NavDrawer, TopNavBar } from './components';
+import { Link } from '@reach/router';
+import { NavDrawer, TopNavBar, RecordListContainer } from './components';
 import { makeStyles } from '@material-ui/core/styles';
-import { RecordListContainer } from './components';
 import { observer, inject } from 'mobx-react';
 import { participantStore } from '../injectables';
 
