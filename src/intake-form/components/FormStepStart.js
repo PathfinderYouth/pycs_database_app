@@ -56,7 +56,7 @@ export const FormStepStart = (props) => {
             required
           />
         </div>
-        <div className="disclaimerTextContainer">
+        <div className="formTextContainer">
           <Typography
             gutterBottom
             align="center"

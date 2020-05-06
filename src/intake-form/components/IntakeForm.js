@@ -9,6 +9,7 @@ import { FormStepMedical } from './FormStepMedical';
 import { FormStepCurrentStatus } from './FormStepCurrentStatus';
 import { FormStepQuestions } from './FormStepQuestions';
 import { requiredFields } from '../fields';
+import { FormStepConfirmation } from './FormStepConfirmation';
 import './IntakeForm.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,14 +22,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const IntakeForm = (props) => {
-  /* 
-  0 - Start page
-  1 - Basic info
-  2 - Medical info
-  3 - Current status
-  4 - Questions
-  5 - Confirmation page
-  */
+  const classes = useStyles();
+  const { form } = props;
+  const { handleSubmit, isSubmitting } = form;
+  const [currentStep, setCurrentStep] = useState(1);
 
   // Validates form on initial load, generating errors that must be cleared in order to proceed
   useEffect(() => {
@@ -89,19 +86,16 @@ export const IntakeForm = (props) => {
       case 4:
         return <FormStepQuestions form={form} />;
       case 5:
-        return <p>Confirmation</p>;
+        return <FormStepConfirmation />;
       default:
         return <FormStepStart form={form} />;
     }
   };
 
-  const classes = useStyles();
-  const { form } = props;
-  const { handleSubmit, isSubmitting } = form;
   return (
     <div className={`${classes.root} container`}>
-      <div>
-        <Link href="#">
+      <div className="topLeftLink">
+        <Link href="https://pathfinderyouthsociety.org/">
           <Typography>
             &lt; Back to pathfinderyouthsociety.org
           </Typography>
@@ -132,18 +126,24 @@ export const IntakeForm = (props) => {
               Next
             </Button>
           )}
-          {currentStep === 4 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              Submit
-            </Button>
-          )}
+            {currentStep === 5 && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  handleSubmit(form.values, form);
+                  // TODO: only proceed to next step if pushing to database was successful,
+                  // otherwise, show an error message somehow
+                  handleClickNext();
+                }}
+                disabled={isSubmitting}
+              >
+                Submit
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
