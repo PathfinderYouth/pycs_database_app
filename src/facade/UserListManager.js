@@ -114,9 +114,9 @@ export default class UserListManager {
   /**
    * Get all documents from user collection.
    * @param {filter: Object}
-   *  Object containing filter fields and values
-   * @param {sorter: Array<Object>}
-   *  Array containing objects indicating sort order
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
