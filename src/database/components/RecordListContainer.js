@@ -39,6 +39,11 @@ export const RecordListContainer = (props) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const rows = props.records;
 
+  const handleRecordRowClicked = (clickedRecord) => {
+    props.setRecordListClicked(clickedRecord);
+    props.handleDialogOpen();
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -89,7 +94,10 @@ export const RecordListContainer = (props) => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, id)}
+                      onClick={handleRecordRowClicked.bind(
+                        this,
+                        record,
+                      )}
                       tabIndex={-1}
                       key={id}
                     >

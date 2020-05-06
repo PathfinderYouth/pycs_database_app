@@ -76,7 +76,11 @@ export const TopNavBar = (props) => {
         <Typography variant="h6" className="title" noWrap>
           {title}
         </Typography>
-        <IconButton aria-label="Add entry" color="inherit">
+        <IconButton
+          aria-label="Add entry"
+          color="inherit"
+          // onClick={} // handle edit dialog
+        >
           <AddIcon />
         </IconButton>
 

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
-import { NavDrawer, TopNavBar, RecordListContainer } from './components';
+import {
+  NavDrawer,
+  TopNavBar,
+  RecordListContainer,
+  RecordDialog,
+} from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
 import { participantStore } from '../injectables';
+import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-
   content: {
-    flexGrow: 1,
     padding: theme.spacing(3),
-    marginTop: '64px', //TODO find a better way than using px.
   },
 }));
 
@@ -23,6 +23,17 @@ export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
+    const [recordListClicked, setRecordListClicked] = useState({
+      id: null,
+      lastName: null,
+      firstName: null,
+      address: null,
+      city: null,
+      status: null,
+      birthDate: null,
+    });
     const { participants } = participantStore;
 
     const handleDrawerOpen = () => {
@@ -33,8 +44,16 @@ export const Database = inject('participantStore')(
       setDrawerState(false);
     };
 
+    const handleDialogOpen = () => {
+      setOpenDialog(true);
+    };
+
+    const handleDialogClose = () => {
+      setOpenDialog(false);
+    };
+
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} root`}>
         <TopNavBar
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerState={drawerState}
@@ -43,10 +62,20 @@ export const Database = inject('participantStore')(
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}
         />
-        <div className={classes.content}>
+        {openDialog ? (
+          <RecordDialog
+            openDialog={openDialog}
+            handleDialogClose={handleDialogClose}
+            recordListClicked={recordListClicked}
+          />
+        ) : null}
+        <div className={`${classes.content} content`}>
           <Typography variant="h3">Database UI</Typography>
           <RecordListContainer
             records={participants}
+            handleDialogOpen={handleDialogOpen}
+            handleDialogClose={handleDialogClose}
+            setRecordListClicked={setRecordListClicked}
           ></RecordListContainer>
         </div>
       </div>
