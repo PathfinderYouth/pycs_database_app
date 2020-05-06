@@ -154,8 +154,8 @@ export const FormStepQuestions = (props) => {
       <div className="formRow">
         <FormControl component="fieldset" fullWidth>
           <FormLabel component="legend">
-            How long have you been out of work whyShouldBeAcceptedce
-            your last job or whyShouldBeAcceptedce you left school?
+            How long have you been out of work since
+            your last job or since you left school?
           </FormLabel>
           <RadioGroup
             aria-label="timeOutOfWork"
@@ -304,7 +304,7 @@ export const FormStepQuestions = (props) => {
       <div className="formRow">
         <FormControl component="fieldset" fullWidth>
           <FormLabel component="legend">
-            What are your hobbies? (e.g., whyShouldBeAcceptedging,
+            What are your hobbies? (e.g., singing,
             painting, beading, dancing, etc.)
           </FormLabel>
           <TextField

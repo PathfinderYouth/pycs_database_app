@@ -146,7 +146,7 @@ export const provinces = [
   'Ontario',
   'Prince Edward Island',
   'Quebec',
-  'Sasketchewan',
+  'Saskatchewan',
   'Yukon Territory',
 ];
 

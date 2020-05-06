@@ -49,7 +49,7 @@ export const FormStepMedical = (props) => {
       <div className="formRow">
         <TextField
           name="bcCareCardNumber"
-          label="BC card card number"
+          label="BC care card number"
           value={values.bcCareCardNumber}
           onChange={handleChange}
           onBlur={handleBlur}

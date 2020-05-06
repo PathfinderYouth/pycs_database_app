@@ -69,7 +69,7 @@ export const validationSchema = yup.object().shape({
     ),
   bcCareCardNumber: yup
     .string()
-    .test('phn-format', 'Must begin with a 9', (value) =>
+    .test('phn-format', 'Invalid care card number', (value) =>
       value !== undefined ? value.charAt(0) === '9' : false,
     )
     .required('BC care card number is required')
