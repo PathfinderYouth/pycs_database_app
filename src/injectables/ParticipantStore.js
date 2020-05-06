@@ -14,6 +14,8 @@ class ParticipantStore {
       address: '123 1st St',
       city: 'Surrey',
       id: 3,
+      status: 'Pending',
+      birthDate: 'Jan 1, 1999',
     },
     {
       lastName: 'There',
@@ -21,6 +23,8 @@ class ParticipantStore {
       address: '125 2nd St',
       city: 'Surrey',
       id: 4,
+      status: 'Pending',
+      birthDate: 'Dec 31, 2002',
     },
   ];
 
@@ -31,6 +35,8 @@ class ParticipantStore {
       address: '123 1st St',
       city: 'Surrey',
       id: 1,
+      status: 'Approved',
+      birthDate: 'Feb 29, 2000',
     },
     {
       lastName: 'McBob',
@@ -38,6 +44,8 @@ class ParticipantStore {
       address: '125 2nd St',
       city: 'Surrey',
       id: 2,
+      status: 'Denied',
+      birthDate: 'Jan 1, 1979',
     },
   ];
 
@@ -76,7 +84,7 @@ class ParticipantStore {
   get participants() {
     return this.list === 'new'
       ? this.newParticipants
-      : this.permanentParticipants
+      : this.permanentParticipants;
   }
 
   // This method needs some work & testing with actual data
@@ -97,7 +105,7 @@ decorate(ParticipantStore, {
   setViewingState: action,
   setListView: action,
   setNewParticipants: action,
-  setPermanentParticipants: action
+  setPermanentParticipants: action,
 });
 
 let participantStore = new ParticipantStore();
