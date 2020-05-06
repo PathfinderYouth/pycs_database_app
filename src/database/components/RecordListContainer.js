@@ -30,23 +30,24 @@ export const RecordListContainer = (props) => {
         </TableHead>
         <TableBody>
           {props.records.map((record) => {
+            const { lastName, firstName, address, city, id } = record;
             return (
               <TableRow
                 className="recordTableRow"
-                key={record.id}
-                onClick={handleRecordRowClicked.bind(this, record.id)}
+                key={id}
+                onClick={handleRecordRowClicked.bind(this, id)}
               >
                 <TableCell>
-                  <Typography>{record.lastName}</Typography>
+                  <Typography>{lastName}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography>{record.firstName}</Typography>
+                  <Typography>{firstName}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography>{record.address}</Typography>
+                  <Typography>{address}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography>{record.city}</Typography>
+                  <Typography>{city}</Typography>
                 </TableCell>
               </TableRow>
             );

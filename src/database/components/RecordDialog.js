@@ -32,6 +32,7 @@ export const RecordDialog = (props) => {
 
   const recordId = props.recordListClicked;
   const record = props.records[recordId - 1];
+  const { lastName, firstName, address, city } = record;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -82,7 +83,8 @@ export const RecordDialog = (props) => {
       open={props.openDialog}
       onClose={props.handleDialogClose}
       aria-labelledby="form-dialog-title"
-      fullWidth={true}
+      fullWidth
+      maxWidth={'lg'}
     >
       <DialogTitle id="form-dialog-title">
         <Grid
@@ -91,7 +93,7 @@ export const RecordDialog = (props) => {
           justify="space-between"
           alignItems="center"
         >
-          {record.lastName},{record.firstName}
+          {lastName},{firstName}
           {menuButton}
         </Grid>
       </DialogTitle>
@@ -126,7 +128,7 @@ export const RecordDialog = (props) => {
             gutterBottom: classes.gutterBottom,
           }}
         >
-          Address: {record.address}, {record.city}
+          Address: {address}, {city}
         </Typography>
         <Typography
           gutterBottom
