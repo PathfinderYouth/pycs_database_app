@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
@@ -8,6 +8,7 @@ import { FormStepBasics } from './FormStepBasics';
 import { FormStepMedical } from './FormStepMedical';
 import { FormStepCurrentStatus } from './FormStepCurrentStatus';
 import { FormStepQuestions } from './FormStepQuestions';
+import { requiredFields } from '../fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import './IntakeForm.css';
 
@@ -26,37 +27,65 @@ export const IntakeForm = (props) => {
   const { handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(1);
 
+  // Validates form on initial load, generating errors that must be cleared in order to proceed
+  useEffect(() => {
+    props.form.validateForm();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [currentStep, setCurrentStep] = useState(0);
+
+  /**
+   * Steps backward a step in the form
+   */
   const handleClickBack = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  const handleClickNext = () => {
-    if (currentStep < 6) {
-      setCurrentStep(currentStep + 1);
+  /**
+   * Checks if the current form step has any errors and prevents progression if so. If not, proceeds to the next step.
+   * @param form Formik form object
+   */
+  const handleClickNext = (form) => {
+    const { errors, setFieldTouched } = form;
+    let stepHasErrors = false;
+    requiredFields[currentStep].forEach((field) => {
+      setFieldTouched(field);
+      if (!!errors[field]) {
+        stepHasErrors = true;
+      }
+    });
+    if (!stepHasErrors) {
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1);
+      }
     }
   };
 
-  /* 
-  1 - Start page
-  2 - Basic info
-  3 - Medical info
-  4 - Current status
-  5 - Questions
-  6 - Confirmation page
+  /**
+   * Determines what step to render based on currentStep
+   * 0 - Start page
+   * 1 - Basic info
+   * 2 - Medical info
+   * 3 - Current status
+   * 4 - Questions
+   * 5 - Confirmation page
+  @param form Formik form object
+  @param step int
   */
   const getFormStep = (form, step) => {
     switch (step) {
-      case 2:
+      case 1:
         return <FormStepBasics form={form} />;
-      case 3:
+      case 2:
         return <FormStepMedical form={form} />;
-      case 4:
+      case 3:
         return <FormStepCurrentStatus form={form} />;
-      case 5:
+      case 4:
         return <FormStepQuestions form={form} />;
-      case 6:
+      case 5:
         return <FormStepConfirmation />;
       default:
         return <FormStepStart form={form} />;
@@ -75,29 +104,28 @@ export const IntakeForm = (props) => {
       <div className="formContainer">
         <div className="form">{getFormStep(form, currentStep)}</div>
       </div>
-      {currentStep !== 6 && (
-        <div className="bottomBar">
-          <div className="buttonBack">
-            {currentStep !== 1 && (
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handleClickBack}
-              >
-                Back
-              </Button>
-            )}
-          </div>
-          <div className="buttonNext">
-            {currentStep < 5 && (
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handleClickNext}
-              >
-                Next
-              </Button>
-            )}
+      <div className="bottomBar">
+        <div className="buttonBack">
+          {currentStep !== 0 && (
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleClickBack}
+            >
+              Back
+            </Button>
+          )}
+        </div>
+        <div className="buttonNext">
+          {currentStep < 4 && (
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => handleClickNext(form)}
+            >
+              Next
+            </Button>
+          )}
             {currentStep === 5 && (
               <Button
                 color="primary"

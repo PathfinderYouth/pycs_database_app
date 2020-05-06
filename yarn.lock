@@ -1801,9 +1801,9 @@
   integrity sha512-bnoqK579sAYrQbp73wwglccjJ4sfRdKU7WNEZ5FW4K2U6Kc0/eZ5kvXG0JKsEKFB50zrFmfFt52/cvBbZa7eXg==
 
 "@types/node@^13.7.0":
-  version "13.13.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.4.tgz#1581d6c16e3d4803eb079c87d4ac893ee7501c2c"
-  integrity sha512-x26ur3dSXgv5AwKS0lNfbjpCakGIduWU1DU91Zz58ONRWrIKGunmZBNv4P7N+e27sJkiGDsw/3fT4AtsqQBrBA==
+  version "13.13.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.5.tgz#96ec3b0afafd64a4ccea9107b75bf8489f0e5765"
+  integrity sha512-3ySmiBYJPqgjiHA7oEaIo2Rzz0HrOZ7yrNO5HWyaE5q0lQ3BppDZ3N53Miz8bw2I7gh1/zir2MGVZBvpb1zq9g==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -9120,6 +9120,13 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-number-format@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.4.1.tgz#d5614dd25edfc21ed48b97356213440081437a94"
+  integrity sha512-ZGFMXZ0U7DcmQ3bSZY3FULOA1mfqreT9NIMYZNoa/ouiSgiTQiYA95Uj2KN8ge6BRr+ghA5vraozqWqsHZQw3Q==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-scripts@3.4.1:
   version "3.4.1"

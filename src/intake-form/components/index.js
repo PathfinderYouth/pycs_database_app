@@ -5,5 +5,6 @@ export * from './FormStepMedical';
 export * from './FormStepCurrentStatus';
 export * from './FormStepQuestions';
 export * from './FormCheckBox';
+export * from './NumberMask';
+export * from './validationHelpers';
 export * from './FormStepConfirmation';
-

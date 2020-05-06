@@ -11,7 +11,13 @@ import { FormCheckBox } from './FormCheckBox';
 import './FormSteps.css';
 
 export const FormStepQuestions = (props) => {
-  const { values, handleChange, handleBlur } = props.form;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+  } = props.form;
   return (
     <div className="fieldsContainer">
       <Typography gutterBottom variant="h4">
@@ -148,8 +154,8 @@ export const FormStepQuestions = (props) => {
       <div className="formRow">
         <FormControl component="fieldset" fullWidth>
           <FormLabel component="legend">
-            How long have you been out of work since your last job or
-            since you left school?
+            How long have you been out of work since
+            your last job or since you left school?
           </FormLabel>
           <RadioGroup
             aria-label="timeOutOfWork"
@@ -298,8 +304,8 @@ export const FormStepQuestions = (props) => {
       <div className="formRow">
         <FormControl component="fieldset" fullWidth>
           <FormLabel component="legend">
-            What are your hobbies? (e.g., singing, painting, beading,
-            dancing, etc.)
+            What are your hobbies? (e.g., singing,
+            painting, beading, dancing, etc.)
           </FormLabel>
           <TextField
             name="hobbies"
@@ -571,7 +577,14 @@ export const FormStepQuestions = (props) => {
             value={values.whyApplied}
             onChange={handleChange}
             onBlur={handleBlur}
+            error={!!errors['whyApplied'] && touched['whyApplied']}
+            helperText={
+              !!errors['whyApplied'] &&
+              touched['whyApplied'] &&
+              errors['whyApplied']
+            }
             variant="outlined"
+            required
             fullWidth
             multiline
           />
@@ -587,7 +600,17 @@ export const FormStepQuestions = (props) => {
             value={values.whyShouldBeAccepted}
             onChange={handleChange}
             onBlur={handleBlur}
+            error={
+              !!errors['whyShouldBeAccepted'] &&
+              touched['whyShouldBeAccepted']
+            }
+            helperText={
+              !!errors['whyShouldBeAccepted'] &&
+              touched['whyShouldBeAccepted'] &&
+              errors['whyShouldBeAccepted']
+            }
             variant="outlined"
+            required
             fullWidth
             multiline
           />
