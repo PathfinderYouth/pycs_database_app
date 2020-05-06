@@ -142,6 +142,7 @@ export default class UserListManager {
       next: querySnap => {
         querySnap.docChanges().forEach(docChg => {
           let doc = docChg.doc.data();
+          doc = docChg.doc.id;
           onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
         });
       },
