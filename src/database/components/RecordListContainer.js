@@ -12,10 +12,12 @@ import { SortingTableHead } from './SortingTableHead';
 import { stableSort, getComparator } from './sortingHelpers';
 
 const headers = [
-  { id: 'lastName', disablePadding: true, label: 'Last Name' },
-  { id: 'firstName', disablePadding: true, label: 'First Name' },
-  { id: 'address', disablePadding: true, label: 'Address' },
-  { id: 'city', disablePadding: true, label: 'City' },
+  { id: 'status', label: 'Status' },
+  { id: 'lastName', label: 'Last Name' },
+  { id: 'firstName', label: 'First Name' },
+  { id: 'birthDate', label: 'Date of Birth' },
+  { id: 'address', label: 'Address' },
+  { id: 'city', label: 'City' },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2),
-  }
+  },
 }));
 
 export const RecordListContainer = (props) => {
@@ -70,9 +72,20 @@ export const RecordListContainer = (props) => {
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage,
+                )
                 .map((record, index) => {
-                  const { id, lastName, firstName, address, city } = record;
+                  const {
+                    id,
+                    lastName,
+                    firstName,
+                    address,
+                    city,
+                    status,
+                    birthDate,
+                  } = record;
                   return (
                     <TableRow
                       hover
@@ -81,10 +94,16 @@ export const RecordListContainer = (props) => {
                       key={id}
                     >
                       <TableCell>
+                        <Typography>{status}</Typography>
+                      </TableCell>
+                      <TableCell>
                         <Typography>{lastName}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography>{firstName}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{birthDate}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography>{address}</Typography>
