@@ -1,13 +1,13 @@
-import { action, computed, observable } from 'mobx';
+import { observable, action, computed, decorate } from 'mobx';
 
 class ParticipantStore {
   // This could be where we set filters like all, approved, denied, etc
-  currentViewingState = observable.box(null);
+  currentViewingState = null;
 
   // switches between the new list and the permanent list
-  list = observable.box('new');
+  list = 'new';
 
-  newParticipants = observable([
+  newParticipants = [
     {
       lastName: 'Friend',
       firstName: 'Hello',
@@ -22,9 +22,9 @@ class ParticipantStore {
       city: 'Surrey',
       id: 4,
     },
-  ]);
+  ];
 
-  permanentParticipants = observable([
+  permanentParticipants = [
     {
       lastName: 'McTest',
       firstName: 'Test',
@@ -39,10 +39,10 @@ class ParticipantStore {
       city: 'Surrey',
       id: 2,
     },
-  ]);
+  ];
 
   constructor() {
-    this.fetchParticipants()
+    this.fetchParticipants();
   }
 
   fetchParticipants = () => {
@@ -50,43 +50,55 @@ class ParticipantStore {
 
     // this.setNewParticipants()
     // this.setPermanentParticipants()
-    console.log('fetching participants...')
-  }
+    console.log('fetching participants...');
+  };
 
-  setViewingState = action((state) => {
+  setViewingState = (state) => {
     this.currentViewingState = state;
-  });
+  };
 
-  setNewParticipants = action((participants) => {
+  setListView = (list) => {
+    this.list = list;
+  };
+
+  setNewParticipants = (participants) => {
     this.newParticipants = participants;
-  });
+  };
 
-  setPermanentParticipants = action((participants) => {
+  setPermanentParticipants = (participants) => {
     this.permanentParticipants = participants;
-  });
+  };
 
-  sortParticipantsByValue = action((value) => {
+  sortParticipantsByValue = (value) => {
     // sorting functionality tbd
-  });
+  };
 
-  getCurrentViewingState = () => this.currentViewingState;
-  
-  getListMode = () => this.list;
-
-  getParticipants = () => {
-    if (this.list.get() === 'new') {
-      return this.newParticipants
-    } else {
-      return this.permanentParticipants
-    }
+  get participants() {
+    return this.list === 'new'
+      ? this.newParticipants
+      : this.permanentParticipants
   }
 
-  getParticipantsByState = computed(() =>
-    // returns a filtered list of participants by current viewing state (approved, declined, etc)
-    this.getParticipants().filter(
-      (participant) => participant.state === this.currentViewingState.get(),
-    ));
+  // This method needs some work & testing with actual data
+  // getParticipantsByState = () =>
+  //   // returns a filtered list of participants by current viewing state (approved, declined, etc)
+  //   this.participants.filter(
+  //     (participant) =>
+  //       participant.state === this.currentViewingState.get(),
+  //   );
 }
+
+decorate(ParticipantStore, {
+  currentViewingState: observable,
+  list: observable,
+  newParticipants: observable,
+  permanentParticipants: observable,
+  participants: computed,
+  setViewingState: action,
+  setListView: action,
+  setNewParticipants: action,
+  setPermanentParticipants: action
+});
 
 let participantStore = new ParticipantStore();
 export default participantStore;

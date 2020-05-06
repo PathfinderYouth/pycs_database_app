@@ -4,10 +4,7 @@ import { NavDrawer, TopNavBar } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordListContainer } from './components';
 import { observer, inject } from 'mobx-react';
-
-// TODO Store this value only in Database.js, currently also declared in TopNavBar.js and NavDrawer.js
-// Tried passing this value as props to both components but didn't work, not sure why.
-const drawerWidth = 240;
+import { participantStore } from '../injectables';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,29 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// for testing table view
-const records = [
-  {
-    lastName: 'McTest',
-    firstName: 'Test',
-    address: '123 1st St',
-    city: 'Surrey',
-    id: 1,
-  },
-  {
-    lastName: 'McBob',
-    firstName: 'Bob',
-    address: '125 2nd St',
-    city: 'Surrey',
-    id: 2,
-  },
-];
-
 // container that holds all database UI objects
 export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
+    const { participants } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -66,7 +46,7 @@ export const Database = inject('participantStore')(
         <div className={classes.content}>
           <Typography variant="h3">Database UI</Typography>
           <RecordListContainer
-            records={records}
+            records={participants}
           ></RecordListContainer>
         </div>
       </div>
