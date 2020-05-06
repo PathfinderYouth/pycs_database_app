@@ -1,5 +1,5 @@
 import React from 'react';
-import { IntakeForm } from './components';
+import { IntakeForm, validationSchema } from './components';
 import { Formik } from 'formik';
 import { intakeFormInitialValues } from './fields';
 
@@ -8,6 +8,7 @@ export const IntakeFormPage = () => (
   <>
     <Formik
       initialValues={intakeFormInitialValues}
+      validationSchema={validationSchema}
       // placeholder onSubmit function
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {

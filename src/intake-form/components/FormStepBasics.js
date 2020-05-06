@@ -7,30 +7,15 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { provinces } from '../fields';
+import { calculateAge } from './validationHelpers';
+import { NumberMask } from './NumberMask';
 import './FormSteps.css';
-
 
 export const FormStepBasics = (props) => {
   const { form } = props;
-  const { values, handleChange, handleBlur } = form;
-
-  const calculateAge = () => {
-    const today = new Date();
-    const { birthDate } = values;
-    if (birthDate !== '') {
-      const birthday = new Date(birthDate);
-      let age = today.getFullYear() - birthday.getFullYear();
-      if (today.getMonth() < birthday.getMonth()) {
-        age--;
-      } else if (today.getMonth() === birthday.getMonth()) {
-        if (today.getDate() < birthday.getDate() + 1) {
-          age--;
-        }
-      }
-      return `${age} years old`;
-    }
-  };
+  const { values, errors, touched, handleChange, handleBlur } = form;
 
   const emergencyContactFields = (number) => {
     const fieldPath = `eContact${number}`;
@@ -103,7 +88,14 @@ export const FormStepBasics = (props) => {
         * indicates a required field
       </Typography>
       <div className="formRow">
-        <FormControl component="fieldset">
+        <FormControl
+          component="fieldset"
+          error={
+            !!errors['programAppliedFor'] &&
+            touched['programAppliedFor']
+          }
+          required
+        >
           <FormLabel component="legend">
             Program applying for:
           </FormLabel>
@@ -126,6 +118,12 @@ export const FormStepBasics = (props) => {
               label="Bean Around Books - Employment Experience"
             />
           </RadioGroup>
+          {!!errors['programAppliedFor'] &&
+            touched['programAppliedFor'] && (
+              <FormHelperText>
+                {errors['programAppliedFor']}
+              </FormHelperText>
+            )}
         </FormControl>
       </div>
       <Typography color="textSecondary">Address</Typography>
@@ -187,20 +185,42 @@ export const FormStepBasics = (props) => {
         <TextField
           name="phoneHome"
           label="Home phone"
-          type="number"
           value={values.phoneHome}
           onChange={handleChange}
           onBlur={handleBlur}
+          error={
+            (!!errors['contactMethod'] || !!errors['phoneHome']) &&
+            touched['phoneHome']
+          }
+          helperText={
+            (!!errors['contactMethod'] || errors['phoneHome']) &&
+            touched['phoneHome'] &&
+            (errors['contactMethod'] || errors['phoneHome'])
+          }
           variant="outlined"
+          InputProps={{
+            inputComponent: NumberMask,
+          }}
         />
         <TextField
           name="phoneCell"
           label="Cell phone"
-          type="number"
           value={values.phoneCell}
           onChange={handleChange}
           onBlur={handleBlur}
+          error={
+            (!!errors['contactMethod'] || !!errors['phoneCell']) &&
+            touched['phoneCell']
+          }
+          helperText={
+            (!!errors['contactMethod'] || errors['phoneCell']) &&
+            touched['phoneCell'] &&
+            (errors['contactMethod'] || errors['phoneCell'])
+          }
           variant="outlined"
+          InputProps={{
+            inputComponent: NumberMask,
+          }}
         />
         <FormControl component="fieldset">
           <FormLabel component="legend">
@@ -225,6 +245,23 @@ export const FormStepBasics = (props) => {
             />
           </RadioGroup>
         </FormControl>
+        <TextField
+          name="email"
+          label="Email address"
+          value={values.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={
+            (!!errors['contactMethod'] || errors['email']) &&
+            touched['email']
+          }
+          helperText={
+            (!!errors['contactMethod'] || errors['email']) &&
+            touched['email'] &&
+            (errors['contactMethod'] || errors['email'])
+          }
+          variant="outlined"
+        />
       </div>
       <Typography color="textSecondary">Birthdate</Typography>
       <div className="formRow">
@@ -236,12 +273,22 @@ export const FormStepBasics = (props) => {
           onChange={handleChange}
           onBlur={handleBlur}
           variant="outlined"
+          error={!!errors['birthDate'] && touched['birthDate']}
+          helperText={
+            !!errors['birthDate'] &&
+            touched['birthDate'] &&
+            errors['birthDate']
+          }
           required
           InputLabelProps={{
             shrink: true,
           }}
         />
-        <Typography>{calculateAge()}</Typography>
+        {calculateAge(values.birthDate) >= 0 && (
+          <Typography>{`${calculateAge(
+            values.birthDate,
+          )} years old`}</Typography>
+        )}
       </div>
       <Typography color="textSecondary">
         Emergency contacts

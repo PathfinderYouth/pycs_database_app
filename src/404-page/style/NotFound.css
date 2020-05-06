@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  background: #F5F5F5;
+  height: 100vh;
+  justify-content: center;
+}
+
+.content {
+  flex-basis: content;
+  padding: 1em;
+  margin-top: 5em;
+  margin-bottom: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logo {
+  margin: 15px;
+  max-height: 10em;
+}
+
+.errorText {
+  margin: 1em;
+}
