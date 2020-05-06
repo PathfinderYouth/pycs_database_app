@@ -6,14 +6,6 @@ import './FormSteps.css';
 
 export const FormStepStart = (props) => {
   const { values, errors, touched, handleChange, handleBlur } = props.form;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  // console.log(errors)
-  // console.log(touched)
->>>>>>> 6bfc3a5... Setting up initial validation schema
-=======
->>>>>>> f522405... Adding more validation tests
   
   return (
     <div className="startPageContainer">
