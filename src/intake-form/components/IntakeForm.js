@@ -25,15 +25,13 @@ export const IntakeForm = (props) => {
   const classes = useStyles();
   const { form } = props;
   const { handleSubmit, isSubmitting } = form;
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
 
   // Validates form on initial load, generating errors that must be cleared in order to proceed
   useEffect(() => {
     props.form.validateForm();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [currentStep, setCurrentStep] = useState(0);
 
   /**
    * Steps backward a step in the form
@@ -58,7 +56,7 @@ export const IntakeForm = (props) => {
       }
     });
     if (!stepHasErrors) {
-      if (currentStep < 4) {
+      if (currentStep < 5) {
         setCurrentStep(currentStep + 1);
       }
     }
@@ -126,7 +124,7 @@ export const IntakeForm = (props) => {
               Next
             </Button>
           )}
-            {currentStep === 5 && (
+            {currentStep === 4 && (
               <Button
                 color="primary"
                 variant="contained"
@@ -134,7 +132,7 @@ export const IntakeForm = (props) => {
                   handleSubmit(form.values, form);
                   // TODO: only proceed to next step if pushing to database was successful,
                   // otherwise, show an error message somehow
-                  handleClickNext();
+                  handleClickNext(form);
                 }}
                 disabled={isSubmitting}
               >
@@ -143,7 +141,6 @@ export const IntakeForm = (props) => {
             )}
           </div>
         </div>
-      )}
     </div>
   );
 };
