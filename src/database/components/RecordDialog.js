@@ -30,9 +30,14 @@ const sampleData = {
 export const RecordDialog = (props) => {
   const classes = useStyles();
 
-  const recordId = props.recordListClicked;
-  const record = props.records[recordId - 1];
-  const { lastName, firstName, address, city } = record;
+  const {
+    lastName,
+    firstName,
+    address,
+    city,
+    status,
+    birthDate,
+  } = props.recordListClicked;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -104,6 +109,14 @@ export const RecordDialog = (props) => {
             gutterBottom: classes.gutterBottom,
           }}
         >
+          Status: {status}
+        </Typography>
+        <Typography
+          gutterBottom
+          classes={{
+            gutterBottom: classes.gutterBottom,
+          }}
+        >
           Date joined: {sampleData.dateJoined}
         </Typography>
         <Typography
@@ -120,7 +133,7 @@ export const RecordDialog = (props) => {
             gutterBottom: classes.gutterBottom,
           }}
         >
-          Birthday: {sampleData.birthday}
+          Birthday: {birthDate}
         </Typography>
         <Typography
           gutterBottom

@@ -24,7 +24,7 @@ export const Database = inject('participantStore')(
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
-    // Get record id clicked from RecordListContainer.js and passed to RecordDialog.js
+    // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
     const [recordListClicked, setRecordListClicked] = useState({
       id: null,
       lastName: null,
