@@ -1,20 +1,20 @@
 import React from 'react';
 import Logo from '../../assets/Pathfinder-Logo.jpg';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { FormFieldBuilder } from './FormFieldBuilder';
 import './FormSteps.css';
 
-export const FormStepStart = (props) => {
-  const { values, errors, touched, handleChange, handleBlur } = props.form;
-  
+export const FormStepStart = ({ form, step }) => {
+  const { fields } = step
   return (
     <div className="startPageContainer">
       <div className="startPageContents">
         <img className="logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
-        <Typography gutterBottom variant="h4">
+        <Typography gutterBottom align="center" variant="h4">
           Self-Enrollment System
         </Typography>
-        <Typography gutterBottom color="textSecondary">
+        <Typography gutterBottom align="center" color="textSecondary">
           To begin, please enter your name:
         </Typography>
         <Typography
@@ -24,30 +24,9 @@ export const FormStepStart = (props) => {
         >
           * indicates a required field
         </Typography>
-        <div>
-          <TextField
-            name="nameGiven"
-            label="Given name(s)"
-            value={values.nameGiven}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            variant="outlined"
-            error={!!errors['nameGiven'] && touched['nameGiven']}
-            helperText={(!!errors['nameGiven'] && touched['nameGiven']) && errors['nameGiven']}
-            required
-          />
-          <TextField
-            name="nameLast"
-            label="Last name"
-            value={values.nameLast}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            variant="outlined"
-            error={!!errors['nameLast'] && touched['nameLast']}
-            helperText={(!!errors['nameLast'] && touched['nameLast']) && errors['nameLast']}
-            required
-          />
-        </div>
+        <Grid container spacing={2}>
+          {fields.map((field) => <FormFieldBuilder key={field.name} form={form} field={field} />)}
+        </Grid>
         <div className="formTextContainer">
           <Typography
             gutterBottom
