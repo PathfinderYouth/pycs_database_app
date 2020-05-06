@@ -11,12 +11,12 @@ import './App.css';
 const App = () => (
   <Provider participantStore={participantStore}>
     <Router>
-      <IntakeFormPage path='/'/>
-      <SignIn path='sign-in'/>
-      <Database path='database'/>
+      <IntakeFormPage path="/" />
+      <SignIn path="sign-in" />
+      <Database path="database" />
       <NotFound default />
     </Router>
   </Provider>
-)
+);
 
 export default App;
