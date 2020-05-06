@@ -86,7 +86,6 @@ export const RecordListContainer = (props) => {
                     status,
                     birthDate,
                   } = record;
-                  console.log(status);
                   return (
                     <TableRow
                       hover
