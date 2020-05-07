@@ -17,7 +17,7 @@
   padding: 1em;
   display: flex;
   justify-content: space-between;
-  vertical-align: middle;
+  align-items: center;
 }
 
 .form {
