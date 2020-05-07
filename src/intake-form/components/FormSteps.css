@@ -10,8 +10,12 @@
   margin-bottom: 1em;
 }
 
-.radioGroup {
-  margin: 1em;
+.form-radioGroup {
+  padding: 1em;
+}
+
+.form-elect {
+  padding-right: 1em;
 }
 
 .logo {
