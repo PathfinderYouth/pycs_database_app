@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import App from "./App";
+import AccountManager from "./admin/AccountManager";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<AccountManager />, document.getElementById("root"));
