@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
@@ -23,12 +24,13 @@ export const IntakeForm = (props) => {
   const { form } = props;
   const { handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(0);
+  const recaptchaRef = React.createRef();
   const lastStepNumber = formSteps.length;
 
   // Validates form on initial load, generating errors that must be cleared in order to proceed
   useEffect(() => {
     props.form.validateForm();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -41,12 +43,27 @@ export const IntakeForm = (props) => {
   };
 
   /**
+   * Called when a user is verified via ReCaptcha
+   */
+  const onCaptchaChanged = () => {
+    toNextPage();
+  };
+
+  /**
+   * Goes to next step in form
+   */
+  const toNextPage = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  /**
    * Checks if the current form step has any errors and prevents progression if so. If not, proceeds to the next step.
    * @param form Formik form object
    */
   const handleClickNext = (form) => {
     const { errors, setFieldTouched } = form;
     let stepHasErrors = false;
+
     requiredFields[currentStep].forEach((field) => {
       setFieldTouched(field);
       if (!!errors[field]) {
@@ -55,7 +72,11 @@ export const IntakeForm = (props) => {
     });
     if (!stepHasErrors) {
       if (currentStep < lastStepNumber) {
-        setCurrentStep(currentStep + 1);
+        if (currentStep === lastStepNumber - 1) {
+          recaptchaRef.current.execute()
+        } else {
+          toNextPage();
+        }
       }
     }
   };
@@ -73,6 +94,12 @@ export const IntakeForm = (props) => {
 
   return (
     <div className={`${classes.root} container`}>
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        sitekey="6LfukvMUAAAAAGkE5uDvYCqdi-DEKey3J8AiZl8v"
+        size="invisible"
+        onChange={onCaptchaChanged}
+      />
       <div className="topLeftLink">
         <Link href="https://pathfinderyouthsociety.org/">
           <Typography>
@@ -94,6 +121,23 @@ export const IntakeForm = (props) => {
               Back
             </Button>
           )}
+        </div>
+        <div className="captcha">
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            className="captcha"
+          >
+            This site is protected by reCAPTCHA and the Google{' '}
+            <a href="https://policies.google.com/privacy">
+              Privacy Policy
+            </a>{' '}
+            and{' '}
+            <a href="https://policies.google.com/terms">
+              Terms of Service
+            </a>{' '}
+            apply.
+          </Typography>
         </div>
         <div className="buttonNext">
           {currentStep < lastStepNumber - 1 && (
