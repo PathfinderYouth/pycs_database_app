@@ -5,12 +5,9 @@ import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormStepStart } from './FormStepStart';
-import { FormStepBasics } from './FormStepBasics';
-import { FormStepMedical } from './FormStepMedical';
-import { FormStepCurrentStatus } from './FormStepCurrentStatus';
-import { FormStepQuestions } from './FormStepQuestions';
-import { requiredFields } from '../fields';
+import { formSteps, requiredFields } from './fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
+import { FormStep } from './FormStep';
 import './IntakeForm.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +25,7 @@ export const IntakeForm = (props) => {
   const { handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(0);
   const recaptchaRef = React.createRef();
+  const lastStepNumber = formSteps.length;
 
   // Validates form on initial load, generating errors that must be cleared in order to proceed
   useEffect(() => {
@@ -73,9 +71,9 @@ export const IntakeForm = (props) => {
       }
     });
     if (!stepHasErrors) {
-      if (currentStep < 5) {
-        if (currentStep === 4) {
-          recaptchaRef.current.execute();
+      if (currentStep < lastStepNumber) {
+        if (currentStep === lastStepNumber - 1) {
+          recaptchaRef.current.execute()
         } else {
           toNextPage();
         }
@@ -83,31 +81,14 @@ export const IntakeForm = (props) => {
     }
   };
 
-  /**
-   * Determines what step to render based on currentStep
-   * 0 - Start page
-   * 1 - Basic info
-   * 2 - Medical info
-   * 3 - Current status
-   * 4 - Questions
-   * 5 - Confirmation page
-  @param form Formik form object
-  @param step int
-  */
   const getFormStep = (form, step) => {
-    switch (step) {
-      case 1:
-        return <FormStepBasics form={form} />;
-      case 2:
-        return <FormStepMedical form={form} />;
-      case 3:
-        return <FormStepCurrentStatus form={form} />;
-      case 4:
-        return <FormStepQuestions form={form} />;
-      case 5:
-        return <FormStepConfirmation />;
-      default:
-        return <FormStepStart form={form} />;
+    const currentStep = formSteps[step];
+    if (step > 0 && step < lastStepNumber) {
+      return <FormStep form={form} step={currentStep}/>;
+    } else if (step >= lastStepNumber) {
+      return <FormStepConfirmation />
+    } else {
+      return <FormStepStart form={form} step={currentStep}/>
     }
   };
 
@@ -159,7 +140,7 @@ export const IntakeForm = (props) => {
           </Typography>
         </div>
         <div className="buttonNext">
-          {currentStep < 4 && (
+          {currentStep < lastStepNumber - 1 && (
             <Button
               color="primary"
               variant="contained"
@@ -168,21 +149,22 @@ export const IntakeForm = (props) => {
               Next
             </Button>
           )}
-          {currentStep === 4 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                handleSubmit(form.values, form);
-                // TODO: only proceed to next step if pushing to database was successful,
-                // otherwise, show an error message somehow
-                handleClickNext(form);
-              }}
-              disabled={isSubmitting}
-            >
-              Submit
-            </Button>
-          )}
+            {currentStep === lastStepNumber - 1 && (
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  handleSubmit(form.values, form);
+                  // TODO: only proceed to next step if pushing to database was successful,
+                  // otherwise, show an error message somehow
+                  handleClickNext(form);
+                }}
+                disabled={isSubmitting}
+              >
+                Submit
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
