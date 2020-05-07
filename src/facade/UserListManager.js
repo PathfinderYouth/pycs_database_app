@@ -27,18 +27,16 @@ export default class UserListManager {
 
   /**
    * Add a new document into user collection.
-   * @param {email: string}
-   *  Email of the new user
-   * @param {role: string}
-   *  Role of the new user
+   * @param {user: Object}
+   *  Object containing user info
    * @param {onSuccess?: (docId: string) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  addUser(email, role, onSuccess, onError) {
+  addUser(user, onSuccess, onError) {
     this.userRef
-      .add({ email: email, role: role })
+      .add(user)
       .then(docRef => {
         if (onSuccess) {
           onSuccess(docRef.id);
@@ -66,7 +64,7 @@ export default class UserListManager {
           onNext(doc);
           return;
         }
-
+        
         if (onError) {
           onError(new Error('Document does not exist'));
         }
@@ -91,6 +89,33 @@ export default class UserListManager {
       .doc(docId)
       .update(data)
       .then(onSuccess)
+      .catch(onError);
+  }
+  
+  /**
+   * Update a document in user collection when user do inital sign-in.
+   * @param {email: string}
+   *  Email of the user who does inital sign-in
+   * @param {uid: string}
+   *  Firebase uid of the user who does inital sign-in
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   */
+  updateFirstTimeUser(email, uid, onSuccess, onError) {
+    this.userRef.where("email", "==", email)
+      .get()
+      .then(querySnap => {
+        if (querySnap.docs.length === 0) {
+          throw new Error("Email does not exist")
+        }
+        
+        querySnap.docs[0].ref
+          .update({ uid: uid })
+          .then(onSuccess)
+          .catch(onError);
+      })
       .catch(onError);
   }
 
