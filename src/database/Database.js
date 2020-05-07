@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from '@reach/router';
 import {
@@ -34,7 +34,7 @@ export const Database = inject('participantStore')(
       status: null,
       birthDate: null,
     });
-    const { participants } = participantStore;
+    const { participants, setCollection } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -51,6 +51,11 @@ export const Database = inject('participantStore')(
     const handleDialogClose = () => {
       setOpenDialog(false);
     };
+    
+    useEffect(() => {
+      // Do this after the component is initialized
+      setCollection('new');
+    }, []);
 
     return (
       <div className={`${classes.root} root`}>
@@ -70,6 +75,19 @@ export const Database = inject('participantStore')(
           />
         ) : null}
         <div className={`${classes.content} content`}>
+        
+          /* For testing purposes */
+          <button onClick={() => {
+            setCollection('new');
+          }}>
+            New Collection
+          </button>
+          <button onClick={() => {
+            setCollection('permanent');
+          }}>
+            Permanent Collection
+          </button>
+          
           <Typography variant="h3">Database UI</Typography>
           <RecordListContainer
             records={participants}

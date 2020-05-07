@@ -1,111 +1,98 @@
-import { observable, action, computed, decorate } from 'mobx';
+import { observable, action, computed, autorun, decorate } from 'mobx';
+import service from "../facade/service"
+
+const db = service.getDatabase();
 
 class ParticipantStore {
-  // This could be where we set filters like all, approved, denied, etc
-  currentViewingState = null;
+  _filter = {};
+  
+  _sorter = {};
+  
+  _participants = [];
+  
+  _collection = null;
+  
+  _unsubscribe = null;
+  
+  _onNext = (doc, newIndex, oldIndex, type) => {
+    let newList = this._participants.slice();
+    
+    switch (type) {
+      case 'added':
+        newList.splice(newIndex, 0, doc);
+        this._participants = newList;
+        break;
+        
+      case 'modified':
+        // TODO: update record in list
+        break;
+        
+      case 'removed':
+        // TODO: remove record from list
+        break;
 
-  // switches between the new list and the permanent list
-  list = 'new';
-
-  newParticipants = [
-    {
-      lastName: 'Friend',
-      firstName: 'Hello',
-      address: '123 1st St',
-      city: 'Surrey',
-      id: 3,
-      status: 'Pending',
-      birthDate: 'Jan 1, 1999',
-    },
-    {
-      lastName: 'There',
-      firstName: 'Hi',
-      address: '125 2nd St',
-      city: 'Surrey',
-      id: 4,
-      status: 'Pending',
-      birthDate: 'Dec 31, 2002',
-    },
-  ];
-
-  permanentParticipants = [
-    {
-      lastName: 'McTest',
-      firstName: 'Test',
-      address: '123 1st St',
-      city: 'Surrey',
-      id: 1,
-      status: 'Approved',
-      birthDate: 'Feb 29, 2000',
-    },
-    {
-      lastName: 'McBob',
-      firstName: 'Bob',
-      address: '125 2nd St',
-      city: 'Surrey',
-      id: 2,
-      status: 'Denied',
-      birthDate: 'Jan 1, 1979',
-    },
-  ];
-
-  constructor() {
-    this.fetchParticipants();
+      default:
+        // Do nothing
+    }
   }
-
-  fetchParticipants = () => {
-    // call DatabaseManager.getNewParticipants or whatever method gets the participants from the firestore
-
-    // this.setNewParticipants()
-    // this.setPermanentParticipants()
-    console.log('fetching participants...');
-  };
-
-  setViewingState = (state) => {
-    this.currentViewingState = state;
-  };
-
-  setListView = (list) => {
-    this.list = list;
-  };
-
-  setNewParticipants = (participants) => {
-    this.newParticipants = participants;
-  };
-
-  setPermanentParticipants = (participants) => {
-    this.permanentParticipants = participants;
-  };
-
-  sortParticipantsByValue = (value) => {
-    // sorting functionality tbd
-  };
-
+  
+  _updateList = autorun(() => {
+    // Run this whenever type of collection, filter, or sorter changes
+    
+    // Unsubscribe to previous real-time listener and reset list to empty
+    if (this._unsubscribe) {
+      this._participants = [];
+      this._unsubscribe();
+    }
+    
+    switch (this._collection) {
+      case 'new':
+        this._unsubscribe = db.getNewList(
+          this._filter,
+          this._sorter,
+          this._onNext
+        );
+        break;
+        
+      case 'permanent':
+        this._unsubscribe = db.getPermanentList(
+          this._filter,
+          this._sorter,
+          this._onNext
+        );
+        break;
+        
+      default:
+        // Do nothing
+    }
+  })
+  
+  setFilter = filter => {
+    this._filter = filter;
+  }
+  
+  setSorter = sorter => {
+    this._sorter = sorter;
+  }
+  
+  setCollection = collection => {
+    this._collection = collection;
+  }
+  
   get participants() {
-    return this.list === 'new'
-      ? this.newParticipants
-      : this.permanentParticipants;
+    return this._participants;
   }
-
-  // This method needs some work & testing with actual data
-  // getParticipantsByState = () =>
-  //   // returns a filtered list of participants by current viewing state (approved, declined, etc)
-  //   this.participants.filter(
-  //     (participant) =>
-  //       participant.state === this.currentViewingState.get(),
-  //   );
 }
 
 decorate(ParticipantStore, {
-  currentViewingState: observable,
-  list: observable,
-  newParticipants: observable,
-  permanentParticipants: observable,
+  _filter: observable,
+  _sorter: observable,
+  _participants: observable,
+  _collection: observable,
+  setFilter: action,
+  setSorter: action,
+  setCollection: action,
   participants: computed,
-  setViewingState: action,
-  setListView: action,
-  setNewParticipants: action,
-  setPermanentParticipants: action,
 });
 
 let participantStore = new ParticipantStore();
