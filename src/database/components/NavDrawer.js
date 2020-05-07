@@ -104,10 +104,6 @@ export const NavDrawer = (props) => {
           </Badge>
         </ListItem>
         <Divider />
-        <div className={classes.container}>
-          <RecordSearchBar />
-        </div>
-        <Divider />
         <ListItem button key="participants" onClick={handleClick}>
           <ListItemText primary="All Participants" />
           <div className="expandButton" onClick={expandClick}>
@@ -133,6 +129,10 @@ export const NavDrawer = (props) => {
           </List>
         </Collapse>
       </List>
+        <Divider />
+        <div className={classes.container}>
+          <RecordSearchBar />
+        </div>
     </div>
   );
 
