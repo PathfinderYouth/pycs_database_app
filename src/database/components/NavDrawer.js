@@ -94,10 +94,6 @@ export const NavDrawer = (props) => {
         ) : null}
       </div>
       <Divider />
-      <div className={classes.container}>
-        <RecordSearchBar />
-      </div>
-      <Divider />
       <List>
         <ListItem button key="New Applications" onClick={handleClick}>
           <Badge badgeContent={numNew} color="secondary">
@@ -107,6 +103,10 @@ export const NavDrawer = (props) => {
             />
           </Badge>
         </ListItem>
+        <Divider />
+        <div className={classes.container}>
+          <RecordSearchBar />
+        </div>
         <Divider />
         <ListItem button key="participants" onClick={handleClick}>
           <ListItemText primary="All Participants" />
