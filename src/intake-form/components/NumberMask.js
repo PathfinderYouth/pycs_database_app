@@ -4,7 +4,7 @@ import NumberFormat from 'react-number-format';
 const masks = {
   sin: "### ### ###",
   bcCareCardNumber: "#### ### ###",
-  phone: "(###) ###-####"
+  phone: "(###) ###-####",
 }
 
 export const NumberMask = (props) => {
@@ -14,7 +14,7 @@ export const NumberMask = (props) => {
       {...other}
       name={name}
       getInputRef={inputRef}
-      format={name === 'phoneHome' || name === 'phoneCell' ? masks.phone : masks[name]}
+      format={name.toLowerCase().includes('phone') ? masks.phone : masks[name]}
       onValueChange={(values) => {
         onChange({
           target: {
