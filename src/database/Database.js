@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { Link } from '@reach/router';
 import {
   NavDrawer,
   TopNavBar,
@@ -61,6 +60,7 @@ export const Database = inject('participantStore')(
         <NavDrawer
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}
+          numNew={4} //TODO get length of new participants list
         />
         {openDialog ? (
           <RecordDialog
