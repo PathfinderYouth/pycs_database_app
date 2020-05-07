@@ -6,6 +6,7 @@ import { SignIn } from './sign-in';
 import { Provider } from 'mobx-react';
 import { participantStore } from './injectables';
 import { NotFound } from './404-page';
+import { Record } from './record'
 import './App.css';
 
 const App = () => (
