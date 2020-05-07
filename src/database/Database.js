@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import {
   NavDrawer,
+  RecordViewDrawer,
   TopNavBar,
   RecordListContainer,
   RecordDialog,
@@ -22,18 +23,10 @@ export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
     // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
-    const [recordListClicked, setRecordListClicked] = useState({
-      id: null,
-      lastName: null,
-      firstName: null,
-      address: null,
-      city: null,
-      status: null,
-      birthDate: null,
-    });
     const { participants, setCollection } = participantStore;
+    const [recordListClicked, setRecordListClicked] = useState(null);
+    const [openRecord, setOpenRecord] = useState(false);
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -43,12 +36,12 @@ export const Database = inject('participantStore')(
       setDrawerState(false);
     };
 
-    const handleDialogOpen = () => {
-      setOpenDialog(true);
+    const handleRecordOpen = () => {
+      setOpenRecord(true);
     };
 
-    const handleDialogClose = () => {
-      setOpenDialog(false);
+    const handleRecordClose = () => {
+      setOpenRecord(false);
     };
     
     useEffect(() => {
@@ -62,25 +55,32 @@ export const Database = inject('participantStore')(
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerState={drawerState}
         />
-        <NavDrawer
-          handleDrawerClose={handleDrawerClose}
-          handleDrawerState={drawerState}
-        />
-        {openDialog ? (
-          <RecordDialog
-            openDialog={openDialog}
-            handleDialogClose={handleDialogClose}
-            recordListClicked={recordListClicked}
+        {openRecord ? (
+          <RecordViewDrawer
+            handleDrawerClose={handleDrawerClose}
+            handleDrawerState={drawerState}
           />
-        ) : null}
+        ) : (
+          <NavDrawer
+            handleDrawerClose={handleDrawerClose}
+            handleDrawerState={drawerState}
+          />
+        )}
         <div className={`${classes.content} content`}>
-          <Typography variant="h3">Database UI</Typography>
-          <RecordListContainer
-            records={participants}
-            handleDialogOpen={handleDialogOpen}
-            handleDialogClose={handleDialogClose}
-            setRecordListClicked={setRecordListClicked}
-          ></RecordListContainer>
+          {openRecord ? (
+            <div>
+              <Typography variant="h1" onClick={handleRecordClose}>Back!</Typography>
+            </div>
+          ) : (
+            <>
+              <RecordListContainer
+                records={participants}
+                handleRecordOpen={handleRecordOpen}
+                handleRecordClose={handleRecordClose}
+                setRecordListClicked={setRecordListClicked}
+              />
+            </>
+          )}
         </div>
       </div>
     );

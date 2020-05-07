@@ -23,7 +23,6 @@ const headers = [
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(2),
   },
   paper: {
     width: '100%',
@@ -41,7 +40,7 @@ export const RecordListContainer = (props) => {
 
   const handleRecordRowClicked = (clickedRecord) => {
     props.setRecordListClicked(clickedRecord);
-    props.handleDialogOpen();
+    props.handleRecordOpen();
   };
 
   const handleRequestSort = (event, property) => {
