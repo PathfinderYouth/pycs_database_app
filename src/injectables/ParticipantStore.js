@@ -1,111 +1,103 @@
-import { observable, action, computed, decorate } from 'mobx';
+import { observable, action, computed, autorun, decorate } from 'mobx';
+import service from '../facade/service';
+
+const db = service.getDatabase();
 
 class ParticipantStore {
-  // This could be where we set filters like all, approved, denied, etc
-  currentViewingState = null;
+  _filter = {};
 
-  // switches between the new list and the permanent list
-  list = 'new';
+  _sorter = {};
 
-  newParticipants = [
-    {
-      lastName: 'Friend',
-      firstName: 'Hello',
-      address: '123 1st St',
-      city: 'Surrey',
-      id: 3,
-      status: 'Pending',
-      birthDate: 'Jan 1, 1999',
-    },
-    {
-      lastName: 'There',
-      firstName: 'Hi',
-      address: '125 2nd St',
-      city: 'Surrey',
-      id: 4,
-      status: 'Pending',
-      birthDate: 'Dec 31, 2002',
-    },
-  ];
+  _participants = [];
 
-  permanentParticipants = [
-    {
-      lastName: 'McTest',
-      firstName: 'Test',
-      address: '123 1st St',
-      city: 'Surrey',
-      id: 1,
-      status: 'Approved',
-      birthDate: 'Feb 29, 2000',
-    },
-    {
-      lastName: 'McBob',
-      firstName: 'Bob',
-      address: '125 2nd St',
-      city: 'Surrey',
-      id: 2,
-      status: 'Denied',
-      birthDate: 'Jan 1, 1979',
-    },
-  ];
+  _collection = null;
 
-  constructor() {
-    this.fetchParticipants();
-  }
+  _unsubscribe = null;
 
-  fetchParticipants = () => {
-    // call DatabaseManager.getNewParticipants or whatever method gets the participants from the firestore
+  // This is an event listener/handler for when a document in a collection
+  // changes. Firestore will send the event, and this method will handle it.
+  // Reference: https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange
+  _onChildNext = (doc, newIndex, oldIndex, type) => {
+    let newList = this._participants.slice();
 
-    // this.setNewParticipants()
-    // this.setPermanentParticipants()
-    console.log('fetching participants...');
+    switch (type) {
+      case 'added':
+        newList.splice(newIndex, 0, doc);
+        break;
+
+      case 'modified':
+        newList.splice(oldIndex, 1);
+        newList.splice(newIndex, 0, doc);
+        break;
+
+      case 'removed':
+        newList.splice(oldIndex, 1);
+        break;
+
+      default:
+      // Do nothing
+    }
+
+    this._participants = newList;
   };
 
-  setViewingState = (state) => {
-    this.currentViewingState = state;
+  _updateList = autorun(() => {
+    // Run this whenever type of collection, filter, or sorter changes
+
+    // Unsubscribe to previous real-time listener and reset list to empty
+    if (this._unsubscribe) {
+      this._participants = [];
+      this._unsubscribe();
+    }
+
+    switch (this._collection) {
+      case 'new':
+        this._unsubscribe = db.getNewList(
+          this._filter,
+          this._sorter,
+          this._onChildNext,
+        );
+        break;
+
+      case 'permanent':
+        this._unsubscribe = db.getPermanentList(
+          this._filter,
+          this._sorter,
+          this._onChildNext,
+        );
+        break;
+
+      default:
+      // Do nothing
+    }
+  });
+
+  setFilter = filter => {
+    this._filter = filter;
   };
 
-  setListView = (list) => {
-    this.list = list;
+  setSorter = sorter => {
+    this._sorter = sorter;
   };
 
-  setNewParticipants = (participants) => {
-    this.newParticipants = participants;
-  };
-
-  setPermanentParticipants = (participants) => {
-    this.permanentParticipants = participants;
-  };
-
-  sortParticipantsByValue = (value) => {
-    // sorting functionality tbd
+  setCollection = collection => {
+    this._collection = collection;
   };
 
   get participants() {
-    return this.list === 'new'
-      ? this.newParticipants
-      : this.permanentParticipants;
+    return this._participants;
   }
-
-  // This method needs some work & testing with actual data
-  // getParticipantsByState = () =>
-  //   // returns a filtered list of participants by current viewing state (approved, declined, etc)
-  //   this.participants.filter(
-  //     (participant) =>
-  //       participant.state === this.currentViewingState.get(),
-  //   );
 }
 
 decorate(ParticipantStore, {
-  currentViewingState: observable,
-  list: observable,
-  newParticipants: observable,
-  permanentParticipants: observable,
+  _filter: observable,
+  _sorter: observable,
+  _participants: observable,
+  _collection: observable,
+  setFilter: action,
+  setSorter: action,
+  setCollection: action,
   participants: computed,
-  setViewingState: action,
-  setListView: action,
-  setNewParticipants: action,
-  setPermanentParticipants: action,
 });
 
 let participantStore = new ParticipantStore();
