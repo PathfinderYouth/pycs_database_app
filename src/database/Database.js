@@ -75,19 +75,6 @@ export const Database = inject('participantStore')(
           />
         ) : null}
         <div className={`${classes.content} content`}>
-        
-          /* For testing purposes */
-          <button onClick={() => {
-            setCollection('new');
-          }}>
-            New Collection
-          </button>
-          <button onClick={() => {
-            setCollection('permanent');
-          }}>
-            Permanent Collection
-          </button>
-          
           <Typography variant="h3">Database UI</Typography>
           <RecordListContainer
             records={participants}

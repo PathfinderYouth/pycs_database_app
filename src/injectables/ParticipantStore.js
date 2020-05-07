@@ -20,20 +20,22 @@ class ParticipantStore {
     switch (type) {
       case 'added':
         newList.splice(newIndex, 0, doc);
-        this._participants = newList;
         break;
         
       case 'modified':
-        // TODO: update record in list
+        newList.splice(oldIndex, 1);
+        newList.splice(newIndex, 0, doc);
         break;
         
       case 'removed':
-        // TODO: remove record from list
+        newList.splice(oldIndex, 1);
         break;
 
       default:
         // Do nothing
     }
+    
+    this._participants = newList;
   }
   
   _updateList = autorun(() => {
