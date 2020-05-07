@@ -3,10 +3,17 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { NumberMask } from './NumberMask';
 import './FormSteps.css';
 
 export const FormStepMedical = (props) => {
-  const { values, handleChange, handleBlur } = props.form;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+  } = props.form;
   return (
     <div className="fieldsContainer">
       <Typography gutterBottom variant="h4">
@@ -42,12 +49,23 @@ export const FormStepMedical = (props) => {
       <div className="formRow">
         <TextField
           name="bcCareCardNumber"
-          label="BC card card number"
-          type="number"
+          label="BC care card number"
           value={values.bcCareCardNumber}
           onChange={handleChange}
           onBlur={handleBlur}
+          error={
+            !!errors['bcCareCardNumber'] &&
+            touched['bcCareCardNumber']
+          }
+          helperText={
+            !!errors['bcCareCardNumber'] &&
+            touched['bcCareCardNumber'] &&
+            errors['bcCareCardNumber']
+          }
           variant="outlined"
+          InputProps={{
+            inputComponent: NumberMask,
+          }}
         />
         <TextField
           name="numDependants"

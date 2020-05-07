@@ -7,10 +7,17 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { NumberMask } from './NumberMask';
 import './FormSteps.css';
 
 export const FormStepCurrentStatus = (props) => {
-  const { values, handleChange, handleBlur } = props.form;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+  } = props.form;
   return (
     <div className="fieldsContainer">
       <Typography gutterBottom variant="h4">
@@ -177,13 +184,19 @@ export const FormStepCurrentStatus = (props) => {
         <TextField
           name="sin"
           label="Social insurance number"
-          type="number"
           value={values.sin}
           onChange={handleChange}
           onBlur={handleBlur}
+          error={!!errors['sin'] && touched['sin']}
+          helperText={
+            !!errors['sin'] && touched['sin'] && errors['sin']
+          }
           variant="outlined"
           style={{ minWidth: '15em' }}
           required
+          InputProps={{
+            inputComponent: NumberMask,
+          }}
         />
       </div>
       <div className="formRow">

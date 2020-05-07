@@ -62,15 +62,22 @@ export default class DatabaseManager {
   /**
    * Private helper method to get list of documents
    */
-  _getList(ref, onChildNext, onError, status) {
-    if (status) {
-      ref = ref.where('status', '==', status);
+  _getList(ref, filter, sorter, onChildNext, onError) {
+    for (const field in filter) {
+      if (filter[field]) {
+        ref = ref.where(field, '==', filter[field]);
+      }
+    }
+
+    for (const field in sorter) {
+      ref = ref.orderBy(field, sorter[field] ? sorter[field] : undefined);
     }
 
     return ref.onSnapshot({
       next: querySnap => {
         querySnap.docChanges().forEach(docChg => {
           let doc = docChg.doc.data();
+          doc.id = docChg.doc.id;
           onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
         });
       },
@@ -90,6 +97,7 @@ export default class DatabaseManager {
   addNew(participant, onSuccess, onError) {
     let document = Object.assign({}, participant, {
       status: STATUS.new,
+      createdAt: FieldValue.serverTimestamp(),
       history: FieldValue.arrayUnion({
         user: 'System',
         event: 'Received registration data from participant.',
@@ -179,6 +187,7 @@ export default class DatabaseManager {
   addPermanent(participant, onSuccess, onError) {
     let document = Object.assign({}, participant, {
       status: STATUS.pending,
+      createdAt: FieldValue.serverTimestamp(),
       history: FieldValue.arrayUnion({
         user: 'TODO',
         event: 'TODO: Created',
@@ -209,7 +218,8 @@ export default class DatabaseManager {
    *  Unsubscribe function
    */
   getPermanent(docId, onNext, onError) {
-    return this._getSingleParticipant(this.permanentRef, docId, onNext, onError);
+    let ref = this.permanentRef;
+    return this._getSingleParticipant(ref, docId, onNext, onError);
   }
 
   /**
@@ -296,7 +306,7 @@ export default class DatabaseManager {
    * Move a document in new collection to permanent collection.
    * @param {docId: string}
    *  Document id
-   * @param {onSuccess?: () => void}
+   * @param {onSuccess?: (docId: string) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
@@ -325,7 +335,11 @@ export default class DatabaseManager {
 
     return this.db
       .runTransaction(updateFunction)
-      .then(onSuccess)
+      .then(() => {
+        if (onSuccess) {
+          onSuccess(newDocRef.id);
+        }
+      })
       .catch(onError);
   }
 
@@ -383,6 +397,10 @@ export default class DatabaseManager {
 
   /**
    * Get all participant documents from new collection.
+   * @param {filter: Object}
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
@@ -391,12 +409,16 @@ export default class DatabaseManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getNewList(onChildNext, onError) {
-    return this._getList(this.newRef, onChildNext, onError);
+  getNewList(filter, sorter, onChildNext, onError) {
+    return this._getList(this.newRef, filter, sorter, onChildNext, onError);
   }
 
   /**
-   * Get all pending participant documents from permanent collection.
+   * Get all participant documents from permanent collection.
+   * @param {filter: Object}
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
@@ -405,58 +427,17 @@ export default class DatabaseManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getPendingList(onChildNext, onError) {
-    let status = STATUS.pending;
-    return this._getList(this.permanentRef, onChildNext, onError, status);
-  }
-
-  /**
-   * Get all approved participant documents from permanent collection.
-   * @param {onChildNext: (doc: Object, newIndex: number,
-   *                       oldIndex: number, type: string) => void}
-   *  Callback function when document changes in the collection
-   * @param {onError?: (error: Error) => void}
-   *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
-   */
-  getApprovedList(onChildNext, onError) {
-    let status = STATUS.approved;
-    return this._getList(this.permanentRef, onChildNext, onError, status);
-  }
-
-  /**
-   * Get all declined participant documents from permanent collection.
-   * @param {onChildNext: (doc: Object, newIndex: number,
-   *                       oldIndex: number, type: string) => void}
-   *  Callback function when document changes in the collection
-   * @param {onError?: (error: Error) => void}
-   *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
-   */
-  getDeclinedList(onChildNext, onError) {
-    let status = STATUS.declined;
-    return this._getList(this.permanentRef, onChildNext, onError, status);
-  }
-
-  /**
-   * Get all deleted participant documents from permanent collection.
-   * @param {onChildNext: (doc: Object, newIndex: number,
-   *                       oldIndex: number, type: string) => void}
-   *  Callback function when document changes in the collection
-   * @param {onError?: (error: Error) => void}
-   *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
-   */
-  getDeletedList(onChildNext, onError) {
-    let status = STATUS.deleted;
-    return this._getList(this.permanentRef, onChildNext, onError, status);
+  getPermanentList(filter, sorter, onChildNext, onError) {
+    let ref = this.permanentRef;
+    return this._getList(ref, filter, sorter, onChildNext, onError);
   }
 
   /**
    * Get all participant documents from both new and permanent collections.
+   * @param {filter: Object}
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
@@ -465,13 +446,13 @@ export default class DatabaseManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getAllDocuments(onChildNext, onError) {
-    let unsubNew = this.getNewList(onChildNext, onError);
-    let unsubPerm = this._getList(this.permanentRef, onChildNext, onError);
+  getAllList(filter, sorter, onChildNext, onError) {
+    let unsubNew = this.getNewList(filter, sorter, onChildNext, onError);
+    let unsubPer = this.getPermanentList(filter, sorter, onChildNext, onError);
 
     return () => {
       unsubNew();
-      unsubPerm();
+      unsubPer();
     };
   }
 }
