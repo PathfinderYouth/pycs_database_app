@@ -20,6 +20,4 @@ export const IntakeFormPage = () => (
     }}
     render={(form) => <IntakeForm form={form} />}
   />
-    ///* {(form) => <IntakeForm form={form} />} */}
-  // </Formik>
 );
