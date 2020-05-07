@@ -1,3 +1,7 @@
 table {
   min-width: 750;
 }
+
+.maxWidth {
+  width: 100%;
+}
