@@ -166,7 +166,6 @@ export const IntakeForm = (props) => {
             )}
           </div>
         </div>
-      </div>
     </div>
   );
 };
