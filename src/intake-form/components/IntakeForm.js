@@ -205,13 +205,13 @@ export const IntakeForm = (props) => {
             className="captcha"
           >
             This site is protected by reCAPTCHA and the Google{' '}
-            <a href="https://policies.google.com/privacy">
+            <Link href="https://policies.google.com/privacy">
               Privacy Policy
-            </a>{' '}
+            </Link>{' '}
             and{' '}
-            <a href="https://policies.google.com/terms">
+            <Link href="https://policies.google.com/terms">
               Terms of Service
-            </a>{' '}
+            </Link>{' '}
             apply.
           </Typography>
         </div>
