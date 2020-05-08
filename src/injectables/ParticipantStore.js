@@ -96,7 +96,7 @@ class ParticipantStore {
     return this._participants;
   }
 
-  get numOfNew() {
+  get numOfNewParticipants() {
     return this._statistics.numOfNew;
   }
 }

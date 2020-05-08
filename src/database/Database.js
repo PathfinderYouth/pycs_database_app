@@ -34,7 +34,11 @@ export const Database = inject('participantStore')(
       status: null,
       birthDate: null,
     });
-    const { participants, setCollection, numOfNew } = participantStore;
+    const {
+      participants,
+      setCollection,
+      numOfNewParticipants
+    } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
