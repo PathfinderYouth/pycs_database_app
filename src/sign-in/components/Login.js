@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import './Login.css';
 
 class LogIn extends Component {
   constructor(props) {
@@ -58,12 +59,8 @@ class LogIn extends Component {
   useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
     },
     form: {
-      width: '100%',
       marginTop: theme.spacing(1),
     },
     submit: {
@@ -75,12 +72,12 @@ class LogIn extends Component {
     const classes = this.useStyles;
     return (
       <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
+        <div className={`${classes.paper} paperStyle`}>
           <Typography component="h1" variant="h5">
             PYCS Staff Login Portal
           </Typography>
           <form
-            className={classes.form}
+            className={`${classes.form} maxWidth`}
             noValidate
             onSubmit={this.handleLogin}
           >
