@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { NavDrawer, RecordDialog, RecordListContainer, TopNavBar } from './components';
+import { NavDrawer, RecordListContainer, TopNavBar } from './components';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
@@ -16,17 +17,9 @@ export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
     // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
-    const [recordListClicked, setRecordListClicked] = useState({
-      id: null,
-      lastName: null,
-      firstName: null,
-      address: null,
-      city: null,
-      status: null,
-      birthDate: null,
-    });
+    const [recordListClicked, setRecordListClicked] = useState(null);
+    const [openRecord, setOpenRecord] = useState(false);
     const {
       participants,
       setCollection,
@@ -41,12 +34,12 @@ export const Database = inject('participantStore')(
       setDrawerState(false);
     };
 
-    const handleDialogOpen = () => {
-      setOpenDialog(true);
+    const handleRecordOpen = () => {
+      setOpenRecord(true);
     };
 
-    const handleDialogClose = () => {
-      setOpenDialog(false);
+    const handleRecordClose = () => {
+      setOpenRecord(false);
     };
 
     useEffect(() => {
@@ -58,29 +51,29 @@ export const Database = inject('participantStore')(
 
     return (
       <div className={`${classes.root} root`}>
-        <TopNavBar
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerState={drawerState}
-        />
+        <TopNavBar handleDrawerOpen={handleDrawerOpen} handleDrawerState={drawerState} />
         <NavDrawer
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}
-          numNew={4} //TODO get length of new participants list
+          isRecordOpen={openRecord}
         />
-        {openDialog ? (
-          <RecordDialog
-            openDialog={openDialog}
-            handleDialogClose={handleDialogClose}
-            recordListClicked={recordListClicked}
-          />
-        ) : null}
         <div className={`${classes.content} content`}>
-          <RecordListContainer
-            records={participants}
-            handleDialogOpen={handleDialogOpen}
-            handleDialogClose={handleDialogClose}
-            setRecordListClicked={setRecordListClicked}
-          ></RecordListContainer>
+          {openRecord ? (
+            <div>
+              <Typography variant="h1" onClick={handleRecordClose}>
+                Back!
+              </Typography>
+            </div>
+          ) : (
+            <>
+              <RecordListContainer
+                records={participants}
+                handleRecordOpen={handleRecordOpen}
+                handleRecordClose={handleRecordClose}
+                setRecordListClicked={setRecordListClicked}
+              />
+            </>
+          )}
         </div>
       </div>
     );

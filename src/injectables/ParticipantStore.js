@@ -1,4 +1,4 @@
-import { observable, action, computed, autorun, decorate } from 'mobx';
+import { action, autorun, computed, decorate, observable } from 'mobx';
 import service from '../facade/service';
 
 const db = service.getDatabase();
@@ -60,19 +60,11 @@ class ParticipantStore {
 
     switch (this._collection) {
       case 'new':
-        this._unsubscribe = db.getNewList(
-          this._filter,
-          this._sorter,
-          this._onChildNext,
-        );
+        this._unsubscribe = db.getNewList(this._filter, this._sorter, this._onChildNext);
         break;
 
       case 'permanent':
-        this._unsubscribe = db.getPermanentList(
-          this._filter,
-          this._sorter,
-          this._onChildNext,
-        );
+        this._unsubscribe = db.getPermanentList(this._filter, this._sorter, this._onChildNext);
         break;
 
       default:
@@ -80,15 +72,15 @@ class ParticipantStore {
     }
   });
 
-  setFilter = filter => {
+  setFilter = (filter) => {
     this._filter = filter;
   };
 
-  setSorter = sorter => {
+  setSorter = (sorter) => {
     this._sorter = sorter;
   };
 
-  setCollection = collection => {
+  setCollection = (collection) => {
     this._collection = collection;
   };
 

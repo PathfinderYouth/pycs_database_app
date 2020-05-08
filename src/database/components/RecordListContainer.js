@@ -22,9 +22,6 @@ const headers = [
 ];
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(2),
-  },
   paper: {
     marginBottom: theme.spacing(2),
   },
@@ -40,7 +37,7 @@ export const RecordListContainer = (props) => {
 
   const handleRecordRowClicked = (clickedRecord) => {
     props.setRecordListClicked(clickedRecord);
-    props.handleDialogOpen();
+    props.handleRecordOpen();
   };
 
   const handleRequestSort = (event, property) => {

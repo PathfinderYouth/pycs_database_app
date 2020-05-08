@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  IntakeForm,
-  validationSchema,
-  initialValues,
-} from './components';
+import { initialValues, IntakeForm, validationSchema } from './components';
 import { Formik } from 'formik';
 
 export const IntakeFormPage = () => (
