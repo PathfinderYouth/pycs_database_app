@@ -1,0 +1,9 @@
+.paperStyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.maxWidth {
+  width: 100%;
+}

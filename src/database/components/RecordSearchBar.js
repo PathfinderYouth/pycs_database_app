@@ -1,15 +1,16 @@
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { InputLabel } from '@material-ui/core';
+import './style/RecordSearchBar.css';
 
 export const RecordSearchBar = () => {
-  const [value, setValue] = React.useState('SIN');
+  const [value, setValue] = React.useState('lastName');
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -28,25 +29,18 @@ export const RecordSearchBar = () => {
           ),
         }}
       />
-      <FormControl component="fieldset">
-        <RadioGroup
-          aria-label="searchMethod"
-          name="searchMethod"
-          value={value}
+      <FormControl className="formControl">
+        <InputLabel>Search By</InputLabel>
+        <Select
+          className="formControl"
+          defaultValue={value}
           onChange={handleChange}
-          row
         >
-          <FormControlLabel
-            value="sin"
-            control={<Radio />}
-            label="SIN"
-          />
-          <FormControlLabel
-            value="name"
-            control={<Radio />}
-            label="Name"
-          />
-        </RadioGroup>
+          <MenuItem value="lastName">Last Name</MenuItem>
+          <MenuItem value="firstName">First Name</MenuItem>
+          <MenuItem value="sin">SIN</MenuItem>
+          <MenuItem value="birthDate">Date of Birth</MenuItem>
+        </Select>
       </FormControl>
     </>
   );

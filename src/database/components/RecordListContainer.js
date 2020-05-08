@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TablePagination } from '@material-ui/core';
 import { SortingTableHead } from './SortingTableHead';
 import { stableSort, getComparator } from './sortingHelpers';
+import './style/RecordListContainer.css';
 
 const headers = [
   { id: 'status', label: 'Status' },
@@ -21,11 +22,7 @@ const headers = [
 ];
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
   paper: {
-    width: '100%',
     marginBottom: theme.spacing(2),
   },
 }));
@@ -62,8 +59,8 @@ export const RecordListContainer = (props) => {
   };
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
+    <div className={`${classes.root} maxWidth`}>
+      <Paper className={`${classes.paper} maxWidth`}>
         <TableContainer>
           <Table className={classes.table} size="medium">
             <SortingTableHead
