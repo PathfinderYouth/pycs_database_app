@@ -45,10 +45,7 @@ export const Database = inject('participantStore')(
 
     return (
       <div className={`${classes.root} root`}>
-        <TopNavBar
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerState={drawerState}
-        />
+        <TopNavBar handleDrawerOpen={handleDrawerOpen} handleDrawerState={drawerState} />
         <NavDrawer
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}

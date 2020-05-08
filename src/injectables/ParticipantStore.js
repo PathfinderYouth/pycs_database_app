@@ -52,19 +52,11 @@ class ParticipantStore {
 
     switch (this._collection) {
       case 'new':
-        this._unsubscribe = db.getNewList(
-          this._filter,
-          this._sorter,
-          this._onChildNext,
-        );
+        this._unsubscribe = db.getNewList(this._filter, this._sorter, this._onChildNext);
         break;
 
       case 'permanent':
-        this._unsubscribe = db.getPermanentList(
-          this._filter,
-          this._sorter,
-          this._onChildNext,
-        );
+        this._unsubscribe = db.getPermanentList(this._filter, this._sorter, this._onChildNext);
         break;
 
       default:

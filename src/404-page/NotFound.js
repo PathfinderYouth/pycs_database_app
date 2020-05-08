@@ -7,23 +7,30 @@ import './style/NotFound.css';
 
 export const NotFound = () => {
   return (
-    <div className='root'>
-      <Card className='content'>
-        <img className='logo' src={Logo} alt="Pathfinder Youth Centre Society logo" />
-        <div className='errorText'>
+    <div className="root">
+      <Card className="content">
+        <img
+          className="logo"
+          src={Logo}
+          alt="Pathfinder Youth Centre Society logo"
+        />
+        <div className="errorText">
           <Typography variant="h3">Page not found</Typography>
           <br />
           <Typography>
-            <b>Potential participants</b>, <Link to="/">click here</Link> to access the intake form.
+            <b>Potential participants</b>,{' '}
+            <Link to="/">click here</Link> to access the intake form.
           </Typography>
           <Typography>
-            <b>Pathfinder Youth Society Centre staff</b>, <Link to="/sign-in">click here</Link> to
-            login.
+            <b>Pathfinder Youth Society Centre staff</b>,{' '}
+            <Link to="/sign-in">click here</Link> to login.
           </Typography>
           <br />
           <Typography>
-            <a href="https://pathfinderyouthsociety.org/">Click here</a> to return to the Pathfinder
-            Youth Society homepage.
+            <a href="https://pathfinderyouthsociety.org/">
+              Click here
+            </a>{' '}
+            to return to the Pathfinder Youth Society homepage.
           </Typography>
         </div>
       </Card>
