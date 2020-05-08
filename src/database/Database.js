@@ -27,7 +27,11 @@ export const Database = inject('participantStore')(
       status: null,
       birthDate: null,
     });
-    const { participants, setCollection } = participantStore;
+    const {
+      participants,
+      setCollection,
+      numOfNewParticipants
+    } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -48,6 +52,8 @@ export const Database = inject('participantStore')(
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

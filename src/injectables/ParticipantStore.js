@@ -14,6 +14,14 @@ class ParticipantStore {
 
   _unsubscribe = null;
 
+  _statistics = {};
+
+  constructor() {
+    db.getStatistics(doc => {
+      this._statistics = doc;
+    });
+  }
+
   // This is an event listener/handler for when a document in a collection
   // changes. Firestore will send the event, and this method will handle it.
   // Reference: https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange
@@ -87,6 +95,10 @@ class ParticipantStore {
   get participants() {
     return this._participants;
   }
+
+  get numOfNewParticipants() {
+    return this._statistics.numOfNew;
+  }
 }
 
 decorate(ParticipantStore, {
@@ -94,10 +106,12 @@ decorate(ParticipantStore, {
   _sorter: observable,
   _participants: observable,
   _collection: observable,
+  _statistics: observable,
   setFilter: action,
   setSorter: action,
   setCollection: action,
   participants: computed,
+  numOfNewParticipants: computed,
 });
 
 let participantStore = new ParticipantStore();

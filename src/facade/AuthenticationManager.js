@@ -37,7 +37,7 @@ export default class AuthenticationManager {
   logIn(email, password, onSuccess, onError) {
     this.authen
       .signInWithEmailAndPassword(email, password)
-      .then((userCred) => {
+      .then(userCred => {
         if (onSuccess) {
           let authObj = {
             type: userCred.opertionType,
@@ -66,7 +66,7 @@ export default class AuthenticationManager {
   signUp(email, password, onSuccess, onError) {
     this.authen
       .createUserWithEmailAndPassword(email, password)
-      .then((userCred) => {
+      .then(userCred => {
         if (onSuccess) {
           let authObj = {
             type: userCred.operationType,
@@ -88,6 +88,9 @@ export default class AuthenticationManager {
    *  Callback function when fail
    */
   signOut(onSuccess, onError) {
-    this.authen.signOut().then(onSuccess).catch(onError);
+    this.authen
+      .signOut()
+      .then(onSuccess)
+      .catch(onError);
   }
 }
