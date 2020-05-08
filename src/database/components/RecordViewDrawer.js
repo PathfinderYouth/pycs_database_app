@@ -6,7 +6,11 @@ import { formSteps } from '../../intake-form/components';
 import './style/NavDrawer.css';
 
 export const RecordViewDrawer = (props) => {
-  const stepNames = formSteps.map((step) => step.stepName);
+  const stepNames = formSteps.map((step) => {
+    if (step !== undefined && step.fields.length !== 0) {
+      return step.stepName;
+    }
+  });
   return (
     <List>
       {stepNames.map((category) => {

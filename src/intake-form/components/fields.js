@@ -26,10 +26,7 @@ export const formSteps = [
         type: 'radio',
         required: true,
         size: 12,
-        options: [
-          'New Employment Beginnings',
-          'Bean Around Books - Employment Experience',
-        ],
+        options: ['New Employment Beginnings', 'Bean Around Books - Employment Experience'],
       },
       {
         name: 'addressStreet',
@@ -184,7 +181,7 @@ export const formSteps = [
     ],
   },
   {
-    stepName: 'Information on Employment Equity',
+    stepName: 'Employment Equity',
     fields: [
       {
         name: 'gender',
@@ -204,7 +201,7 @@ export const formSteps = [
       },
       {
         name: 'personWithDisability',
-        label: 'Person with a disibility',
+        label: 'Person with a disability',
         type: 'radio',
         required: true,
         size: 6,
@@ -236,8 +233,7 @@ export const formSteps = [
       },
       {
         name: 'levelOfEducation',
-        label:
-          'Level of education (select the highest level of education you have completed)',
+        label: 'Level of education (select the highest level of education you have completed)',
         type: 'radio',
         required: true,
         size: 12,
@@ -255,7 +251,7 @@ export const formSteps = [
     ],
   },
   {
-    stepName: 'Medical information',
+    stepName: 'Medical Information',
     fields: [
       {
         name: 'doctorName',
@@ -314,14 +310,13 @@ export const formSteps = [
     ],
   },
   {
-    stepName: 'Current status',
+    stepName: 'Current Status',
     fields: [
       {
         name: 'lawTrouble',
         type: 'text',
         size: 12,
-        description:
-          'Have you ever been in trouble with the law or on parole? Please explain.',
+        description: 'Have you ever been in trouble with the law or on parole? Please explain.',
 
         multiline: true,
       },
@@ -370,8 +365,7 @@ export const formSteps = [
       },
       {
         name: 'bankAccountType',
-        label:
-          'If yes, is your bank account a chequing or savings account or do you have both?',
+        label: 'If yes, is your bank account a chequing or savings account or do you have both?',
         type: 'radio',
         size: 8,
         dependsOnOtherField: {
@@ -394,11 +388,7 @@ export const formSteps = [
         label: 'Citizenship status',
         type: 'radio',
         size: 4,
-        options: [
-          'Canadian citizen',
-          'Permanent resident',
-          'Native Canadian',
-        ],
+        options: ['Canadian citizen', 'Permanent resident', 'Native Canadian'],
       },
       {
         name: 'isEntitledToWorkInCanada',
@@ -432,9 +422,7 @@ export const formSteps = [
         label: "Do you have a valid driver's licence?",
         type: 'radio',
         size: 4,
-        dependantFields: [
-          { name: 'driversLicenseType', value: 'Yes' },
-        ],
+        dependantFields: [{ name: 'driversLicenseType', value: 'Yes' }],
         options: ['Yes', 'No'],
       },
       {
@@ -461,9 +449,7 @@ export const formSteps = [
         label: 'How did you find out about our program?',
         size: 12,
         type: 'radio',
-        dependantFields: [
-          { name: 'learnedAboutPathfinderOther', value: 'Other' },
-        ],
+        dependantFields: [{ name: 'learnedAboutPathfinderOther', value: 'Other' }],
         options: [
           'Family and/or friends',
           'Teacher/counselor',
@@ -483,7 +469,7 @@ export const formSteps = [
         name: 'learnedAboutPathfinderOther',
         type: 'text',
         description:
-          'If you chose "other" to "How did you find out about our proram?", please specify:',
+          'If you chose "other" to "How did you find out about our program?", please specify:',
         label: 'If other, please specify',
         size: 12,
         multiline: true,
@@ -498,9 +484,7 @@ export const formSteps = [
         label: 'What is your current form of income?',
         type: 'radio',
         size: 12,
-        dependantFields: [
-          { name: 'formOfIncomeOther', value: 'Other' },
-        ],
+        dependantFields: [{ name: 'formOfIncomeOther', value: 'Other' }],
         options: [
           'None',
           'Employment insurance',
@@ -536,8 +520,7 @@ export const formSteps = [
       },
       {
         name: 'hasEmploymentProgramTraining',
-        label:
-          'Have you ever attended a job club or paid employment training program?',
+        label: 'Have you ever attended a job club or paid employment training program?',
         type: 'radio',
         size: 12,
         dependantFields: [
@@ -561,8 +544,7 @@ export const formSteps = [
       },
       {
         name: 'employmentProgramComplete',
-        label:
-          'Did you complete the job club or paid employment program?',
+        label: 'Did you complete the job club or paid employment program?',
         type: 'radio',
         size: 4,
         options: ['Yes', 'No'],
@@ -576,8 +558,7 @@ export const formSteps = [
         name: 'sixMonthsHistory',
         type: 'text',
         size: 12,
-        description:
-          'What have you been doing for the last six months?',
+        description: 'What have you been doing for the last six months?',
         multiline: true,
       },
     ],
@@ -587,14 +568,11 @@ export const formSteps = [
     fields: [
       {
         name: 'presentSituationAspects',
-        label:
-          'What aspects of your present situation would you like to change? (check two)',
+        label: 'What aspects of your present situation would you like to change? (check two)',
         type: 'checklist',
         size: 12,
         maxChecked: 2,
-        dependantFields: [
-          { name: 'presentSituationAspectsOther', value: 'Other' },
-        ],
+        dependantFields: [{ name: 'presentSituationAspectsOther', value: 'Other' }],
         options: [
           'Increase my self confidence',
           'Have more money and/or get out of poverty',
@@ -624,9 +602,7 @@ export const formSteps = [
         type: 'checklist',
         maxChecked: 2,
         size: 12,
-        dependantFields: [
-          { name: 'urgentNeedsOther', value: 'Other' },
-        ],
+        dependantFields: [{ name: 'urgentNeedsOther', value: 'Other' }],
         options: [
           'Basic needs (food, shelter and clothing)',
           'The need to be independent',
@@ -640,8 +616,7 @@ export const formSteps = [
         name: 'urgentNeedsOther',
         type: 'text',
         size: 12,
-        description:
-          'If you have other urgent needs, please specify:',
+        description: 'If you have other urgent needs, please specify:',
         label: 'If other, please specify',
         multiline: true,
         dependsOnOtherField: {
@@ -652,8 +627,7 @@ export const formSteps = [
       },
       {
         name: 'timeOutOfWork',
-        label:
-          'How long have you been out of work since your last job or since you left school?',
+        label: 'How long have you been out of work since your last job or since you left school?',
         type: 'radio',
         size: 12,
         options: [
@@ -666,13 +640,10 @@ export const formSteps = [
       },
       {
         name: 'reasonsForUnemployment',
-        label:
-          'What is the main reason you are unemployed? (check all that apply to you)',
+        label: 'What is the main reason you are unemployed? (check all that apply to you)',
         type: 'checklist',
         size: 12,
-        dependantFields: [
-          { name: 'reasonsForUnemploymentOther', value: 'Other' },
-        ],
+        dependantFields: [{ name: 'reasonsForUnemploymentOther', value: 'Other' }],
         options: [
           'I have just completed school or another training program',
           'I do not know how to do a good job search on my own',
@@ -690,8 +661,7 @@ export const formSteps = [
         type: 'text',
         size: 12,
         label: 'If other, please specify',
-        description:
-          'If there are other reasons you are unemployed, please specify:',
+        description: 'If there are other reasons you are unemployed, please specify:',
         multiline: true,
         dependsOnOtherField: {
           name: 'reasonsForUnemployment',
@@ -703,8 +673,7 @@ export const formSteps = [
         name: 'hopeToGainFromProgram',
         type: 'text',
         size: 12,
-        description:
-          'What do you hope to gain from our program when you graduate?',
+        description: 'What do you hope to gain from our program when you graduate?',
         multiline: true,
       },
       {
@@ -718,8 +687,7 @@ export const formSteps = [
         name: 'hobbies',
         type: 'text',
         size: 12,
-        description:
-          'What are your hobbies? (e.g., singing, painting, beading, dancing, etc.)',
+        description: 'What are your hobbies? (e.g., singing, painting, beading, dancing, etc.)',
         multiline: true,
       },
       {
@@ -727,12 +695,7 @@ export const formSteps = [
         label: 'Do you consider yourself to be:',
         size: 12,
         type: 'radio',
-        options: [
-          'Shy/introverted',
-          'Sociable',
-          'Extrovered',
-          'Quiet/reserved',
-        ],
+        options: ['Shy/introverted', 'Sociable', 'Extrovered', 'Quiet/reserved'],
       },
       {
         name: 'hasSiblings',
@@ -746,8 +709,7 @@ export const formSteps = [
         name: 'siblings',
         type: 'text',
         size: 8,
-        description:
-          'If you have brothers or sisters, who do you like the most and why?',
+        description: 'If you have brothers or sisters, who do you like the most and why?',
         multiline: true,
         dependsOnOtherField: {
           name: 'hasSiblings',
@@ -767,8 +729,7 @@ export const formSteps = [
         name: 'children',
         type: 'text',
         size: 8,
-        description:
-          'If you have children, how many and what are their names?',
+        description: 'If you have children, how many and what are their names?',
         multiline: true,
         dependsOnOtherField: {
           name: 'hasChildren',
@@ -780,8 +741,7 @@ export const formSteps = [
         name: 'numberOfJobInterviews',
         type: 'number',
         size: 12,
-        description:
-          'How many job interviews have you been to in the last 6 months?',
+        description: 'How many job interviews have you been to in the last 6 months?',
       },
       {
         name: 'hasVolunteered',
@@ -814,8 +774,7 @@ export const formSteps = [
       {
         name: 'inRehabOrAddictionsServices',
         size: 4,
-        label:
-          'Are you currently in any community rehab programs or addictions support services?',
+        label: 'Are you currently in any community rehab programs or addictions support services?',
         type: 'radio',
         options: ['Yes', 'No'],
       },
@@ -830,8 +789,7 @@ export const formSteps = [
         name: 'whyApplied',
         type: 'text',
         size: 12,
-        description:
-          'Why have you applied to the Pathfinder Youth Centre Society’s Program? *',
+        description: 'Why have you applied to the Pathfinder Youth Centre Society’s Program? *',
         multiline: true,
         required: true,
       },
@@ -847,8 +805,7 @@ export const formSteps = [
         name: 'employmentGoals',
         type: 'text',
         size: 12,
-        description:
-          'What are your employment goals one year from now?',
+        description: 'What are your employment goals one year from now?',
         multiline: true,
       },
       {
