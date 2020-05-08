@@ -64,7 +64,7 @@ export default class UserListManager {
           onNext(doc);
           return;
         }
-        
+
         if (onError) {
           onError(new Error('Document does not exist'));
         }
@@ -91,7 +91,7 @@ export default class UserListManager {
       .then(onSuccess)
       .catch(onError);
   }
-  
+
   /**
    * Update a document in user collection when user do inital sign-in.
    * @param {email: string}
@@ -104,13 +104,14 @@ export default class UserListManager {
    *  Callback function when fail
    */
   updateFirstTimeUser(email, uid, onSuccess, onError) {
-    this.userRef.where("email", "==", email)
+    this.userRef
+      .where('email', '==', email)
       .get()
       .then(querySnap => {
         if (querySnap.docs.length === 0) {
-          throw new Error("Email does not exist")
+          throw new Error('Email does not exist');
         }
-        
+
         querySnap.docs[0].ref
           .update({ uid: uid })
           .then(onSuccess)

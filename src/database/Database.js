@@ -18,9 +18,13 @@ export const Database = inject('participantStore')(
     const classes = useStyles();
     const [drawerState, setDrawerState] = useState(false);
     // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
-    const { participants, setCollection } = participantStore;
     const [recordListClicked, setRecordListClicked] = useState(null);
     const [openRecord, setOpenRecord] = useState(false);
+    const {
+      participants,
+      setCollection,
+      numOfNewParticipants
+    } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -41,6 +45,8 @@ export const Database = inject('participantStore')(
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
+      
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

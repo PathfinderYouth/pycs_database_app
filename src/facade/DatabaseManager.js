@@ -5,7 +5,6 @@ const FieldValue = firebase.firestore.FieldValue;
 const Timestamp = firebase.firestore.Timestamp;
 
 const STATUS = {
-  new: 'New',
   pending: 'Pending',
   approved: 'Approved',
   declined: 'Declined',
@@ -37,6 +36,7 @@ export default class DatabaseManager {
     this.db = firebase.firestore();
     this.permanentRef = this.db.collection('permanent');
     this.newRef = this.db.collection('new');
+    this.statRef = this.db.collection('statistics').doc('participant');
   }
 
   /**
@@ -96,7 +96,7 @@ export default class DatabaseManager {
    */
   addNew(participant, onSuccess, onError) {
     let document = Object.assign({}, participant, {
-      status: STATUS.new,
+      status: STATUS.pending,
       createdAt: FieldValue.serverTimestamp(),
       history: FieldValue.arrayUnion({
         user: 'System',
@@ -105,11 +105,15 @@ export default class DatabaseManager {
       }),
     });
 
-    this.newRef
-      .add(document)
-      .then(docRef => {
+    let docRef = this.newRef.doc();
+
+    let batch = this.db.batch();
+    batch.set(docRef, document);
+    batch.update(this.statRef, { numOfNew: FieldValue.increment(1) });
+    batch
+      .commit()
+      .then(() => {
         if (onSuccess) {
-          // Could use docRef.data() to get doc content instead
           onSuccess(docRef.id);
         }
       })
@@ -168,9 +172,13 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   deleteNew(docId, onSuccess, onError) {
-    this.newRef
-      .doc(docId)
-      .delete()
+    let docRef = this.newRef.doc(docId);
+    let batch = this.db.batch();
+
+    batch.delete(docRef);
+    batch.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
+    batch
+      .commit()
       .then(onSuccess)
       .catch(onError);
   }
@@ -433,26 +441,20 @@ export default class DatabaseManager {
   }
 
   /**
-   * Get all participant documents from both new and permanent collections.
-   * @param {filter: Object}
-   *  Object containing fields and values for filtering
-   * @param {sorter: Object}
-   *  Object containing fields and orders for sorting
-   * @param {onChildNext: (doc: Object, newIndex: number,
-   *                       oldIndex: number, type: string) => void}
-   *  Callback function when document changes in the collection
+   * Get participant statistical info stored in a firestore document.
+   * @param {onNext: (doc: Object) => void}
+   *  Callback function when document changes
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getAllList(filter, sorter, onChildNext, onError) {
-    let unsubNew = this.getNewList(filter, sorter, onChildNext, onError);
-    let unsubPer = this.getPermanentList(filter, sorter, onChildNext, onError);
-
-    return () => {
-      unsubNew();
-      unsubPer();
-    };
+  getStatistics(onNext, onError) {
+    return this.statRef.onSnapshot({
+      next: docSnap => {
+        onNext(docSnap.data());
+      },
+      error: onError,
+    });
   }
 }
