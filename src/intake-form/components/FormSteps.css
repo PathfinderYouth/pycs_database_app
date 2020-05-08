@@ -38,3 +38,7 @@
   margin: 3em 0;
   max-width: 70%;
 }
+
+.form-descriptionLabel {
+  padding-bottom: 0.5em;
+}

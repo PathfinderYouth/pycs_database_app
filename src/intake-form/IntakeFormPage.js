@@ -2,7 +2,6 @@ import React from 'react';
 import { initialValues, IntakeForm, validationSchema } from './components';
 import { Formik } from 'formik';
 
-// container that holds all intake form UI objects
 export const IntakeFormPage = () => (
   <Formik
     initialValues={initialValues}
@@ -14,6 +13,7 @@ export const IntakeFormPage = () => (
         setSubmitting(false);
       }, 400);
     }}
-    render={(form) => <IntakeForm form={form} />}
-  />
+  >
+    {(form) => <IntakeForm form={form} />}
+  </Formik>
 );
