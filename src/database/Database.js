@@ -9,7 +9,7 @@ import {
 } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
-import { participantStore } from '../injectables';
+import { participantStore, userStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +51,7 @@ export const Database = inject('participantStore')(
     const handleDialogClose = () => {
       setOpenDialog(false);
     };
-    
+
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
@@ -85,5 +85,14 @@ export const Database = inject('participantStore')(
         </div>
       </div>
     );
+  }),
+);
+
+// TODO refactor code in this file, (admin only) onClick User Management menu item to re-render
+export const UserManagement = inject('userStore')(
+  observer(() => {
+    const classes = useStyles();
+    // TODO connct to ui, handle account creation/deletion
+    return <></>;
   }),
 );
