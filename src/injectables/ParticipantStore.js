@@ -111,7 +111,7 @@ decorate(ParticipantStore, {
   setSorter: action,
   setCollection: action,
   participants: computed,
-  numOfNew: computed,
+  numOfNewParticipants: computed,
 });
 
 let participantStore = new ParticipantStore();
