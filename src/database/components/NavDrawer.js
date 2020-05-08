@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RecordSearchBar } from './RecordSearchBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,7 +12,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Badge from '@material-ui/core/Badge';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import './style/NavDrawer.css';
+import { Collapse } from '@material-ui/core';
+import { Check, Clear, HourglassEmptyOutlined, Inbox, Person } from '@material-ui/icons';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 const drawerWidth = 240;
 
@@ -46,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-between',
     },
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 export const NavDrawer = (props) => {
@@ -53,15 +62,33 @@ export const NavDrawer = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
+  const [
+    participantsListExpanded,
+    setParticipantsListExpanded,
+  ] = useState(false);
+  const numNew = props.numNew;
+
+  const statuses = [
+    { name: 'Pending', icon: <HourglassEmptyOutlined /> },
+    { name: 'Approved', icon: <Check /> },
+    { name: 'Denied', icon: <Clear /> },
+  ];
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
+
+  const expandClick = () => {
+    setParticipantsListExpanded(!participantsListExpanded);
+  };
+
+  const handleClick = () => {
+    //TODO
+  };
 
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeaderCss`}>
         <Typography>UserLogin@pycs.org</Typography>
-
         {matches ? (
           <IconButton
             aria-label="more options"
@@ -78,15 +105,50 @@ export const NavDrawer = (props) => {
       <div className={classes.container}>
         <RecordSearchBar />
       </div>
-      <Divider />
       <List>
-        {['Option 1', 'Option 2', 'Option 3', 'Option 4'].map(
-          (text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
-          ),
-        )}
+        <Divider />
+        <ListItem button key="participants" onClick={handleClick}>
+          <ListItemIcon>
+            <Person />
+          </ListItemIcon>
+          <ListItemText primary="All Participants" />
+          <div className="expandButton" onClick={expandClick}>
+            {participantsListExpanded ? (
+              <ExpandLess />
+            ) : (
+              <ExpandMore />
+            )}
+          </div>
+        </ListItem>
+        <Collapse in={participantsListExpanded} timeout="auto">
+          <List component="div" disablePadding>
+            {statuses.map((status) => (
+              <ListItem
+                button
+                key={status.name.toLowerCase()}
+                className={classes.nested}
+                onClick={handleClick}
+              >
+                <ListItemIcon>{status.icon}</ListItemIcon>
+                <ListItemText primary={status.name} />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+        <Divider />
+        <ListItem button key="New Applications" onClick={handleClick}>
+          <ListItemIcon>
+            <Badge
+              badgeContent={numNew}
+              color="secondary"
+              overlap="circle"
+            >
+              <Inbox />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary="New Applications" />
+        </ListItem>
+        <Divider />
       </List>
     </div>
   );

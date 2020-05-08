@@ -8,7 +8,14 @@ import { NumberMask } from './NumberMask';
 import './FormSteps.css';
 
 export const FormTextField = ({ form, field }) => {
-  const { values, errors, touched, handleChange, handleBlur, setFieldValue } = form;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+  } = form;
   const {
     name,
     type,
@@ -56,8 +63,10 @@ export const FormTextField = ({ form, field }) => {
 
   const isFieldDisabled = (dependsOnOtherField, values) => {
     const { name, list, value } = dependsOnOtherField;
-    return list ? !values[name].includes(value) : values[name] !== value
-  }
+    return list
+      ? !values[name].includes(value)
+      : values[name] !== value;
+  };
 
   const handleDependantFieldChange = ({ target: { value } }) => {
     if (!!dependantFields) {
@@ -72,14 +81,16 @@ export const FormTextField = ({ form, field }) => {
   return !!dependsOnOtherField ? (
     <FormControl component="fieldset" fullWidth>
       {!!description && (
-        <FormLabel component="legend">{description}</FormLabel>
+        <div className="form-descriptionLabel">
+          <FormLabel component="legend">{description}</FormLabel>
+        </div>
       )}
       <TextField
         {...commonProps}
         name={name}
         onChange={handleChange}
         onBlur={handleBlur}
-        value={isFieldDisabled(dependsOnOtherField, values) ? '' : values[name]}
+        value={values[name]}
         disabled={isFieldDisabled(dependsOnOtherField, values)}
       />
     </FormControl>
@@ -87,8 +98,8 @@ export const FormTextField = ({ form, field }) => {
     <FastField
       name={name}
       onChange={(event) => {
-        handleChange(event)
-        handleDependantFieldChange(event)
+        handleChange(event);
+        handleDependantFieldChange(event);
       }}
       onBlur={handleBlur}
       value={values[name]}
@@ -96,7 +107,9 @@ export const FormTextField = ({ form, field }) => {
       {({ field }) => (
         <FormControl component="fieldset" fullWidth>
           {!!description && (
-            <FormLabel component="legend">{description}</FormLabel>
+            <div className="form-descriptionLabel">
+              <FormLabel component="legend">{description}</FormLabel>
+            </div>
           )}
           <TextField {...field} {...commonProps} />
         </FormControl>
