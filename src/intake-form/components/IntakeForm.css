@@ -5,14 +5,14 @@
   flex-direction: column;
 }
 
-.formContainer {
+.form-container {
   display: flex;
   flex-grow: 1;
   justify-content: center;
   overflow-y: scroll;
 }
 
-.bottomBar {
+.form-bottomBar {
   width: calc(100% - 2em);
   padding: 1em;
   display: flex;
@@ -32,8 +32,15 @@
   display: flex;
 }
 
-.topLeftLink {
-  margin: 0.5em 0 0 0.5em;
+.form-topBar {
+  padding: 0.5em 0 0.5em 0.5em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-breadcrumbs {
+  padding: 0 0.5em;
+  display: flex;
 }
 
 .captcha {

@@ -1,6 +1,10 @@
 export const formSteps = [
   {
-    // Start page
+    stepName: 'Start',
+    fields: [],
+  },
+  {
+    stepName: 'Basic Information',
     fields: [
       {
         name: 'nameGiven',
@@ -16,11 +20,6 @@ export const formSteps = [
         size: 6,
         required: true,
       },
-    ],
-  },
-  {
-    stepName: 'Basic Information',
-    fields: [
       {
         name: 'programAppliedFor',
         label: 'Program applying for:',
@@ -150,7 +149,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact2Name',
-        description: 'Emergency contact 1',
+        description: 'Emergency contact 2',
         label: 'Emergency contact name',
         type: 'text',
         size: 12,
