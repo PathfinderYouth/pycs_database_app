@@ -7,15 +7,20 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import './style/NavDrawer.css';
 import { Collapse } from '@material-ui/core';
+import './style/NavDrawer.css';
+import { Check, Clear, HourglassEmptyOutlined, Inbox, Person } from '@material-ui/icons';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 export const ListViewDrawer = (props) => {
   const { handleClick, numNew, classes } = props;
-  const [
-    participantsListExpanded,
-    setParticipantsListExpanded,
-  ] = useState(true);
+  const [participantsListExpanded, setParticipantsListExpanded] = useState(true);
+
+  const statuses = [
+    { name: 'Pending', icon: <HourglassEmptyOutlined /> },
+    { name: 'Approved', icon: <Check /> },
+    { name: 'Denied', icon: <Clear /> },
+  ];
 
   const expandClick = () => {
     setParticipantsListExpanded(!participantsListExpanded);
@@ -23,45 +28,46 @@ export const ListViewDrawer = (props) => {
 
   return (
     <div>
+      <div className={classes.container}>
+        <RecordSearchBar />
+      </div>
       <List>
-        <ListItem button key="New Applications" onClick={handleClick}>
-          <Badge badgeContent={numNew} color="secondary">
-            <ListItemText
-              primary="New Applications"
-              className="listItemWithBadge"
-            />
-          </Badge>
-        </ListItem>
         <Divider />
         <ListItem button key="participants" onClick={handleClick}>
+          <ListItemIcon>
+            <Person />
+          </ListItemIcon>
           <ListItemText primary="All Participants" />
           <div className="expandButton" onClick={expandClick}>
-            {participantsListExpanded ? (
-              <ExpandLess />
-            ) : (
-              <ExpandMore />
-            )}
+            {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
           </div>
         </ListItem>
         <Collapse in={participantsListExpanded} timeout="auto">
           <List component="div" disablePadding>
-            {['Pending', 'Approved', 'Denied'].map((text) => (
+            {statuses.map((status) => (
               <ListItem
                 button
-                key={text}
+                key={status.name.toLowerCase()}
                 className={classes.nested}
                 onClick={handleClick}
               >
-                <ListItemText primary={text} />
+                <ListItemIcon>{status.icon}</ListItemIcon>
+                <ListItemText primary={status.name} />
               </ListItem>
             ))}
           </List>
         </Collapse>
+        <Divider />
+        <ListItem button key="New Applications" onClick={handleClick}>
+          <ListItemIcon>
+            <Badge badgeContent={numNew} color="secondary" overlap="circle">
+              <Inbox />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary="New Applications" />
+        </ListItem>
+        <Divider />
       </List>
-      <Divider />
-      <div className={classes.container}>
-        <RecordSearchBar />
-      </div>
     </div>
   );
 };
