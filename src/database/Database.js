@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Link } from '@reach/router';
-import {
-  NavDrawer,
-  TopNavBar,
-  RecordListContainer,
-  RecordDialog,
-} from './components';
+import React, { useEffect, useState } from 'react';
+import { NavDrawer, RecordDialog, RecordListContainer, TopNavBar } from './components';
 import { makeStyles } from '@material-ui/core/styles';
-import { observer, inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
 import './Database.css';
 
@@ -51,7 +44,7 @@ export const Database = inject('participantStore')(
     const handleDialogClose = () => {
       setOpenDialog(false);
     };
-    
+
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
@@ -66,6 +59,7 @@ export const Database = inject('participantStore')(
         <NavDrawer
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}
+          numNew={4} //TODO get length of new participants list
         />
         {openDialog ? (
           <RecordDialog
@@ -75,7 +69,6 @@ export const Database = inject('participantStore')(
           />
         ) : null}
         <div className={`${classes.content} content`}>
-          <Typography variant="h3">Database UI</Typography>
           <RecordListContainer
             records={participants}
             handleDialogOpen={handleDialogOpen}
