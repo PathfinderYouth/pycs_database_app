@@ -17,6 +17,8 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import './style/NavDrawer.css';
 import { Collapse } from '@material-ui/core';
+import { Check, Clear, HourglassEmptyOutlined, Inbox, Person } from '@material-ui/icons';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 const drawerWidth = 240;
 
@@ -63,8 +65,14 @@ export const NavDrawer = (props) => {
   const [
     participantsListExpanded,
     setParticipantsListExpanded,
-  ] = useState(true);
+  ] = useState(false);
   const numNew = props.numNew;
+
+  const statuses = [
+    { name: 'Pending', icon: <HourglassEmptyOutlined /> },
+    { name: 'Approved', icon: <Check /> },
+    { name: 'Denied', icon: <Clear /> },
+  ];
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -94,17 +102,15 @@ export const NavDrawer = (props) => {
         ) : null}
       </div>
       <Divider />
+      <div className={classes.container}>
+        <RecordSearchBar />
+      </div>
       <List>
-        <ListItem button key="New Applications" onClick={handleClick}>
-          <Badge badgeContent={numNew} color="secondary">
-            <ListItemText
-              primary="New Applications"
-              className="listItemWithBadge"
-            />
-          </Badge>
-        </ListItem>
         <Divider />
         <ListItem button key="participants" onClick={handleClick}>
+          <ListItemIcon>
+            <Person />
+          </ListItemIcon>
           <ListItemText primary="All Participants" />
           <div className="expandButton" onClick={expandClick}>
             {participantsListExpanded ? (
@@ -116,23 +122,34 @@ export const NavDrawer = (props) => {
         </ListItem>
         <Collapse in={participantsListExpanded} timeout="auto">
           <List component="div" disablePadding>
-            {['Pending', 'Approved', 'Denied'].map((text) => (
+            {statuses.map((status) => (
               <ListItem
                 button
-                key={text}
+                key={status.name.toLowerCase()}
                 className={classes.nested}
                 onClick={handleClick}
               >
-                <ListItemText primary={text} />
+                <ListItemIcon>{status.icon}</ListItemIcon>
+                <ListItemText primary={status.name} />
               </ListItem>
             ))}
           </List>
         </Collapse>
-      </List>
         <Divider />
-        <div className={classes.container}>
-          <RecordSearchBar />
-        </div>
+        <ListItem button key="New Applications" onClick={handleClick}>
+          <ListItemIcon>
+            <Badge
+              badgeContent={numNew}
+              color="secondary"
+              overlap="circle"
+            >
+              <Inbox />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary="New Applications" />
+        </ListItem>
+        <Divider />
+      </List>
     </div>
   );
 
