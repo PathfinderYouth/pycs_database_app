@@ -90,11 +90,7 @@ export const FormTextField = ({ form, field }) => {
         name={name}
         onChange={handleChange}
         onBlur={handleBlur}
-        value={
-          isFieldDisabled(dependsOnOtherField, values)
-            ? ''
-            : values[name]
-        }
+        value={values[name]}
         disabled={isFieldDisabled(dependsOnOtherField, values)}
       />
     </FormControl>
