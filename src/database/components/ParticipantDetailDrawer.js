@@ -5,7 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { formSteps } from '../../intake-form/components';
 import './style/NavDrawer.css';
 
-export const RecordViewDrawer = (props) => {
+export const ParticipantDetailDrawer = (props) => {
   const stepNames = formSteps.map((step) => {
     if (step !== undefined && step.fields.length !== 0) {
       return step.stepName;

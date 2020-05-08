@@ -9,10 +9,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Collapse } from '@material-ui/core';
 import './style/NavDrawer.css';
-import { Check, Clear, HourglassEmptyOutlined, Inbox, Person } from '@material-ui/icons';
+import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
-export const ListViewDrawer = (props) => {
+export const ParticipantListDrawer = (props) => {
   const { handleClick, numNew, classes } = props;
   const [participantsListExpanded, setParticipantsListExpanded] = useState(true);
 
@@ -58,13 +58,21 @@ export const ListViewDrawer = (props) => {
           </List>
         </Collapse>
         <Divider />
-        <ListItem button key="New Applications" onClick={handleClick}>
+        <ListItem button key="newApplications" onClick={handleClick}>
           <ListItemIcon>
             <Badge badgeContent={numNew} color="secondary" overlap="circle">
               <Inbox />
             </Badge>
           </ListItemIcon>
           <ListItemText primary="New Applications" />
+        </ListItem>
+        <Divider />
+        {/*//TODO: only render this if user is staff*/}
+        <ListItem button key="staff" onClick={handleClick}>
+          <ListItemIcon>
+            <Work />
+          </ListItemIcon>
+          <ListItemText primary="Staff Management" />
         </ListItem>
         <Divider />
       </List>
