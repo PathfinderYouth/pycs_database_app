@@ -3,7 +3,7 @@ import Logo from '../assets/Pathfinder-Logo.jpg';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import { Link } from '@reach/router';
-import './style/NotFound.css'
+import './style/NotFound.css';
 
 export const NotFound = () => {
   return (

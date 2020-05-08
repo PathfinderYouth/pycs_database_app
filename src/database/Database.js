@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import {
-  NavDrawer,
-  RecordViewDrawer,
-  TopNavBar,
-  RecordListContainer,
-  RecordDialog,
-} from './components';
+import { NavDrawer, RecordListContainer, TopNavBar } from './components';
 import { makeStyles } from '@material-ui/core/styles';
-import { observer, inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
 import './Database.css';
 
@@ -43,7 +37,7 @@ export const Database = inject('participantStore')(
     const handleRecordClose = () => {
       setOpenRecord(false);
     };
-    
+
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
@@ -55,21 +49,17 @@ export const Database = inject('participantStore')(
           handleDrawerOpen={handleDrawerOpen}
           handleDrawerState={drawerState}
         />
-        {openRecord ? (
-          <RecordViewDrawer
-            handleDrawerClose={handleDrawerClose}
-            handleDrawerState={drawerState}
-          />
-        ) : (
-          <NavDrawer
-            handleDrawerClose={handleDrawerClose}
-            handleDrawerState={drawerState}
-          />
-        )}
+        <NavDrawer
+          handleDrawerClose={handleDrawerClose}
+          handleDrawerState={drawerState}
+          isRecordOpen={openRecord}
+        />
         <div className={`${classes.content} content`}>
           {openRecord ? (
             <div>
-              <Typography variant="h1" onClick={handleRecordClose}>Back!</Typography>
+              <Typography variant="h1" onClick={handleRecordClose}>
+                Back!
+              </Typography>
             </div>
           ) : (
             <>

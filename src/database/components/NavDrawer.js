@@ -1,10 +1,6 @@
 import React from 'react';
-import { RecordSearchBar } from './RecordSearchBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -12,6 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { RecordViewDrawer } from './RecordViewDrawer';
+import { ListViewDrawer } from './ListViewDrawer';
 import './style/NavDrawer.css';
 
 const drawerWidth = 240;
@@ -46,10 +44,13 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-between',
     },
   },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 }));
 
 export const NavDrawer = (props) => {
-  const { window } = props;
+  const { window, isRecordOpen } = props;
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -57,10 +58,18 @@ export const NavDrawer = (props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  const handleListViewClick = () => {
+    //TODO
+  };
+
+  const handleRecordViewClick = () => {
+    //TODO
+  };
+
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeaderCss`}>
-        <Typography>UserLogin@pycs.org</Typography>
+        <Typography>Staff McStaff</Typography>
 
         {matches ? (
           <IconButton
@@ -75,19 +84,16 @@ export const NavDrawer = (props) => {
         ) : null}
       </div>
       <Divider />
-      <div className={classes.container}>
-        <RecordSearchBar />
-      </div>
-      <Divider />
-      <List>
-        {['Option 1', 'Option 2', 'Option 3', 'Option 4'].map(
-          (text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
-          ),
-        )}
-      </List>
+      {isRecordOpen ? (
+        <RecordViewDrawer handleClick={handleRecordViewClick} />
+      ) : (
+        <ListViewDrawer
+          numNew={4}
+          handleClick={handleListViewClick}
+          classes={classes}
+        />
+      )}
+      ;
     </div>
   );
 

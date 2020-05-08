@@ -1,4 +1,4 @@
-import { observable, action, computed, autorun, decorate } from 'mobx';
+import { action, autorun, computed, decorate, observable } from 'mobx';
 import service from '../facade/service';
 
 const db = service.getDatabase();
@@ -72,15 +72,15 @@ class ParticipantStore {
     }
   });
 
-  setFilter = filter => {
+  setFilter = (filter) => {
     this._filter = filter;
   };
 
-  setSorter = sorter => {
+  setSorter = (sorter) => {
     this._sorter = sorter;
   };
 
-  setCollection = collection => {
+  setCollection = (collection) => {
     this._collection = collection;
   };
 
