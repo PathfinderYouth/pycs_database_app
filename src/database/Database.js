@@ -26,8 +26,8 @@ export const Database = inject('participantStore')(
       { id: 'city', label: 'City' },
     ];
     const staffHeaders = [
-      { id: 'lastName', label: 'Last Name' },
-      { id: 'firstName', label: 'First Name' },
+      { id: 'email', label: 'Email' },
+      { id: 'name', label: 'Name' },
       { id: 'role', label: 'Role' },
     ];
 
