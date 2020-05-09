@@ -46,10 +46,6 @@ export const ListContainer = (props) => {
     //TODO
   };
 
-  const handleClick = (event, name) => {
-    //TODO
-  };
-
   return (
     <div className={`${classes.root} maxWidth`}>
       <Paper className={`${classes.paper} maxWidth`}>

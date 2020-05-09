@@ -11,10 +11,22 @@ import { Collapse } from '@material-ui/core';
 import './style/NavDrawer.css';
 import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { makeStyles } from '@material-ui/core/styles';
 
-export const ParticipantListDrawer = (props) => {
-  const { handleClick, numNew, classes } = props;
-  const [participantsListExpanded, setParticipantsListExpanded] = useState(true);
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(2),
+  },
+
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
+}));
+
+export const ListViewDrawer = (props) => {
+  const classes = useStyles();
+  const { handleClick, numNew } = props;
+  const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
 
   const statuses = [
     { name: 'Pending', icon: <HourglassEmptyOutlined /> },
@@ -37,7 +49,7 @@ export const ParticipantListDrawer = (props) => {
           <ListItemIcon>
             <Person />
           </ListItemIcon>
-          <ListItemText primary="All Participants" />
+          <ListItemText primary="Participants" />
           <div className="expandButton" onClick={expandClick}>
             {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
           </div>

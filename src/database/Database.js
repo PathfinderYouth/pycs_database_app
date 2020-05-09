@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ListContainer, NavDrawer, TopNavBar } from './components';
+import { DetailViewDrawer, ListContainer, ListViewDrawer, NavDrawer, TopNavBar } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
-import Typography from '@material-ui/core/Typography';
 import { viewModes } from './components/viewMode';
 import './Database.css';
+import { ParticipantTabs } from './components/ParticipantTabs';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -17,14 +17,6 @@ const useStyles = makeStyles((theme) => ({
 export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
-    const [drawerState, setDrawerState] = useState(false);
-    // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
-    const [openParticipantRecord, setOpenParticipantRecord] = useState(null);
-    const [openStaffRecord, setOpenStaffRecord] = useState(null);
-    const [viewMode, setViewMode] = useState(viewModes.PARTICIPANT_LIST);
-
-    const { participants, setCollection, numOfNewParticipants } = participantStore;
-
     const participantHeaders = [
       { id: 'status', label: 'Status' },
       { id: 'lastName', label: 'Last Name' },
@@ -33,12 +25,19 @@ export const Database = inject('participantStore')(
       { id: 'address', label: 'Address' },
       { id: 'city', label: 'City' },
     ];
-
     const staffHeaders = [
       { id: 'lastName', label: 'Last Name' },
       { id: 'firstName', label: 'First Name' },
       { id: 'role', label: 'Role' },
     ];
+
+    const [drawerState, setDrawerState] = useState(false);
+    const [viewMode, setViewMode] = useState(viewModes.PARTICIPANT_LIST);
+
+    // Get record clicked from RecordListContainer.js and passed to RecordDialog.js
+    const [openParticipantRecord, setOpenParticipantRecord] = useState(null);
+    const [openStaffRecord, setOpenStaffRecord] = useState(null);
+    const { participants, setCollection, numOfNewParticipants } = participantStore;
 
     const handleDrawerOpen = () => {
       setDrawerState(true);
@@ -64,26 +63,56 @@ export const Database = inject('participantStore')(
       setViewMode(viewModes.STAFF_LIST);
     };
 
-    const viewSwitch = () => {
+    const handleViewDrawerClick = (itemClicked) => {
+      //TODO change modes/make queries depending on what was clicked
+    };
+
+    const listViewDrawer = (
+      <ListViewDrawer handleClick={handleViewDrawerClick} numNew={4} classes={classes} />
+    );
+
+    const participantListView = (
+      <ListContainer
+        headers={participantHeaders}
+        records={participants}
+        setRowClicked={setOpenParticipantRecord}
+        handleRowOpened={handleParticipantOpen}
+        handleRowClosed={handleParticipantClose}
+      />
+    );
+
+    const [navButtons, setNavButtons] = useState(listViewDrawer);
+    const [contentView, setContentView] = useState(participantListView);
+
+    const handleChangeParticipantTab = () => {
+      //TODO
+    };
+
+    const switchNavDrawer = () => {
       switch (viewMode) {
         case viewModes.PARTICIPANT_LIST:
-          return (
-            <ListContainer
-              headers={participantHeaders}
-              records={participants}
-              setRowClicked={setOpenParticipantRecord}
-              handleRowOpened={handleParticipantOpen}
-              handleRowClosed={handleParticipantClose}
-            />
-          );
+        case viewModes.STAFF_LIST:
+          return listViewDrawer;
         case viewModes.PARTICIPANT_DETAIL:
           return (
-            <div>
-              <Typography variant="h1" onClick={handleParticipantClose}>
-                Back!
-              </Typography>
-            </div>
+            <DetailViewDrawer
+              handleClickBack={handleParticipantClose}
+              subComponent={<ParticipantTabs handleClick={handleChangeParticipantTab()} />}
+            />
           );
+        case viewModes.STAFF_DETAIL:
+          return <DetailViewDrawer handleClickBack={handleStaffClose()} />;
+        default:
+          return null;
+      }
+    };
+
+    const switchContentView = () => {
+      switch (viewMode) {
+        case viewModes.PARTICIPANT_LIST:
+          return participantListView;
+        case viewModes.PARTICIPANT_DETAIL:
+          return null; //TODO replace with participant details
         case viewModes.STAFF_LIST:
           return (
             <ListContainer
@@ -95,8 +124,7 @@ export const Database = inject('participantStore')(
             />
           );
         case viewModes.STAFF_DETAIL:
-          //TODO
-          return null;
+          return null; //TODO replace with staff details
         default:
           return null;
       }
@@ -105,6 +133,7 @@ export const Database = inject('participantStore')(
     useEffect(() => {
       // Do this after the component is initialized
       setCollection('new');
+      switchContentView();
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -115,10 +144,9 @@ export const Database = inject('participantStore')(
         <NavDrawer
           handleDrawerClose={handleDrawerClose}
           handleDrawerState={drawerState}
-          viewMode={viewMode}
-          numNew={numOfNewParticipants}
+          subComponent={switchNavDrawer()}
         />
-        <div className={`${classes.content} content`}>{viewSwitch(viewMode)}</div>
+        <div className={`${classes.content} content`}>{switchContentView()}</div>
       </div>
     );
   }),

@@ -8,9 +8,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { ParticipantDetailDrawer } from './ParticipantDetailDrawer';
-import { ParticipantListDrawer } from './ParticipantListDrawer';
-import { viewModes } from './viewMode';
 import './style/NavDrawer.css';
 
 const drawerWidth = 240;
@@ -45,45 +42,15 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-between',
     },
   },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
 }));
 
 export const NavDrawer = (props) => {
-  const { window, viewMode } = props;
+  const { window, subComponent } = props;
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
-  const handleListViewClick = () => {
-    //TODO
-  };
-
-  const handleRecordViewClick = () => {
-    //TODO
-  };
-
-  const drawerSwitch = () => {
-    switch (viewMode) {
-      case viewModes.PARTICIPANT_LIST:
-        return (
-          <ParticipantListDrawer numNew={4} handleClick={handleListViewClick} classes={classes} />
-        );
-      case viewModes.PARTICIPANT_DETAIL:
-        return <ParticipantDetailDrawer handleClick={handleRecordViewClick} />;
-      case viewModes.STAFF_LIST:
-        //TODO
-        return null;
-      case viewModes.STAFF_DETAIL:
-        //TODO
-        return null;
-      default:
-        return null;
-    }
-  };
 
   const drawer = (
     <div>
@@ -103,7 +70,7 @@ export const NavDrawer = (props) => {
         ) : null}
       </div>
       <Divider />
-      {drawerSwitch()}
+      {subComponent}
     </div>
   );
 

@@ -4,5 +4,5 @@ export * from './TopNavBar';
 export * from './ListContainer';
 export * from './RecordDialog';
 export * from './SortingTableHead';
-export * from './ParticipantDetailDrawer';
-export * from './ParticipantListDrawer';
+export * from './DetailViewDrawer';
+export * from './ListViewDrawer';
