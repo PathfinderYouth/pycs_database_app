@@ -60,7 +60,7 @@ export const ListViewDrawer = (props) => {
         <Divider />
         <ListItem button key="New Applications" onClick={handleClick}>
           <ListItemIcon>
-            <Badge badgeContent={numNew} color="secondary" overlap="circle">
+            <Badge badgeContent={numNew} color="error" overlap="circle">
               <Inbox />
             </Badge>
           </ListItemIcon>

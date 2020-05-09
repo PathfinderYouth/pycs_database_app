@@ -1,11 +1,12 @@
 import React from 'react';
-import LogIn from './components/Login';
-import NavBar from './components/NavBar';
+import { LogIn, NavBar } from './components';
+import './SignIn.css';
+
 
 // container that holds all sign in page UI objects
 export const SignIn = () => (
-  <>
+  <div className='sign-in-container'>
     <NavBar />
     <LogIn />
-  </>
+  </div>
 );

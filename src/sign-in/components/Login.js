@@ -7,11 +7,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import './Login.css';
 
-class LogIn extends Component {
+export class LogIn extends Component {
   constructor(props) {
     super(props);
     this.authService = service.getAuthentication();
@@ -56,28 +55,15 @@ class LogIn extends Component {
     this.setState(newState);
   }
 
-  useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-    },
-    form: {
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
-
   render() {
-    const classes = this.useStyles;
     return (
       <Container component="main" maxWidth="xs">
-        <div className={`${classes.paper} paperStyle`}>
-          <Typography component="h1" variant="h5">
+        <div className={`paperStyle`}>
+          <Typography variant="h5">
             PYCS Staff Login Portal
           </Typography>
           <form
-            className={`${classes.form} maxWidth`}
+            className={`maxWidth`}
             noValidate
             onSubmit={this.handleLogin}
           >
@@ -117,7 +103,6 @@ class LogIn extends Component {
               variant="contained"
               color="primary"
               onClick={this.handleLogin}
-              className={classes.submit}
             >
               Sign In
             </Button>
@@ -134,5 +119,3 @@ class LogIn extends Component {
     );
   }
 }
-
-export default LogIn;
