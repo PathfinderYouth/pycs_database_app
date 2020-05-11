@@ -22,10 +22,14 @@ export const IntakeForm = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const lastStepNumber = formSteps.length;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.up('md'));
+  const isFullSize = useMediaQuery(theme.breakpoints.up('md'));
   let visitedSteps = [];
+  let formContainerDiv; // reference to form container div
 
-  // Validates form on initial load, generating errors that must be cleared in order to proceed
+  /**
+   * Validates form on initial load, generating errors that must be cleared in order to proceed
+   */
+
   useEffect(() => {
     props.form.validateForm();
     visitStep(currentStep);
@@ -33,6 +37,13 @@ export const IntakeForm = (props) => {
   }, []);
 
 
+  /**
+   * Scrolls to the top of the form container when the page changes
+   */
+  useEffect(() => {
+    formContainerDiv.scrollTop = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep]);
 
   /**
    * Called when a user is verified via ReCaptcha
@@ -161,7 +172,7 @@ export const IntakeForm = (props) => {
       {currentStep > 0 && currentStep < lastStepNumber && (
         <div className="form-breadcrumbs">
           <Breadcrumbs
-            maxItems={isMobile ? undefined : 2}
+            maxItems={isFullSize ? undefined : 2}
             separator={<NavigateNextIcon fontSize="small" />}
             aria-label="breadcrumb"
           >
@@ -169,11 +180,7 @@ export const IntakeForm = (props) => {
               (step, index) =>
                 index > 0 &&
                 (currentStep === index ? (
-                  <Typography
-                    key={step.stepName}
-                    variant="caption"
-                    color="textSecondary"
-                  >
+                  <Typography key={step.stepName} variant="caption" color="textSecondary">
                     {step.stepName}
                   </Typography>
                 ) : (
@@ -194,7 +201,7 @@ export const IntakeForm = (props) => {
         </div>
       )}
 
-      <div className="form-container">
+      <div className="form-container" ref={(ref) => (formContainerDiv = ref)}>
         <div className="form">{getFormStep(form, currentStep)}</div>
       </div>
       <div className="form-bottomBar">
@@ -210,29 +217,15 @@ export const IntakeForm = (props) => {
           )}
         </div>
         <div className="captcha">
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            className="captcha"
-          >
+          <Typography variant="body2" color="textSecondary" className="captcha">
             This site is protected by reCAPTCHA and the Google{' '}
-            <Link href="https://policies.google.com/privacy">
-              Privacy Policy
-            </Link>{' '}
-            and{' '}
-            <Link href="https://policies.google.com/terms">
-              Terms of Service
-            </Link>{' '}
-            apply.
+            <Link href="https://policies.google.com/privacy">Privacy Policy</Link> and{' '}
+            <Link href="https://policies.google.com/terms">Terms of Service</Link> apply.
           </Typography>
         </div>
         <div className="buttonNext">
           {currentStep < lastStepNumber - 1 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => handleClickNext(form)}
-            >
+            <Button color="primary" variant="contained" onClick={handleClickNext}>
               Next
             </Button>
           )}
