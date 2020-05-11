@@ -36,8 +36,6 @@ export class LogIn extends Component {
         console.log(auth.type);
         console.log(auth.additional);
         console.log(auth.email);
-        // TODO redirect to '/database' when success
-        alert('success');
         navigate('/database');
       },
       (error) => {
