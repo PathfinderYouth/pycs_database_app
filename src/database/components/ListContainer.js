@@ -9,17 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { TablePagination } from '@material-ui/core';
 import { SortingTableHead } from './SortingTableHead';
-import { stableSort, getComparator } from './sortingHelpers';
-import './style/RecordListContainer.css';
-
-const headers = [
-  { id: 'status', label: 'Status' },
-  { id: 'lastName', label: 'Last Name' },
-  { id: 'firstName', label: 'First Name' },
-  { id: 'birthDate', label: 'Date of Birth' },
-  { id: 'address', label: 'Address' },
-  { id: 'city', label: 'City' },
-];
+import { getComparator, stableSort } from './sortingHelpers';
+import './style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,17 +18,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const RecordListContainer = (props) => {
+export const ListContainer = (props) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('lastName');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const headers = props.headers;
   const rows = props.records;
 
-  const handleRecordRowClicked = (clickedRecord) => {
-    props.setRecordListClicked(clickedRecord);
-    props.handleRecordOpen();
+  const handleRowClicked = (clickedRow) => {
+    props.setRowClicked(clickedRow);
+    props.handleRowOpened();
   };
 
   const handleRequestSort = (event, property) => {
@@ -51,10 +43,6 @@ export const RecordListContainer = (props) => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    //TODO
-  };
-
-  const handleClick = (event, name) => {
     //TODO
   };
 
@@ -73,48 +61,17 @@ export const RecordListContainer = (props) => {
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage,
-                )
-                .map((record, index) => {
-                  const {
-                    id,
-                    lastName,
-                    firstName,
-                    address,
-                    city,
-                    status,
-                    birthDate,
-                  } = record;
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      onClick={handleRecordRowClicked.bind(
-                        this,
-                        record,
-                      )}
-                      tabIndex={-1}
-                      key={id}
-                    >
-                      <TableCell>
-                        <Typography>{status}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{lastName}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{firstName}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{birthDate}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{address}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography>{city}</Typography>
-                      </TableCell>
+                    <TableRow hover onClick={handleRowClicked.bind(this, row)}>
+                      {headers.map((column) => {
+                        return (
+                          <TableCell>
+                            <Typography>{row[column.id]}</Typography>
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   );
                 })}

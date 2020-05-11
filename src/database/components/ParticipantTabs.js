@@ -1,27 +1,30 @@
-import React from 'react';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import React from 'react';
 import { formSteps } from '../../intake-form/components';
-import './style/NavDrawer.css';
 
-export const RecordViewDrawer = (props) => {
+export const ParticipantTabs = (props) => {
   const stepNames = formSteps.map((step) => {
     if (step !== undefined && step.fields.length !== 0) {
       return step.stepName;
     }
   });
+
+  const handleClick = (clickedCategory) => {
+    props.handleClick(clickedCategory);
+  };
+
   return (
-    <List>
-      {stepNames.map((category) => {
+    <>
+      {stepNames.map((tab) => {
         return (
-          category !== undefined && (
-            <ListItem button onClick={props.handleClick} key={category}>
-              <ListItemText>{category}</ListItemText>
+          tab !== undefined && (
+            <ListItem button onClick={handleClick.bind(this, tab)} key={tab}>
+              <ListItemText>{tab}</ListItemText>
             </ListItem>
           )
         );
       })}
-    </List>
+    </>
   );
 };
