@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { DetailViewDrawer, ListContainer, ListViewDrawer, NavDrawer, TopNavBar } from './components';
+import {
+  DetailViewDrawer,
+  ListContainer,
+  ListViewDrawer,
+  NavDrawer,
+  ParticipantTabs,
+  TopNavBar,
+  viewModes,
+} from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
-import { viewModes } from './components/viewMode';
 import './Database.css';
-import { ParticipantTabs } from './components/ParticipantTabs';
 
 const useStyles = makeStyles((theme) => ({
   content: {
