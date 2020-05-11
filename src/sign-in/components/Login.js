@@ -60,7 +60,7 @@ export class LogIn extends Component {
       <Container component="main" maxWidth="xs">
         <div className={`paperStyle`}>
           <Typography variant="h5">PYCS Staff Login Portal</Typography>
-          <form className={`maxWidth`} noValidate onSubmit={this.handleLogin}>
+          <form className="maxWidth" noValidate onSubmit={this.handleLogin}>
             <TextField
               variant="outlined"
               margin="normal"
