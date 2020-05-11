@@ -74,7 +74,11 @@ export const Database = inject('participantStore')(
     };
 
     const listViewDrawer = (
-      <ListViewDrawer handleClick={handleViewDrawerClick} numNew={4} classes={classes} />
+      <ListViewDrawer
+        handleClick={handleViewDrawerClick}
+        numNew={numOfNewParticipants}
+        classes={classes}
+      />
     );
 
     const participantListView = (
