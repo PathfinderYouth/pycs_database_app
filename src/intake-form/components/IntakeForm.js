@@ -12,7 +12,7 @@ import { FormStepStart } from './FormStepStart';
 import { formSteps, requiredFields } from './fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
-import './IntakeForm.css';
+import './style/IntakeForm.css';
 
 export const IntakeForm = (props) => {
   const { form } = props;
@@ -31,8 +31,6 @@ export const IntakeForm = (props) => {
     visitStep(currentStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
 
   /**
    * Called when a user is verified via ReCaptcha
@@ -61,10 +59,9 @@ export const IntakeForm = (props) => {
       }
     });
     hasErrors &&
-      enqueueSnackbar(
-        'Some fields have errors. Please resolve them to continue.',
-        { variant: 'error' },
-      );
+      enqueueSnackbar('Some fields have errors. Please resolve them to continue.', {
+        variant: 'error',
+      });
     return hasErrors;
   };
 
@@ -169,11 +166,7 @@ export const IntakeForm = (props) => {
               (step, index) =>
                 index > 0 &&
                 (currentStep === index ? (
-                  <Typography
-                    key={step.stepName}
-                    variant="caption"
-                    color="textSecondary"
-                  >
+                  <Typography key={step.stepName} variant="caption" color="textSecondary">
                     {step.stepName}
                   </Typography>
                 ) : (
@@ -200,39 +193,21 @@ export const IntakeForm = (props) => {
       <div className="form-bottomBar">
         <div className="form-buttonBack">
           {currentStep > 1 && currentStep < lastStepNumber && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClickBack}
-            >
+            <Button color="primary" variant="contained" onClick={handleClickBack}>
               Back
             </Button>
           )}
         </div>
         <div className="captcha">
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            className="captcha"
-          >
+          <Typography variant="body2" color="textSecondary" className="captcha">
             This site is protected by reCAPTCHA and the Google{' '}
-            <Link href="https://policies.google.com/privacy">
-              Privacy Policy
-            </Link>{' '}
-            and{' '}
-            <Link href="https://policies.google.com/terms">
-              Terms of Service
-            </Link>{' '}
-            apply.
+            <Link href="https://policies.google.com/privacy">Privacy Policy</Link> and{' '}
+            <Link href="https://policies.google.com/terms">Terms of Service</Link> apply.
           </Typography>
         </div>
         <div className="buttonNext">
           {currentStep < lastStepNumber - 1 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => handleClickNext(form)}
-            >
+            <Button color="primary" variant="contained" onClick={() => handleClickNext(form)}>
               Next
             </Button>
           )}

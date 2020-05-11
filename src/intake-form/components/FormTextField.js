@@ -5,17 +5,10 @@ import FormLabel from '@material-ui/core/FormLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { FastField } from 'formik';
 import { NumberMask } from './NumberMask';
-import './FormSteps.css';
+import './style/FormSteps.css';
 
 export const FormTextField = ({ form, field }) => {
-  const {
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    setFieldValue,
-  } = form;
+  const { values, errors, touched, handleChange, handleBlur, setFieldValue } = form;
   const {
     name,
     type,
@@ -37,9 +30,7 @@ export const FormTextField = ({ form, field }) => {
           inputComponent: NumberMask,
         }
       : {
-          startAdornment: (
-            <InputAdornment position="start">$</InputAdornment>
-          ),
+          startAdornment: <InputAdornment position="start">$</InputAdornment>,
         };
 
   const inputLabelProps =
@@ -63,9 +54,7 @@ export const FormTextField = ({ form, field }) => {
 
   const isFieldDisabled = (dependsOnOtherField, values) => {
     const { name, list, value } = dependsOnOtherField;
-    return list
-      ? !values[name].includes(value)
-      : values[name] !== value;
+    return list ? !values[name].includes(value) : values[name] !== value;
   };
 
   const handleDependantFieldChange = ({ target: { value } }) => {

@@ -2,43 +2,30 @@ import React from 'react';
 import Logo from '../../assets/Pathfinder-Logo.jpg';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import './FormSteps.css';
+import './style/FormSteps.css';
 
 export const FormStepConfirmation = () => {
   return (
     <div className="form-pageContainer">
       <div className="form-pageContents">
-        <img
-          className="logo"
-          src={Logo}
-          alt="Pathfinder Youth Centre Society logo"
-        />
+        <img className="logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
         <Typography gutterBottom variant="h4">
           Self-Enrollment System
         </Typography>
-        <Typography variant="h5">
-          Your application has been successfully received.
-        </Typography>
-        <Typography>
-          You will be contacted soon for an interview.
-        </Typography>
+        <Typography variant="h5">Your application has been successfully received.</Typography>
+        <Typography>You will be contacted soon for an interview.</Typography>
         <div className="form-textContainer">
           <Typography variant="h5">Next steps</Typography>
           <Typography>
-            In order to complete your application, Pathfinder requires
-            participants to fill out an additional form from the
-            Government of Canada. Please download the form using the
-            link below, and then either:
+            In order to complete your application, Pathfinder requires participants to fill out an
+            additional form from the Government of Canada. Please download the form using the link
+            below, and then either:
           </Typography>
           <ul>
             <li>
               <Typography>
                 Fill it out, including your signature, and email it to{' '}
-                <Link
-                  href="mailto:pathfinderyouthsociety@shaw.ca"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <Link href="mailto:pathfinderyouthsociety@shaw.ca" target="_blank" rel="noreferrer">
                   pathfinderyouthsociety@shaw.ca
                 </Link>
                 , or
@@ -46,9 +33,8 @@ export const FormStepConfirmation = () => {
             </li>
             <li>
               <Typography>
-                Print it, fill it out, including your signature, and
-                bring it with you when you when you come in for your
-                interview
+                Print it, fill it out, including your signature, and bring it with you when you when
+                you come in for your interview
               </Typography>
             </li>
           </ul>

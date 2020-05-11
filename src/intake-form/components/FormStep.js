@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { FormFieldBuilder } from './FormFieldBuilder';
-import './FormSteps.css';
+import './style/FormSteps.css';
 
 export const FormStep = ({ form, step }) => {
   const { stepName, fields } = step;
@@ -17,11 +17,7 @@ export const FormStep = ({ form, step }) => {
       </Typography>
       <Grid container spacing={2}>
         {fields.map((field) => (
-          <FormFieldBuilder
-            key={field.name}
-            form={form}
-            field={field}
-          />
+          <FormFieldBuilder key={field.name} form={form} field={field} />
         ))}
       </Grid>
     </div>
