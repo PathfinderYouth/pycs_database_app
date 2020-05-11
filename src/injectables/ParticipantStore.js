@@ -12,7 +12,7 @@ class ParticipantStore {
 
   _collection = null;
 
-  _unsubscribe = null;
+  _controller = null;
 
   _statistics = {};
 
@@ -53,18 +53,28 @@ class ParticipantStore {
     // Run this whenever type of collection, filter, or sorter changes
 
     // Unsubscribe to previous real-time listener and reset list to empty
-    if (this._unsubscribe) {
+    if (this._controller) {
       this._participants = [];
-      this._unsubscribe();
+      this._controller.unsubscribe();
     }
 
     switch (this._collection) {
       case 'new':
-        this._unsubscribe = db.getNewList(this._filter, this._sorter, this._onChildNext);
+        this._controller = db.getNewList(
+          this._filter,
+          this._sorter,
+          10,
+          this._onChildNext,
+        );
         break;
 
       case 'permanent':
-        this._unsubscribe = db.getPermanentList(this._filter, this._sorter, this._onChildNext);
+        this._controller = db.getPermanentList(
+          this._filter,
+          this._sorter,
+          10,
+          this._onChildNext,
+        );
         break;
 
       default:
@@ -72,15 +82,15 @@ class ParticipantStore {
     }
   });
 
-  setFilter = (filter) => {
+  setFilter = filter => {
     this._filter = filter;
   };
 
-  setSorter = (sorter) => {
+  setSorter = sorter => {
     this._sorter = sorter;
   };
 
-  setCollection = (collection) => {
+  setCollection = collection => {
     this._collection = collection;
   };
 
