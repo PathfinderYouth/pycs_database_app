@@ -8,7 +8,7 @@ export const FormStep = ({ form, step }) => {
   const { stepName, fields } = step;
 
   return (
-    <div className="fieldsContainer">
+    <div className="form-fieldsContainer">
       <Typography gutterBottom variant="h4">
         {stepName}
       </Typography>

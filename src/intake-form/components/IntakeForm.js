@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useSnackbar } from 'notistack';
 import { useTheme } from '@material-ui/core/styles';
 import { FormStepStart } from './FormStepStart';
 import { formSteps, requiredFields } from './fields';
@@ -18,26 +19,31 @@ export const IntakeForm = (props) => {
   const { handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(0);
   const recaptchaRef = React.createRef();
+  const { enqueueSnackbar } = useSnackbar();
   const lastStepNumber = formSteps.length;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.up('md'));
+  const isFullSize = useMediaQuery(theme.breakpoints.up('md'));
   let visitedSteps = [];
+  let formContainerDiv; // reference to form container div
 
-  // Validates form on initial load, generating errors that must be cleared in order to proceed
+  /**
+   * Validates form on initial load, generating errors that must be cleared in order to proceed
+   */
+
   useEffect(() => {
     props.form.validateForm();
     visitStep(currentStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   /**
-   * Steps backward a step in the form
+   * Scrolls to the top of the form container when the page changes
    */
-  const handleClickBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  useEffect(() => {
+    formContainerDiv.scrollTop = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep]);
 
   /**
    * Called when a user is verified via ReCaptcha
@@ -65,10 +71,15 @@ export const IntakeForm = (props) => {
         hasErrors = true;
       }
     });
+    hasErrors &&
+      enqueueSnackbar(
+        'Some fields have errors. Please resolve them to continue.',
+        { variant: 'error' },
+      );
     return hasErrors;
   };
 
-  /** 
+  /**
    * Adds current step to list of visited steps
    * @param stepNumber int
    */
@@ -82,7 +93,7 @@ export const IntakeForm = (props) => {
    * Checks if the current form step has any errors and prevents progression if so. If not, proceeds to the next step.
    * @param form Formik form object
    */
-  const handleClickNext = (form) => {
+  const handleClickNext = () => {
     if (!stepHasErrors()) {
       if (currentStep < lastStepNumber) {
         if (currentStep === lastStepNumber - 1) {
@@ -91,6 +102,15 @@ export const IntakeForm = (props) => {
           toNextPage();
         }
       }
+    }
+  };
+
+  /**
+   * Steps backward a step in the form
+   */
+  const handleClickBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -106,11 +126,13 @@ export const IntakeForm = (props) => {
     event.preventDefault();
     if (stepNumber < currentStep) {
       setCurrentStep(stepNumber);
-    } else if (
-      (stepNumber === currentStep + 1 ||
-        visitedSteps.includes(stepNumber)) &&
-      !stepHasErrors()
-    ) {
+    } else if (stepNumber === currentStep + 1) {
+      handleClickNext();
+    } else if (!visitedSteps.includes(stepNumber)) {
+      enqueueSnackbar('Must complete steps before proceeding.', {
+        variant: 'error',
+      });
+    } else if (visitedSteps.includes(stepNumber)) {
       setCurrentStep(stepNumber);
     }
   };
@@ -147,10 +169,10 @@ export const IntakeForm = (props) => {
         </Typography>
       </div>
 
-      {currentStep !== 0 && currentStep !== lastStepNumber && (
+      {currentStep > 0 && currentStep < lastStepNumber && (
         <div className="form-breadcrumbs">
           <Breadcrumbs
-            maxItems={isMobile ? undefined : 2}
+            maxItems={isFullSize ? undefined : 2}
             separator={<NavigateNextIcon fontSize="small" />}
             aria-label="breadcrumb"
           >
@@ -158,11 +180,7 @@ export const IntakeForm = (props) => {
               (step, index) =>
                 index > 0 &&
                 (currentStep === index ? (
-                  <Typography
-                    key={step.stepName}
-                    variant="caption"
-                    color="textSecondary"
-                  >
+                  <Typography key={step.stepName} variant="caption" color="textSecondary">
                     {step.stepName}
                   </Typography>
                 ) : (
@@ -183,12 +201,12 @@ export const IntakeForm = (props) => {
         </div>
       )}
 
-      <div className="form-container">
+      <div className="form-container" ref={(ref) => (formContainerDiv = ref)}>
         <div className="form">{getFormStep(form, currentStep)}</div>
       </div>
       <div className="form-bottomBar">
         <div className="form-buttonBack">
-          {currentStep !== 0 && (
+          {currentStep > 1 && currentStep < lastStepNumber && (
             <Button
               color="primary"
               variant="contained"
@@ -199,29 +217,15 @@ export const IntakeForm = (props) => {
           )}
         </div>
         <div className="captcha">
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            className="captcha"
-          >
+          <Typography variant="body2" color="textSecondary" className="captcha">
             This site is protected by reCAPTCHA and the Google{' '}
-            <Link href="https://policies.google.com/privacy">
-              Privacy Policy
-            </Link>{' '}
-            and{' '}
-            <Link href="https://policies.google.com/terms">
-              Terms of Service
-            </Link>{' '}
-            apply.
+            <Link href="https://policies.google.com/privacy">Privacy Policy</Link> and{' '}
+            <Link href="https://policies.google.com/terms">Terms of Service</Link> apply.
           </Typography>
         </div>
         <div className="buttonNext">
           {currentStep < lastStepNumber - 1 && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => handleClickNext(form)}
-            >
+            <Button color="primary" variant="contained" onClick={handleClickNext}>
               Next
             </Button>
           )}
