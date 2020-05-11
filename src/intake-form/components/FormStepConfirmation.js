@@ -6,8 +6,8 @@ import './FormSteps.css';
 
 export const FormStepConfirmation = () => {
   return (
-    <div className="startPageContainer">
-      <div className="startPageContents">
+    <div className="form-pageContainer">
+      <div className="form-pageContents">
         <img
           className="logo"
           src={Logo}
@@ -22,7 +22,7 @@ export const FormStepConfirmation = () => {
         <Typography>
           You will be contacted soon for an interview.
         </Typography>
-        <div className="formTextContainer">
+        <div className="form-textContainer">
           <Typography variant="h5">Next steps</Typography>
           <Typography>
             In order to complete your application, Pathfinder requires

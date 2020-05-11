@@ -5,8 +5,8 @@ import './FormSteps.css';
 
 export const FormStepStart = () => {
   return (
-    <div className="startPageContainer">
-      <div className="startPageContents">
+    <div className="form-pageContainer">
+      <div className="form-pageContents">
         <img
           className="logo"
           src={Logo}
@@ -15,7 +15,7 @@ export const FormStepStart = () => {
         <Typography gutterBottom align="center" variant="h4">
           Self-Enrollment System
         </Typography>
-        <div className="formTextContainer">
+        <div className="form-textContainer">
           <Typography
             gutterBottom
             align="center"
