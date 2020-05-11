@@ -12,7 +12,7 @@ import { FormStepStart } from './FormStepStart';
 import { formSteps, requiredFields } from './fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
-import './IntakeForm.css';
+import './style/IntakeForm.css';
 
 export const IntakeForm = (props) => {
   const { form } = props;
