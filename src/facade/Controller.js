@@ -49,6 +49,11 @@ export default class Controller {
   }
 
   _buildQuery(ref, filter, sorter) {
+    if (!filter) {
+      // Default filter: none
+      filter = {};
+    }
+
     const { status, ...temp } = filter;
     if (status) {
       ref = ref.where('status', '==', status);
@@ -61,9 +66,9 @@ export default class Controller {
       }
     }
 
-    if (Object.keys(sorter).length === 0) {
-      // Default sorter
-      return ref.orderBy('createdAt');
+    if (!sorter || Object.keys(sorter).length === 0) {
+      // Default sorter: createdAt
+      sorter = { createdAt: 'asc' };
     }
 
     for (const field in sorter) {
