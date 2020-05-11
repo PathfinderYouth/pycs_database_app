@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+import Controller from './Controller';
 
 const FieldValue = firebase.firestore.FieldValue;
 const Timestamp = firebase.firestore.Timestamp;
@@ -54,32 +55,6 @@ export default class DatabaseManager {
         if (onError) {
           onError(new Error('Document does not exist'));
         }
-      },
-      error: onError,
-    });
-  }
-
-  /**
-   * Private helper method to get list of documents
-   */
-  _getList(ref, filter, sorter, onChildNext, onError) {
-    for (const field in filter) {
-      if (filter[field]) {
-        ref = ref.where(field, '==', filter[field]);
-      }
-    }
-
-    for (const field in sorter) {
-      ref = ref.orderBy(field, sorter[field] ? sorter[field] : undefined);
-    }
-
-    return ref.onSnapshot({
-      next: querySnap => {
-        querySnap.docChanges().forEach(docChg => {
-          let doc = docChg.doc.data();
-          doc.id = docChg.doc.id;
-          onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
-        });
       },
       error: onError,
     });
@@ -409,16 +384,28 @@ export default class DatabaseManager {
    *  Object containing fields and values for filtering
    * @param {sorter: Object}
    *  Object containing fields and orders for sorting
+   * @param {limit: number}
+   *  Number of documents for a page
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
+   * @param {onDirecting?: () => void}
+   *  Callback function when before moving from one page to another page
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
+   * @returns {Controller}
+   *  A controller object
    */
-  getNewList(filter, sorter, onChildNext, onError) {
-    return this._getList(this.newRef, filter, sorter, onChildNext, onError);
+  getNewList(filter, sorter, limit, onChildNext, onDirecting, onError) {
+    return new Controller(
+      this.newRef,
+      filter,
+      sorter,
+      limit,
+      onChildNext,
+      onDirecting,
+      onError,
+    );
   }
 
   /**
@@ -427,17 +414,28 @@ export default class DatabaseManager {
    *  Object containing fields and values for filtering
    * @param {sorter: Object}
    *  Object containing fields and orders for sorting
+   * @param {limit: number}
+   *  Number of documents for a page
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
+   * @param {onDirecting?: () => void}
+   *  Callback function when before moving from one page to another page
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
+   * @returns {Controller}
+   *  A controller object
    */
-  getPermanentList(filter, sorter, onChildNext, onError) {
-    let ref = this.permanentRef;
-    return this._getList(ref, filter, sorter, onChildNext, onError);
+  getPermanentList(filter, sorter, limit, onChildNext, onDirecting, onError) {
+    return new Controller(
+      this.permanentRef,
+      filter,
+      sorter,
+      limit,
+      onChildNext,
+      onDirecting,
+      onError,
+    );
   }
 
   /**
