@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import './style/TopNavBar.css';
+import * as firebase from 'firebase/app';
 
 const drawerWidth = 240;
 
@@ -55,6 +56,10 @@ export const TopNavBar = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleSignOut = () => {
+    firebase.auth().signOut();
+  }
 
   return (
     <AppBar
@@ -110,7 +115,7 @@ export const TopNavBar = (props) => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Log out</MenuItem>
+            <MenuItem onClick={handleSignOut}>Log out</MenuItem>
           </Menu>
         </div>
       </Toolbar>
