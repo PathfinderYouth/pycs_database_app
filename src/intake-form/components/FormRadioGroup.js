@@ -6,37 +6,23 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-export const FormRadioGroup = ({ form, field }) => {
+export const FormRadioGroup = ({ form, field, isFieldDisabled }) => {
   const {
     values,
     errors,
     touched,
     handleChange,
-    handleBlur,
-    setFieldValue,
+    handleBlur
   } = form;
   const {
     name,
     options,
     label = undefined,
     required = undefined,
-    dependantFields = undefined,
     dependsOnOtherField = undefined,
   } = field;
 
-  const disabled =
-    !!dependsOnOtherField &&
-    values[dependsOnOtherField.name] !== dependsOnOtherField.value;
-
-  const handleDependantFieldChange = ({ target: { value } }) => {
-    if (!!dependantFields) {
-      dependantFields.forEach((field) => {
-        if (value !== field.value) {
-          setFieldValue(field.name, '');
-        }
-      });
-    }
-  };
+  const disabled = isFieldDisabled(dependsOnOtherField, values, name);
 
   return (
     <FormControl
@@ -49,10 +35,7 @@ export const FormRadioGroup = ({ form, field }) => {
         aria-label={name}
         name={name}
         value={values[name]}
-        onChange={(event) => {
-          handleChange(event);
-          handleDependantFieldChange(event);
-        }}
+        onChange={handleChange}
         onBlur={handleBlur}
         row
       >
