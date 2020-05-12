@@ -70,7 +70,7 @@ export const RecordSearchBar = inject('uiStore')(
     //Updates current search by field when view is changed
     useEffect(() => {
       setSearchBy(headers[0].id);
-    }, [currentViewMode]);
+    }, [headers, currentViewMode]);
 
     const handleChange = (event) => {
       setSearchBy(event.target.value);
