@@ -8,3 +8,7 @@
 .searchBox {
   width: 50%;
 }
+
+.formControl {
+  width: fit-content;
+}
