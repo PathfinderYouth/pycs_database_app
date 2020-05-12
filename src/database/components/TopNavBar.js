@@ -65,7 +65,7 @@ export const TopNavBar = (props) => {
     <AppBar
       position="fixed"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: props.handleDrawerState,
+        [classes.appBarShift]: props.drawerState,
       })}
     >
       <Toolbar>

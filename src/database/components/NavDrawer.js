@@ -38,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
 
     [theme.breakpoints.down('sm')]: {
       // Add attributes for phone size.
-      marginTop: '0em', //TODO find a better way than using px.
+      marginTop: '0em',
       justifyContent: 'space-between',
     },
   },
 }));
 
 export const NavDrawer = (props) => {
-  const { window, subComponent } = props;
+  const { window, children } = props;
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -55,6 +55,8 @@ export const NavDrawer = (props) => {
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeaderCss`}>
+
+        {/* TODO: Replace with current user ID */}
         <Typography>Staff McStaff</Typography>
 
         {matches ? (
@@ -70,7 +72,7 @@ export const NavDrawer = (props) => {
         ) : null}
       </div>
       <Divider />
-      {subComponent}
+      {children}
     </div>
   );
 
@@ -78,13 +80,12 @@ export const NavDrawer = (props) => {
     <div className="root">
       <CssBaseline />
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden mdUp implementation="css">
           <Drawer
             container={container}
             variant="temporary"
             anchor="left"
-            open={props.handleDrawerState}
+            open={props.drawerState}
             onClose={props.handleDrawerClose}
             classes={{
               paper: classes.drawerPaper,
@@ -102,7 +103,7 @@ export const NavDrawer = (props) => {
               paper: classes.drawerPaper,
             }}
             variant="permanent"
-            open={props.handleDrawerState}
+            open={props.drawerState}
           >
             {drawer}
           </Drawer>

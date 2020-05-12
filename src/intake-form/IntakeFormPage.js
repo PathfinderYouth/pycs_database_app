@@ -1,11 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
-import {
-  IntakeForm,
-  validationSchema,
-  initialValues,
-} from './components';
+import { initialValues, IntakeForm, validationSchema } from './components';
 
 export const IntakeFormPage = () => {
   const { enqueueSnackbar } = useSnackbar();

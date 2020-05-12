@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TablePagination } from '@material-ui/core';
 import { SortingTableHead } from './SortingTableHead';
 import { getComparator, stableSort } from './sortingHelpers';
+import { inject, observer } from 'mobx-react';
+import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,76 +20,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ListContainer = (props) => {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('lastName');
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const headers = props.headers;
-  const rows = props.records;
+export const ListContainer = inject('uiStore')(
+  observer(({ records, setRowClicked }) => {
+    const classes = useStyles();
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('lastName');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
+    const { headers, setCurrentViewMode, currentDetailViewMode } = uiStore;
 
-  const handleRowClicked = (clickedRow) => {
-    props.setRowClicked(clickedRow);
-    props.handleRowOpened();
-  };
+    const handleRowClicked = (clickedRow) => {
+      setRowClicked(clickedRow);
+      setCurrentViewMode(currentDetailViewMode);
+    };
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+    const handleRequestSort = (event, property) => {
+      const isAsc = orderBy === property && order === 'asc';
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+    };
 
-  const handleChangePage = (event, newPage) => {
-    //TODO
-  };
+    const handleChangePage = (event, newPage) => {
+      //TODO
+    };
 
-  const handleChangeRowsPerPage = (event) => {
-    //TODO
-  };
+    const handleChangeRowsPerPage = (event) => {
+      //TODO
+    };
 
-  return (
-    <div className={`${classes.root} maxWidth`}>
-      <Paper className={`${classes.paper} maxWidth`}>
-        <TableContainer>
-          <Table className={classes.table} size="medium">
-            <SortingTableHead
-              classes={classes}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headerCells={headers}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow hover onClick={handleRowClicked.bind(this, row)}>
-                      {headers.map((column) => {
-                        return (
-                          <TableCell>
-                            <Typography>{row[column.id]}</Typography>
-                          </TableCell>
-                        );
-                      })}
+    return (
+      <div className={`${classes.root} maxWidth`}>
+        <Paper className={`${classes.paper} maxWidth`}>
+          <TableContainer>
+            <Table className={classes.table} size="medium">
+              <SortingTableHead
+                classes={classes}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={records.length}
+                headerCells={headers}
+              />
+              <TableBody>
+                {stableSort(records, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow hover key={row.id} onClick={handleRowClicked.bind(this, row)}>
+                      {headers.map((column) => (
+                        <TableCell key={`${row.id}-${column.id}`}>
+                          <Typography>{row[column.id]}</Typography>
+                        </TableCell>
+                      ))}
                     </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[20, 50, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </div>
-  );
-};
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[20, 50, 100]}
+            component="div"
+            count={records.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </div>
+    );
+  }),
+);
