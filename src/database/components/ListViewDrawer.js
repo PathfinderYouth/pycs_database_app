@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { RecordSearchBar } from './RecordSearchBar';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -7,26 +6,29 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { Collapse } from '@material-ui/core';
-import './style/NavDrawer.css';
+import Collapse from '@material-ui/core/Collapse';
 import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
+import { inject, observer } from 'mobx-react';
+import { uiStore } from '../../injectables';
+import { RecordSearchBar } from './RecordSearchBar';
+import './style/NavDrawer.css';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(2),
   },
-
   nested: {
     paddingLeft: theme.spacing(4),
   },
 }));
 
-export const ListViewDrawer = (props) => {
+export const ListViewDrawer = inject('uiStore')(
+  observer(({ numNew }) => {
   const classes = useStyles();
-  const { handleClick, numNew } = props;
   const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
+  const { setCurrentViewMode, viewModes } = uiStore;
 
   const statuses = [
     { name: 'Pending', icon: <HourglassEmptyOutlined /> },
@@ -45,7 +47,7 @@ export const ListViewDrawer = (props) => {
       </div>
       <List>
         <Divider />
-        <ListItem button key="participants" onClick={handleClick}>
+        <ListItem button key="participants" onClick={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}>
           <ListItemIcon>
             <Person />
           </ListItemIcon>
@@ -61,7 +63,6 @@ export const ListViewDrawer = (props) => {
                 button
                 key={status.name.toLowerCase()}
                 className={classes.nested}
-                onClick={handleClick}
               >
                 <ListItemIcon>{status.icon}</ListItemIcon>
                 <ListItemText primary={status.name} />
@@ -70,7 +71,7 @@ export const ListViewDrawer = (props) => {
           </List>
         </Collapse>
         <Divider />
-        <ListItem button key="newApplications" onClick={handleClick}>
+        <ListItem button key="newApplications">
           <ListItemIcon>
             <Badge badgeContent={numNew} color="error" overlap="circle">
               <Inbox />
@@ -79,8 +80,10 @@ export const ListViewDrawer = (props) => {
           <ListItemText primary="New Applications" />
         </ListItem>
         <Divider />
+
+
         {/*//TODO: only render this if user is staff*/}
-        <ListItem button key="staff" onClick={handleClick}>
+        <ListItem button key="staff" onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}>
           <ListItemIcon>
             <Work />
           </ListItemIcon>
@@ -90,4 +93,4 @@ export const ListViewDrawer = (props) => {
       </List>
     </div>
   );
-};
+}));

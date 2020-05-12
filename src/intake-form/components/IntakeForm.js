@@ -17,7 +17,7 @@ import './style/IntakeForm.css';
 export const IntakeForm = (props) => {
   const { form } = props;
   const { handleSubmit, isSubmitting } = form;
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(-1);
   const recaptchaRef = React.createRef();
   const { enqueueSnackbar } = useSnackbar();
   const lastStepNumber = formSteps.length;
@@ -35,7 +35,6 @@ export const IntakeForm = (props) => {
     visitStep(currentStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   /**
    * Scrolls to the top of the form container when the page changes
@@ -65,17 +64,19 @@ export const IntakeForm = (props) => {
   const stepHasErrors = () => {
     const { errors, setFieldTouched } = form;
     let hasErrors = false;
-    requiredFields[currentStep].forEach((field) => {
-      setFieldTouched(field);
-      if (!!errors[field]) {
-        hasErrors = true;
-      }
-    });
-    hasErrors &&
-      enqueueSnackbar(
-        'Some fields have errors. Please resolve them to continue.',
-        { variant: 'error' },
-      );
+    if (currentStep > -1) {
+      requiredFields[currentStep].forEach((field) => {
+        setFieldTouched(field);
+        if (!!errors[field]) {
+          hasErrors = true;
+        }
+      });
+      hasErrors &&
+        enqueueSnackbar('Some fields have errors. Please resolve them to continue.', {
+          variant: 'error',
+        });
+    }
+
     return hasErrors;
   };
 
@@ -144,7 +145,7 @@ export const IntakeForm = (props) => {
    */
   const getFormStep = (form, step) => {
     const currentStep = formSteps[step];
-    if (step > 0 && step < lastStepNumber) {
+    if (step > -1 && step < lastStepNumber) {
       return <FormStep form={form} step={currentStep} />;
     } else if (step >= lastStepNumber) {
       return <FormStepConfirmation />;
@@ -169,7 +170,7 @@ export const IntakeForm = (props) => {
         </Typography>
       </div>
 
-      {currentStep > 0 && currentStep < lastStepNumber && (
+      {currentStep > -1 && currentStep < lastStepNumber && (
         <div className="form-breadcrumbs">
           <Breadcrumbs
             maxItems={isFullSize ? undefined : 2}
@@ -178,7 +179,7 @@ export const IntakeForm = (props) => {
           >
             {formSteps.map(
               (step, index) =>
-                index > 0 &&
+                index > -1 &&
                 (currentStep === index ? (
                   <Typography key={step.stepName} variant="caption" color="textSecondary">
                     {step.stepName}
@@ -206,12 +207,8 @@ export const IntakeForm = (props) => {
       </div>
       <div className="form-bottomBar">
         <div className="form-buttonBack">
-          {currentStep > 1 && currentStep < lastStepNumber && (
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleClickBack}
-            >
+          {currentStep > 0 && currentStep < lastStepNumber && (
+            <Button color="primary" variant="contained" onClick={handleClickBack}>
               Back
             </Button>
           )}

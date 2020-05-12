@@ -1,8 +1,8 @@
 export const formSteps = [
-  {
-    stepName: 'Start',
-    fields: [],
-  },
+  // {
+  //   stepName: 'Start',
+  //   fields: [],
+  // },
   {
     stepName: 'Basic Information',
     fields: [
@@ -851,3 +851,5 @@ export const requiredFields = formSteps.reduce((reqs, step) => {
   reqs.push(stepReqs);
   return reqs;
 }, []);
+
+export const stepNames = formSteps.map((step) => step.stepName)
