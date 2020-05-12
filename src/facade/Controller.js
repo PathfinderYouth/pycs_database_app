@@ -1,11 +1,10 @@
 export default class Controller {
-  constructor(ref, filter, sorter, limit, onChildNext, onDirecting, onError) {
+  constructor(ref, filter, sorter, limit, onChildNext, onError) {
     this._query = this._buildQuery(ref, filter, sorter);
 
     this._checkPoints = [];
     this._limit = limit;
     this._currentPage = 0;
-    this._onDirecting = onDirecting;
 
     this._observer = {
       next: querySnap => {
@@ -83,7 +82,7 @@ export default class Controller {
     this._unsubContent();
   }
 
-  prevPage() {
+  prevPage(onDirecting) {
     // You're at the fist page. Cannot go back anymore.
     if (this._currentPage === 0) {
       return;
@@ -95,13 +94,13 @@ export default class Controller {
     }
 
     this._unsubContent();
-    if (this._onDirecting) {
-      this._onDirecting();
+    if (onDirecting) {
+      onDirecting(this._currentPage);
     }
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 
-  nextPage() {
+  nextPage(onDirecting) {
     // You're at the last page. Cannot go forward anymore.
     if (this.endId === this._checkPoints[this._currentPage + 1].id) {
       return;
@@ -111,8 +110,8 @@ export default class Controller {
     query = query.startAfter(this._checkPoints[++this._currentPage]);
 
     this._unsubContent();
-    if (this._onDirecting) {
-      this._onDirecting();
+    if (onDirecting) {
+      onDirecting(this._currentPage);
     }
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }

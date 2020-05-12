@@ -389,21 +389,18 @@ export default class DatabaseManager {
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
-   * @param {onDirecting?: () => void}
-   *  Callback function when before moving from one page to another page
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    * @returns {Controller}
    *  A controller object
    */
-  getNewList(filter, sorter, limit, onChildNext, onDirecting, onError) {
+  getNewList(filter, sorter, limit, onChildNext, onError) {
     return new Controller(
       this.newRef,
       filter,
       sorter,
       limit,
       onChildNext,
-      onDirecting,
       onError,
     );
   }
@@ -419,21 +416,18 @@ export default class DatabaseManager {
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
-   * @param {onDirecting?: () => void}
-   *  Callback function when before moving from one page to another page
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    * @returns {Controller}
    *  A controller object
    */
-  getPermanentList(filter, sorter, limit, onChildNext, onDirecting, onError) {
+  getPermanentList(filter, sorter, limit, onChildNext, onError) {
     return new Controller(
       this.permanentRef,
       filter,
       sorter,
       limit,
       onChildNext,
-      onDirecting,
       onError,
     );
   }
