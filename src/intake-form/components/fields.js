@@ -1,8 +1,4 @@
 export const formSteps = [
-  // {
-  //   stepName: 'Start',
-  //   fields: [],
-  // },
   {
     stepName: 'Basic Information',
     fields: [
@@ -381,7 +377,7 @@ export const formSteps = [
         type: 'text',
         size: 12,
         description:
-          'Do you have any medical conditions or take any medications that we should know about, please list condition and/or medication and dosages? (e.g., asthma, anxiety disorder, depression, mood disorder, diabetes, schizophrenia, etc.)',
+          'Do you have any medical conditions or take any medications that we should know about? Please list condition and/or medication and dosages? (e.g., asthma, anxiety disorder, depression, mood disorder, diabetes, schizophrenia, etc.)',
       },
       {
         name: 'allergies',
@@ -837,4 +833,4 @@ export const requiredFields = formSteps.reduce((reqs, step) => {
   return reqs;
 }, []);
 
-export const stepNames = formSteps.map((step) => step.stepName)
+export const stepNames = formSteps.map((step) => step.stepName);

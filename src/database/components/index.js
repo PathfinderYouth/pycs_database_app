@@ -7,3 +7,4 @@ export * from './SortingTableHead';
 export * from './DetailViewDrawer';
 export * from './ListViewDrawer';
 export * from './ParticipantTabs';
+export * from './StatisticsView';

@@ -7,7 +7,15 @@ import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
-import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
+import {
+  Check,
+  Clear,
+  HourglassEmptyOutlined,
+  Inbox,
+  Person,
+  PieChart,
+  Work,
+} from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
@@ -39,53 +47,62 @@ export const ListViewDrawer = inject('uiStore')(
       setParticipantsListExpanded(!participantsListExpanded);
     };
 
-    return (
-      <div>
-        <List disablePadding={true}>
-          <ListItem
-            button
-            key="participants"
-            onClick={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}
-          >
-            <ListItemIcon>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Participants" />
-            <div className="expandButton" onClick={expandClick}>
-              {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
-            </div>
-          </ListItem>
-          <Collapse in={participantsListExpanded} timeout="auto">
-            <List component="div" disablePadding>
-              {statuses.map((status) => (
-                <ListItem button key={status.name.toLowerCase()} className={classes.nested}>
-                  <ListItemIcon>{status.icon}</ListItemIcon>
-                  <ListItemText primary={status.name} />
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
-          <Divider />
-          <ListItem button key="newApplications">
-            <ListItemIcon>
-              <Badge badgeContent={numNew} color="error" overlap="circle">
-                <Inbox />
-              </Badge>
-            </ListItemIcon>
-            <ListItemText primary="New Applications" />
-          </ListItem>
-          <Divider />
-
-          {/*//TODO: only render this if user is staff*/}
-          <ListItem button key="staff" onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}>
-            <ListItemIcon>
-              <Work />
-            </ListItemIcon>
-            <ListItemText primary="Staff Management" />
-          </ListItem>
-          <Divider />
-        </List>
-      </div>
-    );
-  }),
-);
+  return (
+    <div>
+      <List disablePadding>
+        <ListItem button key="participants" onClick={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}>
+          <ListItemIcon>
+            <Person />
+          </ListItemIcon>
+          <ListItemText primary="Participants" />
+          <div className="expandButton" onClick={expandClick}>
+            {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
+          </div>
+        </ListItem>
+        <Collapse in={participantsListExpanded} timeout="auto">
+          <List component="div" disablePadding>
+            {statuses.map((status) => (
+              <ListItem
+                button
+                key={status.name.toLowerCase()}
+                className={classes.nested}
+              >
+                <ListItemIcon>{status.icon}</ListItemIcon>
+                <ListItemText primary={status.name} />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+        <Divider />
+        <ListItem button key="newApplications">
+          <ListItemIcon>
+            <Badge badgeContent={numNew} color="error" overlap="circle">
+              <Inbox />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary="New Applications" />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
+          key="statistics"
+          onClick={() => setCurrentViewMode(viewModes.STATISTICS)}
+        >
+          <ListItemIcon>
+            <PieChart />
+          </ListItemIcon>
+          <ListItemText primary="Statistics" />
+        </ListItem>
+        <Divider />
+        {/*//TODO: only render this if user is admin*/}
+        <ListItem button key="staff" onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}>
+          <ListItemIcon>
+            <Work />
+          </ListItemIcon>
+          <ListItemText primary="Staff Management" />
+        </ListItem>
+        <Divider />
+      </List>
+    </div>
+  );
+}));
