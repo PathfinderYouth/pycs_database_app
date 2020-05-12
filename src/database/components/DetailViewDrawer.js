@@ -29,7 +29,7 @@ export const DetailViewDrawer = inject('uiStore')(
     };
 
     return (
-      <List>
+      <List disablePadding>
         <ListItem key="back" button onClick={handleClickBack}>
           <ListItemIcon>
             <ArrowBack />

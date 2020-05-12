@@ -70,7 +70,7 @@ export const Database = inject('participantStore', 'uiStore')(
           ? {
               records: [], // TODO: get user list from user store
               // TODO: set current user in user store
-              setRowClicked: () => console.log('Opening staff record'), 
+              setRowClicked: () => console.log('Opening staff record'),
             }
           : {
               records: participants,
@@ -87,13 +87,13 @@ export const Database = inject('participantStore', 'uiStore')(
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
           return <div>Staff Detail</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <div>Participant Detail</div>; //TODO replace with participant detail page
-      
+
         case viewModes.STATISTICS:
           return <div>Statistics</div>; //TODO replace with statistics page
-        
+
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
         default:
