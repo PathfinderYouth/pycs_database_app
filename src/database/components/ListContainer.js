@@ -27,15 +27,7 @@ export const ListContainer = inject('uiStore')(
     const [orderBy, setOrderBy] = useState('lastName');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(20);
-    const {
-      headers,
-      setCurrentViewMode,
-      currentDetailViewMode,
-      currentViewMode,
-      viewModes,
-    } = uiStore;
-
-    const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
+    const { headers, setCurrentViewMode, currentDetailViewMode } = uiStore;
 
     const handleRowClicked = (clickedRow) => {
       setRowClicked(clickedRow);
@@ -58,9 +50,6 @@ export const ListContainer = inject('uiStore')(
 
     return (
       <div className={`${classes.root} maxWidth`}>
-        <Typography variant="h4" gutterBottom>
-          {pageTitle}
-        </Typography>
         <Paper className={`${classes.paper} maxWidth`}>
           <TableContainer>
             <Table className={classes.table} size="medium">
