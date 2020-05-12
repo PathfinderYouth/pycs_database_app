@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
