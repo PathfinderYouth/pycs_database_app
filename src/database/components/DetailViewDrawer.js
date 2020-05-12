@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 export const DetailViewDrawer = (props) => {
   const { handleClickBack, subComponent } = props;
   return (
-    <List>
+    <List disablePadding={true}>
       <ListItem key="back" button onClick={handleClickBack}>
         <ListItemIcon>
           <ArrowBack />

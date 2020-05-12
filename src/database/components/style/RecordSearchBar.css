@@ -1,3 +1,10 @@
-.formControl {
-  width: 100%
+.searchBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: fit-content;
+}
+
+.searchBox {
+  width: 50%;
 }

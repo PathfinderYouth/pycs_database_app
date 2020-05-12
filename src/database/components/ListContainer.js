@@ -11,6 +11,7 @@ import { TablePagination } from '@material-ui/core';
 import { SortingTableHead } from './SortingTableHead';
 import { getComparator, stableSort } from './sortingHelpers';
 import './style/ListContainer.css';
+import { RecordSearchBar } from './RecordSearchBar';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,8 +25,7 @@ export const ListContainer = (props) => {
   const [orderBy, setOrderBy] = React.useState('lastName');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const headers = props.headers;
-  const rows = props.records;
+  const { headers, rows, title } = props;
 
   const handleRowClicked = (clickedRow) => {
     props.setRowClicked(clickedRow);
@@ -49,6 +49,7 @@ export const ListContainer = (props) => {
   return (
     <div className={`${classes.root} maxWidth`}>
       <Paper className={`${classes.paper} maxWidth`}>
+        <RecordSearchBar title={title} headers={headers} />
         <TableContainer>
           <Table className={classes.table} size="medium">
             <SortingTableHead

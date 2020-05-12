@@ -24,9 +24,9 @@ export const Database = inject('participantStore')(
   observer(() => {
     const classes = useStyles();
     const participantHeaders = [
-      { id: 'status', label: 'Status' },
       { id: 'lastName', label: 'Last Name' },
       { id: 'firstName', label: 'First Name' },
+      { id: 'status', label: 'Status' },
       { id: 'birthDate', label: 'Date of Birth' },
       { id: 'address', label: 'Address' },
       { id: 'city', label: 'City' },
@@ -84,7 +84,8 @@ export const Database = inject('participantStore')(
     const participantListView = (
       <ListContainer
         headers={participantHeaders}
-        records={participants}
+        rows={participants}
+        title="Participants"
         setRowClicked={setOpenParticipantRecord}
         handleRowOpened={handleParticipantOpen}
         handleRowClosed={handleParticipantClose}
@@ -127,7 +128,8 @@ export const Database = inject('participantStore')(
           return (
             <ListContainer
               headers={staffHeaders}
-              records={null} //TODO
+              title="Staff"
+              rows={null} //TODO
               setRowClicked={setOpenStaffRecord}
               handleRowOpened={handleStaffOpen}
               handleRowClosed={handleStaffClose}

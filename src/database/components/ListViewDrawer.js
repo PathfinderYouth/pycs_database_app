@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { RecordSearchBar } from './RecordSearchBar';
-import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,12 +10,9 @@ import './style/NavDrawer.css';
 import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    padding: theme.spacing(2),
-  },
-
   nested: {
     paddingLeft: theme.spacing(4),
   },
@@ -40,11 +35,7 @@ export const ListViewDrawer = (props) => {
 
   return (
     <div>
-      <div className={classes.container}>
-        <RecordSearchBar />
-      </div>
-      <List>
-        <Divider />
+      <List disablePadding={true}>
         <ListItem button key="participants" onClick={handleClick}>
           <ListItemIcon>
             <Person />
