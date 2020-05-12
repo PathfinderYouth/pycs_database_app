@@ -14,7 +14,7 @@ class ParticipantStore {
 
   _controller = null;
 
-  _statistics = {};
+  _statistics = null;
 
   constructor() {
     db.getStatistics(doc => {
@@ -99,7 +99,10 @@ class ParticipantStore {
   }
 
   get numOfNewParticipants() {
-    return this._statistics.numOfNew;
+    if (this._statistics && this._statistics.numOfNew) {
+      return this._statistics.numOfNew;
+    }
+    return 0;
   }
 }
 
