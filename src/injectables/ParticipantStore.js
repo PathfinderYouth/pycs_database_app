@@ -102,7 +102,6 @@ class ParticipantStore {
     if (this._statistics && this._statistics.numOfNew) {
       return this._statistics.numOfNew;
     }
-    alert("ok");
     return 0;
   }
 }
