@@ -9,86 +9,115 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import './style/RecordSearchBar.css';
 import Button from '@material-ui/core/Button';
+import { inject, observer } from 'mobx-react';
+import { uiStore } from '../../injectables';
 
 const useStyles = makeStyles((theme) => ({
   root: { padding: theme.spacing(2) },
   button: { marginLeft: theme.spacing(1) },
 }));
 
-export const RecordSearchBar = (props) => {
-  const classes = useStyles();
-  const { title, headers } = props;
-  const [searchDefault, setSearchDefault] = useState(headers[0].id);
-  const [searchBy, setSearchBy] = useState(searchDefault);
-  const [searchText, setSearchText] = useState('');
-
-  const handleChange = (event) => {
-    setSearchBy(event.target.value);
-  };
-
-  useEffect(() => {
-    setSearchDefault(headers[0].id);
-  }, [headers]);
-
-  const getSearchText = (event) => {
-    setSearchText(event.target.value);
-  };
-
-  const onKeyPressed = (event) => {
-    if (event.key === 'Enter') {
-      onSubmit();
-    }
-  };
-
-  const onSubmit = () => {
-    console.log(searchText + ' ' + searchBy);
-    //TODO return this to whatever is doing the search
-  };
-
+const StaffSearchSelect = ({ handleChange }) => {
+  const options = uiStore.staffHeaders;
   return (
-    <div className={`${classes.root} searchBar`}>
-      <Typography variant="h6" className="title">
-        {title}
-      </Typography>
-      <TextField
-        className="searchBox"
-        variant="outlined"
-        size="small"
-        onChange={getSearchText}
-        onKeyPress={onKeyPressed}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <div className="endAdorn">
-                <FormControl className="formControl">
-                  <Select
-                    className="formControl"
-                    defaultValue={headers[0].id}
-                    onChange={handleChange}
-                    disableUnderline
-                  >
-                    {headers.map((header) => {
-                      return (
-                        <MenuItem value={header.id} key={header.id}>
-                          {header.label}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </div>
-            </InputAdornment>
-          ),
-        }}
-      />
-      <Button className={classes.button} variant="contained" color="primary" onClick={onSubmit}>
-        Search
-      </Button>
-    </div>
+    <Select
+      className="formControl"
+      defaultValue={options[0].id}
+      onChange={handleChange}
+      disableUnderline
+    >
+      {options.map((option) => {
+        const { id, label } = option;
+        return (
+          <MenuItem value={id} key={id}>
+            {label}
+          </MenuItem>
+        );
+      })}
+    </Select>
   );
 };
+
+const ParticipantSearchSelect = ({ handleChange }) => {
+  const options = uiStore.participantHeaders;
+  return (
+    <Select
+      className="formControl"
+      defaultValue={options[0].id}
+      onChange={handleChange}
+      disableUnderline
+    >
+      {options.map((option) => {
+        const { id, label } = option;
+        return (
+          <MenuItem value={id} key={id}>
+            {label}
+          </MenuItem>
+        );
+      })}
+    </Select>
+  );
+};
+
+export const RecordSearchBar = inject('uiStore')(
+  observer((props) => {
+    const { currentViewMode, viewModes } = uiStore;
+    const classes = useStyles();
+    const { title, headers } = props;
+    // const [searchDefault, setSearchDefault] = useState();
+    const [searchBy, setSearchBy] = useState(headers[0].id);
+    const [searchText, setSearchText] = useState('');
+    const handleChange = (event) => {
+      setSearchBy(event.target.value);
+    };
+    const getSearchText = (event) => {
+      setSearchText(event.target.value);
+    };
+    const onKeyPressed = (event) => {
+      if (event.key === 'Enter') {
+        onSubmit();
+      }
+    };
+    const onSubmit = () => {
+      console.log(searchText + ' ' + searchBy);
+      //TODO return this to whatever is doing the search
+    };
+    return (
+      <div className={`${classes.root} searchBar`}>
+        <Typography variant="h6" className="title">
+          {title}
+        </Typography>
+        <TextField
+          className="searchBox"
+          variant="outlined"
+          size="small"
+          onChange={getSearchText}
+          onKeyPress={onKeyPressed}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <div className="endAdorn">
+                  <FormControl className="formControl">
+                    {currentViewMode === viewModes.STAFF_LIST ? (
+                      <StaffSearchSelect handleChange={handleChange} />
+                    ) : (
+                      <ParticipantSearchSelect handleChange={handleChange} />
+                    )}
+                  </FormControl>
+                </div>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Button className={classes.button} variant="contained" color="primary" onClick={onSubmit}>
+          Search
+        </Button>
+      </div>
+    );
+  }),
+);
