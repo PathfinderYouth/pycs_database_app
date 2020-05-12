@@ -11,7 +11,7 @@ class ParticipantStore {
 
   documentType = {
     ADDED: 'added',
-    MODIFIED: 'modifed',
+    MODIFIED: 'modified',
     REMOVED: 'removed',
   };
 

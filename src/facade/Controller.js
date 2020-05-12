@@ -23,27 +23,9 @@ export default class Controller {
       error: onError,
     };
 
-    this._unsubStart = this._query.limit(1).onSnapshot({
-      next: querySnap => {
-        if (querySnap.docs.length > 0) {
-          this.startId = querySnap.docs[0].id;
-        }
-      },
-      error: onError,
-    });
-
-    this._unsubEnd = this._query.limitToLast(1).onSnapshot({
-      next: querySnap => {
-        if (querySnap.docs.length > 0) {
-          this.endId = querySnap.docs[0].id;
-        }
-      },
-      error: onError,
-    });
-
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = this._query.limit(limit).onSnapshot(this._observer);
 
-    this.startId = null;
     this.endId = null;
   }
 
@@ -76,8 +58,17 @@ export default class Controller {
     return ref;
   }
 
+  _subscribeToEnd() {
+    return this._query.limitToLast(1).onSnapshot({
+      next: querySnap => {
+        if (querySnap.docs.length > 0) {
+          this.endId = querySnap.docs[0].id;
+        }
+      },
+    });
+  }
+
   unsubscribe() {
-    this._unsubStart();
     this._unsubEnd();
     this._unsubContent();
   }
@@ -93,10 +84,11 @@ export default class Controller {
       query = query.startAt(this._checkPoints[this._currentPage]);
     }
 
-    this._unsubContent();
+    this.unsubscribe();
     if (onDirecting) {
       onDirecting();
     }
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 
@@ -109,10 +101,11 @@ export default class Controller {
     let query = this._query;
     query = query.startAfter(this._checkPoints[++this._currentPage]);
 
-    this._unsubContent();
+    this.unsubscribe();
     if (onDirecting) {
       onDirecting();
     }
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 }
