@@ -6,6 +6,9 @@ export const FormCheckBox = ({ form, field, value }) => {
   const { values, handleChange, handleBlur } = form;
   const { name, maxChecked = undefined } = field;
   const isChecked = values[name].includes(value);
+
+  const disabled = maxChecked && values[name].length >= maxChecked && !isChecked
+
   return (
     <FormControlLabel
       label={value}
@@ -16,11 +19,7 @@ export const FormCheckBox = ({ form, field, value }) => {
           checked={isChecked}
           value={value}
           name={name}
-          disabled={
-            maxChecked &&
-            values[name].length >= maxChecked &&
-            !isChecked
-          }
+          disabled={disabled}
         />
       }
     />

@@ -11,6 +11,9 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import './style/TopNavBar.css';
+import service from '../../facade/service';
+
+const authService = service.getAuthentication();
 
 const drawerWidth = 240;
 
@@ -42,8 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TopNavBar = (props) => {
   const classes = useStyles();
-  const title =
-    'Pathfinder Youth Centre Society Participant Database';
+  const title = 'Pathfinder Youth Centre Society Participant Database';
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -54,6 +56,10 @@ export const TopNavBar = (props) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    authService.signOut();
   };
 
   return (
@@ -110,7 +116,7 @@ export const TopNavBar = (props) => {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Log out</MenuItem>
+            <MenuItem onClick={handleSignOut}>Log out</MenuItem>
           </Menu>
         </div>
       </Toolbar>

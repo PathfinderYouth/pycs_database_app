@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
   DetailViewDrawer,
   ListContainer,
@@ -7,9 +7,12 @@ import {
   TopNavBar,
 } from './components';
 import { makeStyles } from '@material-ui/core/styles';
+import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
+import { AuthContext } from '../sign-in/components/AuthContext';
 import { participantStore, uiStore } from '../injectables';
 import './Database.css';
+import { AlternateEmail } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -21,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export const Database = inject('participantStore', 'uiStore')(
   observer(() => {
     const classes = useStyles();
+
     const {
       viewModes,
       currentViewMode,
@@ -69,7 +73,7 @@ export const Database = inject('participantStore', 'uiStore')(
         currentViewMode === viewModes.STAFF_LIST
           ? {
               records: [], // TODO: get user list from user store
-              // TODO: set current user in user store
+              // TODO: set other properties like the one for participant
               onRowClicked: (clickedRow) => console.log('Opening staff record'),
             }
           : {
@@ -91,19 +95,27 @@ export const Database = inject('participantStore', 'uiStore')(
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
           return <div>Staff Detail</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <div>Participant Detail</div>; //TODO replace with participant detail page
-      
+
         case viewModes.STATISTICS:
           return <div>Statistics</div>; //TODO replace with statistics page
-        
+
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
         default:
           return getListView();
       }
     };
+
+    // useContext hook accepts value from AuthContext provider
+    const { currentUser } = useContext(AuthContext);
+    useEffect(()=>{
+      if (!currentUser) {
+        navigate("/sign-in");
+      }
+    });
 
     return (
       <div className={`${classes.root} root`}>

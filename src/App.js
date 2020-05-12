@@ -7,28 +7,31 @@ import { Database } from './database';
 import { IntakeFormPage } from './intake-form';
 import { NotFound } from './404-page';
 import { SignIn } from './sign-in';
+import { AuthProvider } from './sign-in';
 import { participantStore, uiStore } from './injectables';
 import { theme } from './ui';
 import './App.css';
 
 const App = () => (
-  <Provider participantStore={participantStore} uiStore={uiStore}>
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        <Router>
-          <IntakeFormPage path="/" />
-          <SignIn path="sign-in" />
-          <Database path="database" />
-          <NotFound default />
-        </Router>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </Provider>
+  <AuthProvider>
+    <Provider participantStore={participantStore} uiStore={uiStore}>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          <Router>
+            <IntakeFormPage path="/" />
+            <SignIn path="sign-in" />
+            <Database path="database" />
+            <NotFound default />
+          </Router>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </Provider>
+   </AuthProvider>
 );
 
 export default App;

@@ -2,22 +2,22 @@ import { action, computed, decorate, observable } from 'mobx';
 
 class UIStore {
   participantHeaders = [
-    { id: 'status', label: 'Status' },
     { id: 'lastName', label: 'Last Name' },
     { id: 'firstName', label: 'First Name' },
+    { id: 'status', label: 'Status' },
     { id: 'birthDate', label: 'Date of Birth' },
     { id: 'address', label: 'Address' },
     { id: 'city', label: 'City' },
   ];
 
   staffHeaders = [
-    { id: 'email', label: 'Email' },
     { id: 'name', label: 'Name' },
+    { id: 'email', label: 'Email' },
     { id: 'role', label: 'Role' },
   ];
 
   viewModes = {
-    PARTICIPANTS_LIST: 'participantList',
+    PARTICIPANT_LIST: 'participantList',
     PARTICIPANT_DETAIL: 'participantDetail',
     STAFF_LIST: 'staffList',
     STAFF_DETAIL: 'staffDetail',
@@ -54,7 +54,7 @@ class UIStore {
 
   setCurrentParticipantDetailStep = (stepIndex) => {
     this.currentParticipantDetailStep = stepIndex;
-  }
+  };
 
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;

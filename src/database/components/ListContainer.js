@@ -13,6 +13,7 @@ import { getComparator, stableSort } from './sortingHelpers';
 import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
+import { RecordSearchBar } from './RecordSearchBar';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,7 +35,15 @@ export const ListContainer = inject('uiStore')(
     const [orderBy, setOrderBy] = useState('lastName');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(20);
-    const { headers, setCurrentViewMode, currentDetailViewMode } = uiStore;
+    const {
+      headers,
+      setCurrentViewMode,
+      currentDetailViewMode,
+      currentViewMode,
+      viewModes,
+    } = uiStore;
+
+    const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
     const handleRowClicked = (clickedRow) => {
       onRowClicked(clickedRow);
@@ -65,6 +74,7 @@ export const ListContainer = inject('uiStore')(
     return (
       <div className={`${classes.root} maxWidth`}>
         <Paper className={`${classes.paper} maxWidth`}>
+          <RecordSearchBar title={pageTitle} headers={headers} />
           <TableContainer>
             <Table className={classes.table} size="medium">
               <SortingTableHead
