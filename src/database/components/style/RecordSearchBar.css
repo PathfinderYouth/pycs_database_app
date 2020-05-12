@@ -6,7 +6,12 @@
 }
 
 .searchBox {
-  width: 50%;
+  flex-grow: 1;
+  max-width: 40%;
+}
+
+.title {
+  flex-grow: 1;
 }
 
 .formControl {

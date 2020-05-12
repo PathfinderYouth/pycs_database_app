@@ -23,7 +23,9 @@ export const RecordSearchBar = (props) => {
 
   return (
     <div className={`${classes.root} searchBar`}>
-      <Typography variant="h6">{title}</Typography>
+      <Typography variant="h6" className="title">
+        {title}
+      </Typography>
       <TextField
         className="searchBox"
         InputProps={{
