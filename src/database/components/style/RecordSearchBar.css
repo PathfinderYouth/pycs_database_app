@@ -1,3 +1,20 @@
+.searchBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: fit-content;
+  align-items: center;
+}
+
+.searchBox {
+  flex-grow: 1;
+  max-width: 40%;
+}
+
+.title {
+  flex-grow: 1;
+}
+
 .formControl {
-  width: 100%
+  width: fit-content;
 }
