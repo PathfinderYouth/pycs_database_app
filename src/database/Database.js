@@ -10,7 +10,7 @@ import {
 } from './components';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Redirect } from '@reach/router';
+import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { participantStore } from '../injectables';
 import { AuthContext } from '../sign-in/components/AuthContext';
