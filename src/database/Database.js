@@ -4,38 +4,32 @@ import {
   ListContainer,
   ListViewDrawer,
   NavDrawer,
+  StatisticsView,
   TopNavBar,
 } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
-import { AuthContext } from '../sign-in/components/AuthContext';
+import { AuthContext } from '../sign-in/components';
 import { participantStore, uiStore } from '../injectables';
 import './Database.css';
-import { AlternateEmail } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   content: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
   },
 }));
 
 // container that holds all database UI objects
-export const Database = inject('participantStore', 'uiStore')(
+export const Database = inject(
+  'participantStore',
+  'uiStore',
+)(
   observer(() => {
     const classes = useStyles();
 
-    const {
-      viewModes,
-      currentViewMode,
-      navigationDrawerOpen,
-      setNavigationDrawerOpen,
-    } = uiStore;
-    const {
-      participants,
-      numOfNewParticipants,
-      setCurrentParticipant,
-    } = participantStore;
+    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
+    const { participants, numOfNewParticipants, setCurrentParticipant } = participantStore;
 
     /**
      * Gets content of side drawer
@@ -45,19 +39,12 @@ export const Database = inject('participantStore', 'uiStore')(
         // detail modes
         case viewModes.PARTICIPANT_DETAIL:
         case viewModes.STAFF_DETAIL:
-          return (
-            <DetailViewDrawer/>
-          );
+          return <DetailViewDrawer />;
         // list modes
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
         default:
-          return (
-            <ListViewDrawer
-              numNew={numOfNewParticipants}
-              classes={classes}
-            />
-          );
+          return <ListViewDrawer numNew={numOfNewParticipants} classes={classes} />;
       }
     };
 
@@ -92,7 +79,7 @@ export const Database = inject('participantStore', 'uiStore')(
           return <div>Participant Detail</div>; //TODO replace with participant detail page
 
         case viewModes.STATISTICS:
-          return <div>Statistics</div>; //TODO replace with statistics page
+          return <StatisticsView />;
 
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
@@ -103,9 +90,9 @@ export const Database = inject('participantStore', 'uiStore')(
 
     // useContext hook accepts value from AuthContext provider
     const { currentUser } = useContext(AuthContext);
-    useEffect(()=>{
+    useEffect(() => {
       if (!currentUser) {
-        navigate("/sign-in");
+        navigate('/sign-in');
       }
     });
 
