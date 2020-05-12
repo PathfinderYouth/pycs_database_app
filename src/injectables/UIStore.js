@@ -17,7 +17,7 @@ class UIStore {
   ];
 
   viewModes = {
-    PARTICIPANTS_LIST: 'participantList',
+    PARTICIPANT_LIST: 'participantList',
     PARTICIPANT_DETAIL: 'participantDetail',
     STAFF_LIST: 'staffList',
     STAFF_DETAIL: 'staffDetail',
@@ -54,7 +54,7 @@ class UIStore {
 
   setCurrentParticipantDetailStep = (stepIndex) => {
     this.currentParticipantDetailStep = stepIndex;
-  }
+  };
 
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
