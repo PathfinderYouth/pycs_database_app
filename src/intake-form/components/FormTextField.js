@@ -7,8 +7,8 @@ import { FastField } from 'formik';
 import { NumberMask } from './NumberMask';
 import './style/FormSteps.css';
 
-export const FormTextField = ({ form, field }) => {
-  const { values, errors, touched, handleChange, handleBlur, setFieldValue } = form;
+export const FormTextField = ({ form, field, isFieldDisabled }) => {
+  const { values, errors, touched, handleChange, handleBlur} = form;
   const {
     name,
     type,
@@ -16,7 +16,6 @@ export const FormTextField = ({ form, field }) => {
     description = undefined,
     multiline = undefined,
     required = undefined,
-    dependantFields = undefined,
     dependsOnOtherField = undefined,
     mask = undefined,
     adornment = undefined,
@@ -52,20 +51,7 @@ export const FormTextField = ({ form, field }) => {
     InputLabelProps: inputLabelProps,
   };
 
-  const isFieldDisabled = (dependsOnOtherField, values) => {
-    const { name, list, value } = dependsOnOtherField;
-    return list ? !values[name].includes(value) : values[name] !== value;
-  };
-
-  const handleDependantFieldChange = ({ target: { value } }) => {
-    if (!!dependantFields) {
-      dependantFields.forEach((field) => {
-        if (value !== field.value) {
-          setFieldValue(field.name, '');
-        }
-      });
-    }
-  };
+  const disabled = isFieldDisabled(dependsOnOtherField, values, name);
 
   return !!dependsOnOtherField ? (
     <FormControl component="fieldset" fullWidth>
@@ -80,19 +66,11 @@ export const FormTextField = ({ form, field }) => {
         onChange={handleChange}
         onBlur={handleBlur}
         value={values[name]}
-        disabled={isFieldDisabled(dependsOnOtherField, values)}
+        disabled={disabled}
       />
     </FormControl>
   ) : (
-    <FastField
-      name={name}
-      onChange={(event) => {
-        handleChange(event);
-        handleDependantFieldChange(event);
-      }}
-      onBlur={handleBlur}
-      value={values[name]}
-    >
+    <FastField name={name} onChange={handleChange} onBlur={handleBlur} value={values[name]}>
       {({ field }) => (
         <FormControl component="fieldset" fullWidth>
           {!!description && (

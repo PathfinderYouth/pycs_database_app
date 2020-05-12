@@ -16,7 +16,7 @@ import './style/IntakeForm.css';
 
 export const IntakeForm = (props) => {
   const { form } = props;
-  const { handleSubmit, isSubmitting } = form;
+  const { values, handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(-1);
   const recaptchaRef = React.createRef();
   const { enqueueSnackbar } = useSnackbar();
@@ -231,7 +231,7 @@ export const IntakeForm = (props) => {
               color="primary"
               variant="contained"
               onClick={() => {
-                handleSubmit(form.values, form);
+                handleSubmit(values, form);
                 // TODO: only proceed to next step if pushing to database was successful,
                 // otherwise, show an error message somehow
                 handleClickNext(form);

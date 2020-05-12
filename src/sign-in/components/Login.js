@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { navigate } from '@reach/router';
 import service from '../../facade/service';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -16,8 +17,8 @@ export class LogIn extends Component {
     this.authService = service.getAuthentication();
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      email: null,
-      password: null,
+      email: 'test@test.com',
+      password: '123123',
     };
   }
 
@@ -35,8 +36,7 @@ export class LogIn extends Component {
         console.log(auth.type);
         console.log(auth.additional);
         console.log(auth.email);
-        // TODO redirect to '/database' when success
-        alert('success');
+        navigate('/database');
       },
       (error) => {
         alert(error.message);
@@ -59,14 +59,8 @@ export class LogIn extends Component {
     return (
       <Container component="main" maxWidth="xs">
         <div className={`paperStyle`}>
-          <Typography variant="h5">
-            PYCS Staff Login Portal
-          </Typography>
-          <form
-            className={`maxWidth`}
-            noValidate
-            onSubmit={this.handleLogin}
-          >
+          <Typography variant="h5">PYCS Staff Login Portal</Typography>
+          <form className="maxWidth" noValidate onSubmit={this.handleLogin}>
             <TextField
               variant="outlined"
               margin="normal"

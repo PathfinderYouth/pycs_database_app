@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
   DetailViewDrawer,
   ListContainer,
@@ -7,9 +7,12 @@ import {
   TopNavBar,
 } from './components';
 import { makeStyles } from '@material-ui/core/styles';
+import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
+import { AuthContext } from '../sign-in/components/AuthContext';
 import { participantStore, uiStore } from '../injectables';
 import './Database.css';
+import { AlternateEmail } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -21,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export const Database = inject('participantStore', 'uiStore')(
   observer(() => {
     const classes = useStyles();
+
     const {
       viewModes,
       currentViewMode,
@@ -96,6 +100,14 @@ export const Database = inject('participantStore', 'uiStore')(
           return getListView();
       }
     };
+
+    // useContext hook accepts value from AuthContext provider
+    const { currentUser } = useContext(AuthContext);
+    useEffect(()=>{
+      if (!currentUser) {
+        navigate("/sign-in");
+      }
+    });
 
     return (
       <div className={`${classes.root} root`}>

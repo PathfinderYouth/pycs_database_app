@@ -61,7 +61,7 @@ export const formSteps = [
       },
       {
         name: 'addressTimeLivedAt',
-        label: 'Time lived at this address',
+        label: 'Time lived here',
         size: 4,
         type: 'text',
       },
@@ -219,7 +219,6 @@ export const formSteps = [
         label: 'How did you find out about our program?',
         size: 12,
         type: 'radio',
-        dependantFields: [{ name: 'learnedAboutPathfinderOther', value: 'Other' }],
         options: [
           'Family and/or friends',
           'Teacher/counselor',
@@ -254,10 +253,6 @@ export const formSteps = [
         label: 'Have you ever attended a job club or paid employment training program?',
         type: 'radio',
         size: 8,
-        dependantFields: [
-          { name: 'employmentProgramInfo', value: 'Yes' },
-          { name: 'employmentProgramComplete', value: 'Yes' },
-        ],
         options: ['Yes', 'No'],
       },
       {
@@ -451,7 +446,6 @@ export const formSteps = [
         label: 'Do you have a bank account?',
         type: 'radio',
         size: 4,
-        dependantFields: [{ name: 'bankAccountType', value: 'Yes' }],
         options: ['Yes', 'No'],
       },
       {
@@ -471,7 +465,6 @@ export const formSteps = [
         label: 'What is your current form of income?',
         type: 'radio',
         size: 12,
-        dependantFields: [{ name: 'formOfIncomeOther', value: 'Other' }],
         options: [
           'None',
           'Employment insurance',
@@ -520,7 +513,6 @@ export const formSteps = [
         label: 'What is the main reason you are unemployed? (check all that apply to you)',
         type: 'checklist',
         size: 12,
-        dependantFields: [{ name: 'reasonsForUnemploymentOther', value: 'Other' }],
         options: [
           'I have just completed school or another training program',
           'I do not know how to do a good job search on my own',
@@ -596,7 +588,6 @@ export const formSteps = [
         label:
           'Do you have any health or physical concerns that may affect your ability to participate in our program?',
         type: 'radio',
-        dependantFields: [{ name: 'healthConcerns', value: 'Yes' }],
         options: ['Yes', 'No'],
       },
       {
@@ -624,7 +615,6 @@ export const formSteps = [
         label: "Do you have a valid driver's licence?",
         type: 'radio',
         size: 4,
-        dependantFields: [{ name: 'driversLicenseType', value: 'Yes' }],
         options: ['Yes', 'No'],
       },
       {
@@ -658,7 +648,6 @@ export const formSteps = [
         name: 'hasVolunteered',
         label: 'Have you ever volunteered?',
         type: 'radio',
-        dependantFields: [{ name: 'volunteerInfo', value: 'Yes' }],
         size: 4,
         options: ['Yes', 'No'],
       },
@@ -693,7 +682,6 @@ export const formSteps = [
         type: 'checklist',
         size: 12,
         maxChecked: 2,
-        dependantFields: [{ name: 'presentSituationAspectsOther', value: 'Other' }],
         options: [
           'Increase my self confidence',
           'Have more money and/or get out of poverty',
@@ -723,7 +711,6 @@ export const formSteps = [
         type: 'checklist',
         maxChecked: 2,
         size: 12,
-        dependantFields: [{ name: 'urgentNeedsOther', value: 'Other' }],
         options: [
           'Basic needs (food, shelter and clothing)',
           'The need to be independent',
@@ -772,7 +759,6 @@ export const formSteps = [
         label: 'Do you have any brothers or sisters?',
         type: 'radio',
         size: 4,
-        dependantFields: [{ name: 'siblings', value: 'Yes' }],
         options: ['Yes', 'No'],
       },
       {
@@ -791,7 +777,6 @@ export const formSteps = [
         name: 'hasChildren',
         label: 'Do you have any children?',
         size: 4,
-        dependantFields: [{ name: 'children', value: 'Yes' }],
         type: 'radio',
         options: ['Yes', 'No'],
       },
