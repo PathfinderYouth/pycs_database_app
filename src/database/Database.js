@@ -154,7 +154,7 @@ export const Database = inject('participantStore')(
     const { currentUser } = useContext(AuthContext);
 
     if (!currentUser) {
-      return <Redirect to="/sign-in" />;
+      navigate("/sign-in");
     }
 
     return (
