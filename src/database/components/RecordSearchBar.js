@@ -64,7 +64,6 @@ export const RecordSearchBar = inject('uiStore')(
     const { currentViewMode, viewModes } = uiStore;
     const classes = useStyles();
     const { title, headers } = props;
-    // const [searchDefault, setSearchDefault] = useState();
     const [searchBy, setSearchBy] = useState(headers[0].id);
     const [searchText, setSearchText] = useState('');
     const handleChange = (event) => {
