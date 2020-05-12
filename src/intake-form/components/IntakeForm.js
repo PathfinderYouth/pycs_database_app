@@ -9,7 +9,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import { useTheme } from '@material-ui/core/styles';
 import { FormStepStart } from './FormStepStart';
-import { formSteps, requiredFields } from './fields';
+import { formSteps, requiredFields } from '../../fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
 import './style/IntakeForm.css';

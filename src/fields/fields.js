@@ -82,7 +82,7 @@ export const formSteps = [
         label: 'Best number to call:',
         type: 'radio',
         size: 4,
-        options: ['Phone', 'Cell'],
+        options: ['Home', 'Cell'],
       },
       {
         name: 'email',
@@ -388,13 +388,6 @@ export const formSteps = [
       },
       {
         name: 'fears',
-        type: 'text',
-        size: 12,
-        description:
-          'Do you have any fears that our program coordinator and facilitator should be aware of? (e.g., water, bees, heights, planes, etc.)',
-      },
-      {
-        name: 'addictions',
         type: 'text',
         size: 12,
         description:

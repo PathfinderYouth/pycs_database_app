@@ -64,6 +64,7 @@ class UIStore {
 decorate(UIStore, {
   currentViewMode: observable,
   navigationDrawerOpen: observable,
+  currentParticipantDetailStep: observable,
   headers: computed,
   currentDetailViewMode: computed,
   currentListViewMode: computed,

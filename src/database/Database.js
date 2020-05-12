@@ -1,16 +1,17 @@
 import React, { useEffect, useContext } from 'react';
+import { navigate } from '@reach/router';
+import { inject, observer } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
+  ParticipantDetailPage,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
   StatisticsView,
   TopNavBar,
 } from './components';
-import { makeStyles } from '@material-ui/core/styles';
-import { navigate } from '@reach/router';
-import { inject, observer } from 'mobx-react';
-import { AuthContext } from '../sign-in/components';
+import { AuthContext } from '../sign-in';
 import { participantStore, uiStore } from '../injectables';
 import './Database.css';
 
@@ -90,11 +91,11 @@ export const Database = inject(
     const getContent = () => {
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
-          return <div>Staff Detail</div>; //TODO replace with staff detail page
-
+          return <div>Staff Details</div>; //TODO replace with staff detail page
+        
         case viewModes.PARTICIPANT_DETAIL:
-          return <div>Participant Detail</div>; //TODO replace with participant detail page
-
+          return <ParticipantDetailPage />;
+      
         case viewModes.STATISTICS:
           return <StatisticsView />;
 

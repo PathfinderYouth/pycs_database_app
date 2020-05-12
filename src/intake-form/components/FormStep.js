@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { FormFieldBuilder } from './FormFieldBuilder';
+import { FormFieldBuilder } from '../../fields';
 import './style/FormSteps.css';
 
 export const FormStep = ({ form, step }) => {

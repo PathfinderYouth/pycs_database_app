@@ -51,7 +51,7 @@ export const FormTextField = ({ form, field, isFieldDisabled }) => {
     InputLabelProps: inputLabelProps,
   };
 
-  const disabled = isFieldDisabled(dependsOnOtherField, values, name);
+  const disabled = isFieldDisabled(field, values, name);
 
   return !!dependsOnOtherField ? (
     <FormControl component="fieldset" fullWidth>
