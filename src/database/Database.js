@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
   DetailViewDrawer,
   ListContainer,
@@ -103,10 +103,11 @@ export const Database = inject('participantStore', 'uiStore')(
 
     // useContext hook accepts value from AuthContext provider
     const { currentUser } = useContext(AuthContext);
-
-    if (!currentUser) {
-      navigate("/sign-in");
-    }
+    useEffect(()=>{
+      if (!currentUser) {
+        navigate("/sign-in");
+      }
+    });
 
     return (
       <div className={`${classes.root} root`}>

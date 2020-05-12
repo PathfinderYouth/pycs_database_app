@@ -17,8 +17,8 @@ export class LogIn extends Component {
     this.authService = service.getAuthentication();
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      email: null,
-      password: null,
+      email: 'test@test.com',
+      password: '123123',
     };
   }
 

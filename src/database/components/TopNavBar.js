@@ -11,7 +11,9 @@ import AddIcon from '@material-ui/icons/Add';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import './style/TopNavBar.css';
-import * as firebase from 'firebase/app';
+import service from '../../facade/service';
+
+const authService = service.getAuthentication();
 
 const drawerWidth = 240;
 
@@ -43,8 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TopNavBar = (props) => {
   const classes = useStyles();
-  const title =
-    'Pathfinder Youth Centre Society Participant Database';
+  const title = 'Pathfinder Youth Centre Society Participant Database';
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -58,8 +59,8 @@ export const TopNavBar = (props) => {
   };
 
   const handleSignOut = () => {
-    firebase.auth().signOut();
-  }
+    authService.signOut();
+  };
 
   return (
     <AppBar
