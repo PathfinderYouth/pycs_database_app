@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
@@ -66,21 +66,31 @@ export const RecordSearchBar = inject('uiStore')(
     const { title, headers } = props;
     const [searchBy, setSearchBy] = useState(headers[0].id);
     const [searchText, setSearchText] = useState('');
+
+    //Updates current search by field when view is changed
+    useEffect(() => {
+      setSearchBy(headers[0].id);
+    }, [currentViewMode]);
+
     const handleChange = (event) => {
       setSearchBy(event.target.value);
     };
+
     const getSearchText = (event) => {
       setSearchText(event.target.value);
     };
+
     const onKeyPressed = (event) => {
       if (event.key === 'Enter') {
         onSubmit();
       }
     };
+
     const onSubmit = () => {
       console.log(searchText + ' ' + searchBy);
       //TODO return this to whatever is doing the search
     };
+
     return (
       <div className={`${classes.root} searchBar`}>
         <Typography variant="h6" className="title">
