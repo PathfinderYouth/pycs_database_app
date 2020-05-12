@@ -76,13 +76,13 @@ export default class Controller {
     return ref;
   }
 
-  unsubcribe() {
+  unsubscribe() {
     this._unsubStart();
     this._unsubEnd();
     this._unsubContent();
   }
 
-  prevPage(onDirecting) {
+  back(onDirecting) {
     // You're at the fist page. Cannot go back anymore.
     if (this._currentPage === 0) {
       return;
@@ -95,12 +95,12 @@ export default class Controller {
 
     this._unsubContent();
     if (onDirecting) {
-      onDirecting(this._currentPage);
+      onDirecting();
     }
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 
-  nextPage(onDirecting) {
+  next(onDirecting) {
     // You're at the last page. Cannot go forward anymore.
     if (this.endId === this._checkPoints[this._currentPage + 1].id) {
       return;
@@ -111,7 +111,7 @@ export default class Controller {
 
     this._unsubContent();
     if (onDirecting) {
-      onDirecting(this._currentPage);
+      onDirecting();
     }
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }

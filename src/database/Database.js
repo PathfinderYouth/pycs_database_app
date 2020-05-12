@@ -31,6 +31,10 @@ export const Database = inject('participantStore', 'uiStore')(
       participants,
       numOfNewParticipants,
       setCurrentParticipant,
+      goToPreviousPage,
+      goToNextPage,
+      isLastPage,
+      setLimit,
     } = participantStore;
 
     /**
@@ -66,11 +70,15 @@ export const Database = inject('participantStore', 'uiStore')(
           ? {
               records: [], // TODO: get user list from user store
               // TODO: set current user in user store
-              setRowClicked: () => console.log('Opening staff record'), 
+              onRowClicked: (clickedRow) => console.log('Opening staff record'),
             }
           : {
               records: participants,
-              setRowClicked: setCurrentParticipant,
+              onRowClicked: setCurrentParticipant,
+              onPrevButtonClicked: goToPreviousPage,
+              onNextButtonClicked: goToNextPage,
+              nextButtonDisabled: isLastPage,
+              onChangeRowsPerPage: setLimit,
             };
 
       return <ListContainer {...listViewProps} />;

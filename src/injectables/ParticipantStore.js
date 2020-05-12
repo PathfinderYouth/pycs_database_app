@@ -29,8 +29,6 @@ class ParticipantStore {
 
   _controller = null;
 
-  _isFirstPage = true;
-
   _isLastPage = true;
 
   _statistics = null;
@@ -67,8 +65,12 @@ class ParticipantStore {
 
     this._participants = newList;
 
-    let currentEndId = newList[newList.length - 1].id;
-    this._isLastPage = this._controller.endId === currentEndId;
+    if (newList.length > 0) {
+      let currentEndId = newList[newList.length - 1].id;
+      this._isLastPage = this._controller.endId === currentEndId;
+    } else {
+      this._isLastPage = true;
+    }
   };
 
   _updateList = autorun(() => {
@@ -76,6 +78,7 @@ class ParticipantStore {
 
     // Unsubscribe to previous real-time listener and reset list to empty
     if (this._controller) {
+      this._isLastPage = true;
       this._participants = [];
       this._controller.unsubscribe();
     }
@@ -125,16 +128,11 @@ class ParticipantStore {
   };
 
   goToPreviousPage = () => {
-    this._controller.prevPage(page => {
-      this._participants = [];
-      this._isFirstPage = page === 0;
-    });
+    this._controller.back(() => this._participants = []);
   };
 
   goToNextPage = () => {
-    this._controller.nextPage(page => {
-      this._participants = [];
-    });
+    this._controller.next(() => this._participants = []);
   };
 
   get participants() {
@@ -155,10 +153,6 @@ class ParticipantStore {
     return 0;
   }
 
-  get isFirstPage() {
-    return this._isFirstPage;
-  }
-
   get isLastPage() {
     return this._isLastPage;
   }
@@ -171,7 +165,6 @@ decorate(ParticipantStore, {
   _participants: observable,
   _currentParticipant: observable,
   _collection: observable,
-  _isFirstPage: observable,
   _isLastPage: observable,
   _statistics: observable,
   setCurrentParticipant: action,
@@ -183,7 +176,6 @@ decorate(ParticipantStore, {
   goToNextPage: action,
   participants: computed,
   numOfNewParticipants: computed,
-  isFirstPage: computed,
   isLastPage: computed,
 });
 
