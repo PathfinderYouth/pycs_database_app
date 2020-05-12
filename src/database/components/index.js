@@ -6,5 +6,4 @@ export * from './RecordDialog';
 export * from './SortingTableHead';
 export * from './DetailViewDrawer';
 export * from './ListViewDrawer';
-export * from './viewMode';
 export * from './ParticipantTabs';
