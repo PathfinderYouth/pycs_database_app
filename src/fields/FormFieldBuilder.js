@@ -5,7 +5,8 @@ import { FormRadioGroup } from './FormRadioGroup';
 import { FormCheckList } from './FormCheckList';
 import { FormSelect } from './FormSelect';
 
-const isFieldDisabled = (dependsOnOtherField, values, name) => {
+const isFieldDisabled = (field, values, name) => {
+  const { dependsOnOtherField } = field;
   let disabled = false;
   if (!!dependsOnOtherField) {
     // dependingField = field this field depends on

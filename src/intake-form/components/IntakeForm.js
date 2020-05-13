@@ -9,7 +9,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import { useTheme } from '@material-ui/core/styles';
 import { FormStepStart } from './FormStepStart';
-import { formSteps, requiredFields } from './fields';
+import { formSteps, requiredFields } from '../../fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
 import './style/IntakeForm.css';
@@ -155,14 +155,14 @@ export const IntakeForm = (props) => {
   };
 
   return (
-    <div className="container">
+    <div className="intake-form-page-container">
       <ReCAPTCHA
         ref={recaptchaRef}
         sitekey="6LfukvMUAAAAAGkE5uDvYCqdi-DEKey3J8AiZl8v"
         size="invisible"
         onChange={onCaptchaChanged}
       />
-      <div className="form-topBar">
+      <div className="intake-form-topBar">
         <Typography display="inline">
           <Link href="https://pathfinderyouthsociety.org/">
             &lt; Back to pathfinderyouthsociety.org
@@ -171,7 +171,7 @@ export const IntakeForm = (props) => {
       </div>
 
       {currentStep > -1 && currentStep < lastStepNumber && (
-        <div className="form-breadcrumbs">
+        <div className="intake-form-breadcrumbs">
           <Breadcrumbs
             maxItems={isFullSize ? undefined : 2}
             separator={<NavigateNextIcon fontSize="small" />}
@@ -202,10 +202,10 @@ export const IntakeForm = (props) => {
         </div>
       )}
 
-      <div className="form-container" ref={(ref) => (formContainerDiv = ref)}>
-        <div className="form">{getFormStep(form, currentStep)}</div>
+      <div className="intake-form-container" ref={(ref) => (formContainerDiv = ref)}>
+        <div className="intake-form-step">{getFormStep(form, currentStep)}</div>
       </div>
-      <div className="form-bottomBar">
+      <div className="intake-form-bottomBar">
         <div className="form-buttonBack">
           {currentStep > 0 && currentStep < lastStepNumber && (
             <Button color="primary" variant="contained" onClick={handleClickBack}>
@@ -213,8 +213,8 @@ export const IntakeForm = (props) => {
             </Button>
           )}
         </div>
-        <div className="captcha">
-          <Typography variant="body2" color="textSecondary" className="captcha">
+        <div className="intake-form-captcha">
+          <Typography variant="body2" color="textSecondary">
             This site is protected by reCAPTCHA and the Google{' '}
             <Link href="https://policies.google.com/privacy">Privacy Policy</Link> and{' '}
             <Link href="https://policies.google.com/terms">Terms of Service</Link> apply.
