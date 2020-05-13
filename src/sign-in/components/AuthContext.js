@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import service from '../../facade/service';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import './AuthContext.css';
 
 // get firebase authentication service
 const authService = service.getAuthentication();
@@ -27,7 +29,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   if (pending) {
-    return <>Loading...</>;
+    return (
+      <div className="pendingProgress">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (

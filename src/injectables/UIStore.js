@@ -48,7 +48,7 @@ class UIStore {
   }
 
   get currentListViewMode() {
-    return this.currentViewMode === this.viewModes.STAFF_DETIAL
+    return this.currentViewMode === this.viewModes.STAFF_DETAIL
       ? this.viewModes.STAFF_LIST
       : this.viewModes.PARTICIPANT_LIST;
   }

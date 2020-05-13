@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
@@ -9,6 +9,10 @@ import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import './style/NavDrawer.css';
+import service from '../../facade/service';
+
+// get firebase authentication service
+const authService = service.getAuthentication();
 
 const drawerWidth = 240;
 
@@ -52,12 +56,17 @@ export const NavDrawer = (props) => {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+  const [userEmail, setUserEmail] = useState('');
+  useEffect(() => {
+    if (authService.getCurrentUser()) {
+      setUserEmail(authService.getCurrentUser().email);
+    }
+  });
+
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeaderCss`}>
-
-        {/* TODO: Replace with current user ID */}
-        <Typography variant="h6">Staff McStaff</Typography>
+        <Typography variant="inherit">{userEmail}</Typography>
 
         {matches ? (
           <IconButton

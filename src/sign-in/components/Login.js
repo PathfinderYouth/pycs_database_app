@@ -16,6 +16,7 @@ export class LogIn extends Component {
     super(props);
     this.authService = service.getAuthentication();
     this.handleLogin = this.handleLogin.bind(this);
+    this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
     this.state = {
       email: 'test@test.com',
       password: '123123',
@@ -42,6 +43,10 @@ export class LogIn extends Component {
         alert(error.message);
       },
     );
+  }
+
+  handlePasswordResetEmail() {
+    alert('Please contact your supervisor to reset password');
   }
 
   /**
@@ -102,7 +107,10 @@ export class LogIn extends Component {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={(event) => {
+                  event.preventDefault()
+                  this.handlePasswordResetEmail()
+                }>
                   Forgot password?
                 </Link>
               </Grid>
