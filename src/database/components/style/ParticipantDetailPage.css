@@ -1,5 +1,9 @@
 .participant-detail-container {
   width: 100%;
+}
+
+.participant-detail-contents {
+  width: 100%;
   padding: 2em;
 }
 
@@ -9,6 +13,6 @@
   justify-content: space-between;
 }
 
-.participant-detail-contents {
+.participant-detail-form-contents {
   margin-top: 2em;
 }

@@ -1,17 +1,17 @@
 import React from 'react';
 import Logo from '../../assets/Pathfinder-Logo.jpg';
 import Typography from '@material-ui/core/Typography';
-import './style/FormSteps.css';
+import './style/IntakeForm.css';
 
 export const FormStepStart = () => {
   return (
-    <div className="form-pageContainer">
-      <div className="form-pageContents">
+    <div className="intake-form-pageContainer">
+      <div className="intake-form-pageContents">
         <img className="logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
         <Typography gutterBottom align="center" variant="h4">
           Self-Enrollment System
         </Typography>
-        <div className="form-textContainer">
+        <div className="intake-form-textContainer">
           <Typography gutterBottom align="center" variant="body2" color="textSecondary">
             Pathfinder Youth Centre Society is committed to protecting personal information by
             following responsible information handling practices, in keeping with privacy laws.

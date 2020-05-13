@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// container that holds all database UI objects
 export const Database = inject(
   'participantStore',
   'uiStore',

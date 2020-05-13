@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import Card from '@material-ui/core/Card';
 import { ParticipantDetailEditView } from './ParticipantDetailEditView';
 import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
@@ -38,17 +39,21 @@ export const ParticipantDetailPage = inject('uiStore')(
 
     return (
       <div className="participant-detail-container">
-        {participantDetailMode === 'edit' ? (
-          <ParticipantDetailEditView
-            currentStep={currentParticipantDetailStep}
-            handleClickChangeMode={handleClickViewMode}
-          />
-        ) : (
-          <ParticipantDetailView
-            currentStep={currentParticipantDetailStep}
-            handleClickChangeMode={handleClickEditMode}
-          />
-        )}
+        <Card>
+          <div className="participant-detail-contents">
+            {participantDetailMode === 'edit' ? (
+              <ParticipantDetailEditView
+                currentStep={currentParticipantDetailStep}
+                handleClickChangeMode={handleClickViewMode}
+              />
+            ) : (
+              <ParticipantDetailView
+                currentStep={currentParticipantDetailStep}
+                handleClickChangeMode={handleClickEditMode}
+              />
+            )}
+          </div>
+        </Card>
       </div>
     );
   }),

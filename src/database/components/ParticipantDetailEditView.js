@@ -61,7 +61,7 @@ export const ParticipantDetailEditView = ({ currentStep, handleClickChangeMode }
               </IconButton>
             </div>
           </div>
-          <div className="participant-detail-contents">
+          <div className="participant-detail-form-contents">
             <Grid container spacing={2}>
               {formSteps[currentStep].fields.map((field) => (
                 <FormFieldBuilder key={field.name} form={form} field={field} />

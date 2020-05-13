@@ -2,13 +2,13 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { FormFieldBuilder } from '../../fields';
-import './style/FormSteps.css';
+import './style/IntakeForm.css';
 
 export const FormStep = ({ form, step }) => {
   const { stepName, fields } = step;
 
   return (
-    <div className="form-fieldsContainer">
+    <div className="intake-form-fieldsContainer">
       <Typography gutterBottom variant="h4">
         {stepName}
       </Typography>
