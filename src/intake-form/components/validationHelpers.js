@@ -113,6 +113,8 @@ export const validationSchema = yup.object().shape(
       .required(
         'Please enter why you think you should be accepted to Pathfinder',
       ),
+    hasMentalHealthIssues: yup.string().required('Please select an option'),
+    housingSituation: yup.string().required('Please select an option')
   },
   [
     ['phoneHome', 'phoneCell'],

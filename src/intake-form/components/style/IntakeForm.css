@@ -1,18 +1,18 @@
-.container {
+.intake-form-page-container {
   height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.form-container {
+.intake-form-container {
   display: flex;
   flex-grow: 1;
   justify-content: center;
   overflow-y: scroll;
 }
 
-.form-bottomBar {
+.intake-form-bottomBar {
   width: calc(100% - 2em);
   padding: 1em;
   display: flex;
@@ -20,7 +20,7 @@
   align-items: center;
 }
 
-.form {
+.intake-form-step {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,25 +28,47 @@
   max-width: 80%;
 }
 
-.row {
-  display: flex;
-}
-
-.form-topBar {
+.intake-form-topBar {
   padding: 0.5em 0 0.5em 0.5em;
   display: flex;
   justify-content: space-between;
 }
 
-.form-breadcrumbs {
+.intake-form-breadcrumbs {
   padding: 0 0.5em;
   display: flex;
 }
 
-.captcha {
+.intake-form-captcha {
   text-align: center;
 }
 
-.grecaptcha-badge { 
+.intake-form-fieldsContainer {
+  width: 100%;
+  padding-top: 3em;
+}
+
+.intake-form-logo {
+  max-height: 10em;
+}
+
+.intake-form-pageContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.intake-form-pageContents {
+  margin-top: 3em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intake-form-textContainer {
+  margin: 1.5em 0;
+  max-width: 70%;
+}
+
+.grecaptcha-badge {
   visibility: hidden;
 }
