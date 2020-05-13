@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { initialValues, IntakeForm, validationSchema } from './components';
+import service from '../facade/service';
 
 export const IntakeFormPage = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -11,17 +12,16 @@ export const IntakeFormPage = () => {
       validationSchema={validationSchema}
       // placeholder onSubmit function
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log(JSON.stringify(values, null, 2));
+        service.getDatabase().addNew(values, (docId) => {
           setSubmitting(false);
-          // TODO: display different snackbars depending on if submission was successful or not
-          // on success
           enqueueSnackbar('Application successfully submitted.', {
             variant: 'success',
           });
-          // on fail
-          // enqueueSnackbar('There was a problem submitting your application.', { variant: 'error'})
-        }, 400);
+        }, (error) => {
+          enqueueSnackbar('There was a problem submitting your application.', {
+            variant: 'error'
+          });
+        });
       }}
     >
       {(form) => <IntakeForm form={form} />}

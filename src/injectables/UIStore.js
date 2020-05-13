@@ -2,12 +2,12 @@ import { action, computed, decorate, observable } from 'mobx';
 
 class UIStore {
   participantHeaders = [
-    { id: 'lastName', label: 'Last Name' },
-    { id: 'firstName', label: 'First Name' },
+    { id: 'nameLast', label: 'Last Name' },
+    { id: 'nameGiven', label: 'Given Name(s)' },
     { id: 'status', label: 'Status' },
     { id: 'birthDate', label: 'Date of Birth' },
-    { id: 'address', label: 'Address' },
-    { id: 'city', label: 'City' },
+    { id: 'addressStreet', label: 'Street Address' },
+    { id: 'addressCity', label: 'City' },
   ];
 
   staffHeaders = [
