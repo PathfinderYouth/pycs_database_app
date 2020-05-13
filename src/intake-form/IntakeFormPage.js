@@ -11,7 +11,6 @@ export const IntakeFormPage = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      // placeholder onSubmit function
       onSubmit={(values, { setSubmitting }) => {
         service.getDatabase().addNew(
           values,

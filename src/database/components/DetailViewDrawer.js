@@ -16,12 +16,24 @@ export const DetailViewDrawer = inject('uiStore')(
       setCurrentViewMode,
       currentListViewMode,
       currentDetailViewMode,
+      currentParticipantDetailViewMode,
       setCurrentParticipantDetailStep,
+      setCurrentParticipantDetailViewMode,
       viewModes,
+      participantDetailViewModes,
     } = uiStore;
 
     const handleClickBack = () => {
       setCurrentViewMode(currentListViewMode);
+      if (currentParticipantDetailViewMode === participantDetailViewModes.EDIT) {
+        if (window.confirm('Leave this page? Any unsaved changes will be lost.')) {
+          setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
+          setCurrentParticipantDetailStep(0);
+        }
+      } else {
+        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
+        setCurrentParticipantDetailStep(0);
+      }
     };
 
     const handleChangeParticipantTab = (tabIndex) => {

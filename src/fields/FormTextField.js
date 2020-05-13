@@ -5,7 +5,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { FastField } from 'formik';
 import { NumberMask } from './NumberMask';
-import './style/FormFields.css';
+import './FormFields.css';
 
 export const FormTextField = ({ form, field, isFieldDisabled }) => {
   const { values, errors, touched, handleChange, handleBlur } = form;

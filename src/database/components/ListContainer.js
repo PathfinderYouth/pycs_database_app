@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { inject, observer } from 'mobx-react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,13 +7,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles } from '@material-ui/core/styles';
-import { TablePagination } from '@material-ui/core';
+import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { inject, observer } from 'mobx-react';
+import { getComparator, stableSort } from './sortingHelpers';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
-import { RecordSearchBar } from './RecordSearchBar';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {

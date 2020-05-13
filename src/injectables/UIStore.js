@@ -24,10 +24,17 @@ class UIStore {
     STATISTICS: 'statistics',
   };
 
+  participantDetailViewModes = {
+    VIEW: 'view',
+    EDIT: 'edit'
+  }
+
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)
 
+  currentParticipantDetailViewMode = this.participantDetailViewModes.VIEW;
+  
   navigationDrawerOpen = false;
 
   get headers() {
@@ -56,6 +63,10 @@ class UIStore {
     this.currentParticipantDetailStep = stepIndex;
   };
 
+  setCurrentParticipantDetailViewMode = (viewMode) => {
+    this.currentParticipantDetailViewMode = viewMode;
+  };
+
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
   };
@@ -65,11 +76,13 @@ decorate(UIStore, {
   currentViewMode: observable,
   navigationDrawerOpen: observable,
   currentParticipantDetailStep: observable,
+  currentParticipantDetailViewMode: observable,
   headers: computed,
   currentDetailViewMode: computed,
   currentListViewMode: computed,
   setCurrentViewMode: action,
   setCurrentParticipantDetailStep: action,
+  setCurrentParticipantDetailViewMode: action,
   setNavigationDrawerOpen: action,
 });
 
