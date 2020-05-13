@@ -34,7 +34,7 @@ class ParticipantStore {
   _statistics = null;
 
   constructor() {
-    db.getStatistics(doc => {
+    db.getStatistics((doc) => {
       this._statistics = doc;
     });
   }
@@ -73,66 +73,69 @@ class ParticipantStore {
     }
   };
 
-  _updateList = autorun(() => {
-    // Run this whenever type of collection, filter, or sorter changes
+  _updateList = autorun(
+    () => {
+      // Run this whenever type of collection, filter, or sorter changes
 
-    // Unsubscribe to previous real-time listener and reset list to empty
-    if (this._controller) {
-      this._isLastPage = true;
-      this._participants = [];
-      this._controller.unsubscribe();
-    }
+      // Unsubscribe to previous real-time listener and reset list to empty
+      if (this._controller) {
+        this._isLastPage = true;
+        this._participants = [];
+        this._controller.unsubscribe();
+      }
 
-    switch (this._collection) {
-      case this.collectionType.NEW:
-        this._controller = db.getNewList(
-          this._filter,
-          this._sorter,
-          this._limit,
-          this._onChildNext,
-        );
-        break;
+      switch (this._collection) {
+        case this.collectionType.NEW:
+          this._controller = db.getNewList(
+            this._filter,
+            this._sorter,
+            this._limit,
+            this._onChildNext,
+          );
+          break;
 
-      case this.collectionType.PERMANENT:
-        this._controller = db.getPermanentList(
-          this._filter,
-          this._sorter,
-          this._limit,
-          this._onChildNext,
-        );
-        break;
+        case this.collectionType.PERMANENT:
+          this._controller = db.getPermanentList(
+            this._filter,
+            this._sorter,
+            this._limit,
+            this._onChildNext,
+          );
+          break;
 
-      default:
-      // Do nothing
-    }
-  }, { delay: 500 });
+        default:
+        // Do nothing
+      }
+    },
+    { delay: 500 },
+  );
 
-  setCurrentParticipant = participant => {
+  setCurrentParticipant = (participant) => {
     this._currentParticipant = participant;
   };
 
-  setFilter = filter => {
+  setFilter = (filter) => {
     this._filter = filter;
   };
 
-  setSorter = sorter => {
+  setSorter = (sorter) => {
     this._sorter = sorter;
   };
 
-  setLimit = limit => {
+  setLimit = (limit) => {
     this._limit = limit;
   };
 
-  setCollection = collection => {
+  setCollection = (collection) => {
     this._collection = collection;
   };
 
   goToPreviousPage = () => {
-    this._controller.back(() => this._participants = []);
+    this._controller.back(() => (this._participants = []));
   };
 
   goToNextPage = () => {
-    this._controller.next(() => this._participants = []);
+    this._controller.next(() => (this._participants = []));
   };
 
   get participants() {
@@ -140,7 +143,11 @@ class ParticipantStore {
   }
 
   get collection() {
-    return this._collection
+    return this._collection;
+  }
+
+  get filter() {
+    return this._filter;
   }
 
   /**

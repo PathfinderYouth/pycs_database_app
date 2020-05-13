@@ -28,12 +28,7 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const {
-      viewModes,
-      currentViewMode,
-      navigationDrawerOpen,
-      setNavigationDrawerOpen,
-    } = uiStore;
+    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
     const {
       participants,
       numOfNewParticipants,
@@ -45,12 +40,16 @@ export const Database = inject(
       setSorter,
       setLimit,
       setCollection,
+      collection,
+      filter,
     } = participantStore;
 
-    const handleParticipantViewChanged = (collection, status) => {
-      setCollection(collection);
-      setFilter({ status: status });
-      setSorter({ nameLast: 'asc' });
+    const handleParticipantViewChanged = (newCollection, status) => {
+      if (newCollection !== collection && status !== filter) {
+        setCollection(newCollection);
+        setFilter({ status: status });
+        setSorter({ nameLast: 'asc' });
+      }
     };
 
     /**
@@ -70,7 +69,8 @@ export const Database = inject(
             <ListViewDrawer
               numNew={numOfNewParticipants}
               classes={classes}
-              onParticipantViewChanged={handleParticipantViewChanged}/>
+              onParticipantViewChanged={handleParticipantViewChanged}
+            />
           );
       }
     };
@@ -105,10 +105,10 @@ export const Database = inject(
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
           return <div>Staff Details</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <ParticipantDetailPage />;
-      
+
         case viewModes.STATISTICS:
           return <StatisticsView />;
 
