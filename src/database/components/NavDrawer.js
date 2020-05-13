@@ -54,8 +54,7 @@ export const NavDrawer = (props) => {
 
   const drawer = (
     <div>
-      <div className={`${classes.drawerHeader} drawerHeaderCss`}>
-
+      <div className={`${classes.drawerHeader} drawerHeader`}>
         {/* TODO: Replace with current user ID */}
         <Typography variant="h6">Staff McStaff</Typography>
 

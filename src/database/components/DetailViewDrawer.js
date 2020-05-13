@@ -9,6 +9,7 @@ import { ArrowBack } from '@material-ui/icons';
 import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
 import './style/NavDrawer.css';
+import { StyledListItem } from './StyledListItem';
 
 export const DetailViewDrawer = inject('uiStore')(
   observer(() => {
@@ -30,12 +31,12 @@ export const DetailViewDrawer = inject('uiStore')(
 
     return (
       <List disablePadding>
-        <ListItem key="back" button onClick={handleClickBack}>
+        <StyledListItem key="back" button onClick={handleClickBack}>
           <ListItemIcon>
             <ArrowBack />
           </ListItemIcon>
           <ListItemText primary={'Back'} />
-        </ListItem>
+        </StyledListItem>
         <Divider />
         {currentDetailViewMode === viewModes.PARTICIPANT_DETAIL && (
           <ParticipantTabs handleClick={handleChangeParticipantTab} />
