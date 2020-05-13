@@ -35,12 +35,7 @@ export const ListViewDrawer = inject('uiStore')(
   observer(({ numNew, onParticipantViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
-    const { setCurrentViewMode, viewModes } = uiStore;
-
-    const collectionType = {
-      NEW: 'new',
-      PERMANENT: 'permanent',
-    };
+    const { setCurrentViewMode, viewModes, collectionType } = uiStore;
 
     const statuses = [
       { name: 'Pending', icon: <HourglassEmptyOutlined /> },
