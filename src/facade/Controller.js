@@ -1,11 +1,10 @@
 export default class Controller {
-  constructor(ref, filter, sorter, limit, onChildNext, onDirecting, onError) {
+  constructor(ref, filter, sorter, limit, onChildNext, onError) {
     this._query = this._buildQuery(ref, filter, sorter);
 
     this._checkPoints = [];
     this._limit = limit;
     this._currentPage = 0;
-    this._onDirecting = onDirecting;
 
     this._observer = {
       next: querySnap => {
@@ -24,27 +23,9 @@ export default class Controller {
       error: onError,
     };
 
-    this._unsubStart = this._query.limit(1).onSnapshot({
-      next: querySnap => {
-        if (querySnap.docs.length > 0) {
-          this.startId = querySnap.docs[0].id;
-        }
-      },
-      error: onError,
-    });
-
-    this._unsubEnd = this._query.limitToLast(1).onSnapshot({
-      next: querySnap => {
-        if (querySnap.docs.length > 0) {
-          this.endId = querySnap.docs[0].id;
-        }
-      },
-      error: onError,
-    });
-
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = this._query.limit(limit).onSnapshot(this._observer);
 
-    this.startId = null;
     this.endId = null;
   }
 
@@ -77,14 +58,23 @@ export default class Controller {
     return ref;
   }
 
-  unsubcribe() {
-    this._unsubStart();
+  _subscribeToEnd() {
+    return this._query.limitToLast(1).onSnapshot({
+      next: querySnap => {
+        if (querySnap.docs.length > 0) {
+          this.endId = querySnap.docs[0].id;
+        }
+      },
+    });
+  }
+
+  unsubscribe() {
     this._unsubEnd();
     this._unsubContent();
   }
 
-  prevPage() {
-    // You're at the fist page. Cannot go back anymore.
+  back(onDirecting) {
+    // You're at the first page. Cannot go back anymore.
     if (this._currentPage === 0) {
       return;
     }
@@ -94,14 +84,15 @@ export default class Controller {
       query = query.startAt(this._checkPoints[this._currentPage]);
     }
 
-    this._unsubContent();
-    if (this._onDirecting) {
-      this._onDirecting();
+    this.unsubscribe();
+    if (onDirecting) {
+      onDirecting();
     }
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 
-  nextPage() {
+  next(onDirecting) {
     // You're at the last page. Cannot go forward anymore.
     if (this.endId === this._checkPoints[this._currentPage + 1].id) {
       return;
@@ -110,10 +101,11 @@ export default class Controller {
     let query = this._query;
     query = query.startAfter(this._checkPoints[++this._currentPage]);
 
-    this._unsubContent();
-    if (this._onDirecting) {
-      this._onDirecting();
+    this.unsubscribe();
+    if (onDirecting) {
+      onDirecting();
     }
+    this._unsubEnd = this._subscribeToEnd();
     this._unsubContent = query.limit(this._limit).onSnapshot(this._observer);
   }
 }

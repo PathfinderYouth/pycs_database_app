@@ -22,7 +22,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ListContainer = inject('uiStore')(
-  observer(({ records, setRowClicked }) => {
+  observer(({
+    records,
+    onRowClicked,
+    onPrevButtonClicked,
+    onNextButtonClicked,
+    nextButtonDisabled,
+    onChangeRowsPerPage,
+  }) => {
     const classes = useStyles();
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('lastName');
@@ -39,7 +46,7 @@ export const ListContainer = inject('uiStore')(
     const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
     const handleRowClicked = (clickedRow) => {
-      setRowClicked(clickedRow);
+      onRowClicked(clickedRow);
       setCurrentViewMode(currentDetailViewMode);
     };
 
@@ -50,11 +57,18 @@ export const ListContainer = inject('uiStore')(
     };
 
     const handleChangePage = (event, newPage) => {
-      //TODO
+      if (newPage < page) {
+        onPrevButtonClicked();
+      } else {
+        onNextButtonClicked();
+      }
+      setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event) => {
-      //TODO
+      setPage(0);
+      setRowsPerPage(event.target.value);
+      onChangeRowsPerPage(event.target.value);
     };
 
     return (
@@ -72,28 +86,30 @@ export const ListContainer = inject('uiStore')(
                 headerCells={headers}
               />
               <TableBody>
-                {stableSort(records, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <TableRow hover key={row.id} onClick={handleRowClicked.bind(this, row)}>
-                      {headers.map((column) => (
-                        <TableCell key={`${row.id}-${column.id}`}>
-                          <Typography>{row[column.id]}</Typography>
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                {records.map((row) => (
+                  <TableRow hover key={row.id} onClick={handleRowClicked.bind(this, row)}>
+                    {headers.map((column) => (
+                      <TableCell key={`${row.id}-${column.id}`}>
+                        <Typography>{row[column.id]}</Typography>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[20, 50, 100]}
             component="div"
-            count={records.length}
+            count={-1}
             rowsPerPage={rowsPerPage}
             page={page}
+            labelDisplayedRows={({page}) => `Page ${page + 1}`}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
+            nextIconButtonProps={{
+              disabled: nextButtonDisabled
+            }}
           />
         </Paper>
       </div>

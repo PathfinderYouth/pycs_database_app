@@ -4,21 +4,22 @@ import service from '../facade/service';
 const db = service.getDatabase();
 
 class ParticipantStore {
-
   collectionType = {
     NEW: 'new',
-    PERMANENT: 'permanent'
-  }
+    PERMANENT: 'permanent',
+  };
 
   documentType = {
     ADDED: 'added',
-    MODIFIED: 'modifed',
-    REMOVED: 'removed'
-  }
+    MODIFIED: 'modified',
+    REMOVED: 'removed',
+  };
 
   _filter = {};
 
-  _sorter = {};
+  _sorter = { lastName: 'asc' };
+
+  _limit = 20;
 
   _participants = [];
 
@@ -27,6 +28,8 @@ class ParticipantStore {
   _collection = this.collectionType.NEW;
 
   _controller = null;
+
+  _isLastPage = true;
 
   _statistics = null;
 
@@ -61,6 +64,13 @@ class ParticipantStore {
     }
 
     this._participants = newList;
+
+    if (newList.length > 0) {
+      let currentEndId = newList[newList.length - 1].id;
+      this._isLastPage = this._controller.endId === currentEndId;
+    } else {
+      this._isLastPage = true;
+    }
   };
 
   _updateList = autorun(() => {
@@ -68,6 +78,7 @@ class ParticipantStore {
 
     // Unsubscribe to previous real-time listener and reset list to empty
     if (this._controller) {
+      this._isLastPage = true;
       this._participants = [];
       this._controller.unsubscribe();
     }
@@ -77,7 +88,7 @@ class ParticipantStore {
         this._controller = db.getNewList(
           this._filter,
           this._sorter,
-          10,
+          this._limit,
           this._onChildNext,
         );
         break;
@@ -86,7 +97,7 @@ class ParticipantStore {
         this._controller = db.getPermanentList(
           this._filter,
           this._sorter,
-          10,
+          this._limit,
           this._onChildNext,
         );
         break;
@@ -96,11 +107,11 @@ class ParticipantStore {
     }
   });
 
-  setCurrentParticipant = (participant) => {
+  setCurrentParticipant = participant => {
     this._currentParticipant = participant;
-  }
+  };
 
-  setFilter = (filter) => {
+  setFilter = filter => {
     this._filter = filter;
   };
 
@@ -108,12 +119,23 @@ class ParticipantStore {
     this._sorter = sorter;
   };
 
+  setLimit = limit => {
+    this._limit = limit;
+  };
+
   setCollection = collection => {
     this._collection = collection;
   };
 
+  goToPreviousPage = () => {
+    this._controller.back(() => this._participants = []);
+  };
+
+  goToNextPage = () => {
+    this._controller.next(() => this._participants = []);
+  };
+
   get participants() {
-    // console.log(this._participants)
     return this._participants;
   }
 
@@ -130,21 +152,31 @@ class ParticipantStore {
     }
     return 0;
   }
+
+  get isLastPage() {
+    return this._isLastPage;
+  }
 }
 
 decorate(ParticipantStore, {
   _filter: observable,
   _sorter: observable,
+  _limit: observable,
   _participants: observable,
   _currentParticipant: observable,
   _collection: observable,
+  _isLastPage: observable,
   _statistics: observable,
   setCurrentParticipant: action,
   setFilter: action,
   setSorter: action,
+  setLimit: action,
   setCollection: action,
+  goToPreviousPage: action,
+  goToNextPage: action,
   participants: computed,
   numOfNewParticipants: computed,
+  isLastPage: computed,
 });
 
 let participantStore = new ParticipantStore();

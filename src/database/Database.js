@@ -28,8 +28,21 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
-    const { participants, numOfNewParticipants, setCurrentParticipant } = participantStore;
+    const {
+      viewModes,
+      currentViewMode,
+      navigationDrawerOpen,
+      setNavigationDrawerOpen,
+    } = uiStore;
+    const {
+      participants,
+      numOfNewParticipants,
+      setCurrentParticipant,
+      goToPreviousPage,
+      goToNextPage,
+      isLastPage,
+      setLimit,
+    } = participantStore;
 
     /**
      * Gets content of side drawer
@@ -56,12 +69,16 @@ export const Database = inject(
         currentViewMode === viewModes.STAFF_LIST
           ? {
               records: [], // TODO: get user list from user store
-              // TODO: set current user in user store
-              setRowClicked: () => console.log('Opening staff record'),
+              // TODO: set other properties like the one for participant
+              onRowClicked: (clickedRow) => console.log('Opening staff record'),
             }
           : {
               records: participants,
-              setRowClicked: setCurrentParticipant,
+              onRowClicked: setCurrentParticipant,
+              onPrevButtonClicked: goToPreviousPage,
+              onNextButtonClicked: goToNextPage,
+              nextButtonDisabled: isLastPage,
+              onChangeRowsPerPage: setLimit,
             };
 
       return <ListContainer {...listViewProps} />;
