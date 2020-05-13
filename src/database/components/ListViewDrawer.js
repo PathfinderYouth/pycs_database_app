@@ -7,12 +7,19 @@ import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
-import { Check, Clear, HourglassEmptyOutlined, Inbox, Person, Work } from '@material-ui/icons';
+import {
+  Check,
+  Clear,
+  HourglassEmptyOutlined,
+  Inbox,
+  Person,
+  PieChart,
+  Work,
+} from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
-import { RecordSearchBar } from './RecordSearchBar';
 import './style/NavDrawer.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,27 +33,23 @@ const useStyles = makeStyles((theme) => ({
 
 export const ListViewDrawer = inject('uiStore')(
   observer(({ numNew }) => {
-  const classes = useStyles();
-  const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
-  const { setCurrentViewMode, viewModes } = uiStore;
+    const classes = useStyles();
+    const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
+    const { setCurrentViewMode, viewModes } = uiStore;
 
-  const statuses = [
-    { name: 'Pending', icon: <HourglassEmptyOutlined /> },
-    { name: 'Approved', icon: <Check /> },
-    { name: 'Denied', icon: <Clear /> },
-  ];
+    const statuses = [
+      { name: 'Pending', icon: <HourglassEmptyOutlined /> },
+      { name: 'Approved', icon: <Check /> },
+      { name: 'Denied', icon: <Clear /> },
+    ];
 
-  const expandClick = () => {
-    setParticipantsListExpanded(!participantsListExpanded);
-  };
+    const expandClick = () => {
+      setParticipantsListExpanded(!participantsListExpanded);
+    };
 
   return (
     <div>
-      <div className={classes.container}>
-        <RecordSearchBar />
-      </div>
-      <List>
-        <Divider />
+      <List disablePadding>
         <ListItem button key="participants" onClick={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}>
           <ListItemIcon>
             <Person />
@@ -80,9 +83,18 @@ export const ListViewDrawer = inject('uiStore')(
           <ListItemText primary="New Applications" />
         </ListItem>
         <Divider />
-
-
-        {/*//TODO: only render this if user is staff*/}
+        <ListItem
+          button
+          key="statistics"
+          onClick={() => setCurrentViewMode(viewModes.STATISTICS)}
+        >
+          <ListItemIcon>
+            <PieChart />
+          </ListItemIcon>
+          <ListItemText primary="Statistics" />
+        </ListItem>
+        <Divider />
+        {/*//TODO: only render this if user is admin*/}
         <ListItem button key="staff" onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}>
           <ListItemIcon>
             <Work />

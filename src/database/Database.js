@@ -4,24 +4,27 @@ import {
   ListContainer,
   ListViewDrawer,
   NavDrawer,
+  StatisticsView,
   TopNavBar,
 } from './components';
 import { makeStyles } from '@material-ui/core/styles';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
-import { AuthContext } from '../sign-in/components/AuthContext';
+import { AuthContext } from '../sign-in/components';
 import { participantStore, uiStore } from '../injectables';
 import './Database.css';
-import { AlternateEmail } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   content: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
   },
 }));
 
 // container that holds all database UI objects
-export const Database = inject('participantStore', 'uiStore')(
+export const Database = inject(
+  'participantStore',
+  'uiStore',
+)(
   observer(() => {
     const classes = useStyles();
 
@@ -35,6 +38,10 @@ export const Database = inject('participantStore', 'uiStore')(
       participants,
       numOfNewParticipants,
       setCurrentParticipant,
+      goToPreviousPage,
+      goToNextPage,
+      isLastPage,
+      setLimit,
     } = participantStore;
 
     /**
@@ -45,19 +52,12 @@ export const Database = inject('participantStore', 'uiStore')(
         // detail modes
         case viewModes.PARTICIPANT_DETAIL:
         case viewModes.STAFF_DETAIL:
-          return (
-            <DetailViewDrawer/>
-          );
+          return <DetailViewDrawer />;
         // list modes
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
         default:
-          return (
-            <ListViewDrawer
-              numNew={numOfNewParticipants}
-              classes={classes}
-            />
-          );
+          return <ListViewDrawer numNew={numOfNewParticipants} classes={classes} />;
       }
     };
 
@@ -69,12 +69,16 @@ export const Database = inject('participantStore', 'uiStore')(
         currentViewMode === viewModes.STAFF_LIST
           ? {
               records: [], // TODO: get user list from user store
-              // TODO: set current user in user store
-              setRowClicked: () => console.log('Opening staff record'), 
+              // TODO: set other properties like the one for participant
+              onRowClicked: (clickedRow) => console.log('Opening staff record'),
             }
           : {
               records: participants,
-              setRowClicked: setCurrentParticipant,
+              onRowClicked: setCurrentParticipant,
+              onPrevButtonClicked: goToPreviousPage,
+              onNextButtonClicked: goToNextPage,
+              nextButtonDisabled: isLastPage,
+              onChangeRowsPerPage: setLimit,
             };
 
       return <ListContainer {...listViewProps} />;
@@ -87,13 +91,13 @@ export const Database = inject('participantStore', 'uiStore')(
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
           return <div>Staff Detail</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <div>Participant Detail</div>; //TODO replace with participant detail page
-      
+
         case viewModes.STATISTICS:
-          return <div>Statistics</div>; //TODO replace with statistics page
-        
+          return <StatisticsView />;
+
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
         default:
@@ -103,9 +107,9 @@ export const Database = inject('participantStore', 'uiStore')(
 
     // useContext hook accepts value from AuthContext provider
     const { currentUser } = useContext(AuthContext);
-    useEffect(()=>{
+    useEffect(() => {
       if (!currentUser) {
-        navigate("/sign-in");
+        navigate('/sign-in');
       }
     });
 
