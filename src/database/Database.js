@@ -48,7 +48,6 @@ export const Database = inject(
     } = participantStore;
 
     const handleParticipantViewChanged = (collection, status) => {
-      alert(status);
       setCollection(collection);
       setFilter({
         status: status,
