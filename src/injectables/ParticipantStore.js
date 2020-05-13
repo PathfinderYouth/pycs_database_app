@@ -19,7 +19,7 @@ class ParticipantStore {
     REMOVED: 'removed',
   };
 
-  _filter = {};
+  _filter = { status: null };
 
   _sorter = { nameLast: 'asc' };
 
