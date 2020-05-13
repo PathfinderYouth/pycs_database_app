@@ -234,7 +234,7 @@ export const formSteps = [
         name: 'learnedAboutPathfinderOther',
         type: 'text',
         description:
-          'If you chose "other" to "How did you find out about our program?", please specify:',
+          'If you answered "other" to "How did you find out about our program?", please specify:',
         label: 'If other, please specify',
         size: 12,
         multiline: true,
@@ -266,7 +266,7 @@ export const formSteps = [
       {
         name: 'employmentProgramInfo',
         type: 'text',
-        size: 8,
+        size: 12,
         description:
           'If you did attend a job club or paid employment program, what name, month, year, of the program and where was it?',
         multiline: true,
@@ -373,11 +373,33 @@ export const formSteps = [
         mask: true,
       },
       {
+        name: 'hasMentalHealthIssues',
+        type: 'radio',
+        label: 'Do you have any mental health issues? (e.g., anxiety, depression, mood disorder, schizophrenia, etc.)',
+        required: true,
+        size: 12,
+        options: ['Yes', 'No', 'Decline to answer'],
+      },
+      {
+        name: 'mentalHealthIssues',
+        type: 'text',
+        description:
+          'If you answered "yes" to "Do you have any mental health issues", please specify what issues and any medications you take:',
+        label: 'If yes, please specify',
+        multiline: true,
+        size: 12,
+        dependsOnOtherField: {
+          name: 'hasMentalHealthIssues',
+          list: false,
+          value: 'Yes',
+        },
+      },
+      {
         name: 'medicalConditions',
         type: 'text',
         size: 12,
         description:
-          'Do you have any medical conditions or take any medications that we should know about? Please list condition and/or medication and dosages? (e.g., asthma, anxiety disorder, depression, mood disorder, diabetes, schizophrenia, etc.)',
+          'Do you have any other medical conditions or take any medications that we should know about? Please list condition and/or medication and dosages. (e.g., asthma, diabetes, etc.)',
       },
       {
         name: 'allergies',
@@ -414,12 +436,33 @@ export const formSteps = [
       },
       {
         name: 'housingSituation',
+        type: 'radio',
+        size: 12,
+        required: true,
+        label:
+          'What is your current housing situation?',
+        options: [
+          'Renting',
+          'Living with family',
+          'Couch-surfing',
+          'Homeless',
+          'Living in foster care',
+          'Other',
+        ],
+      },
+      {
+        name: 'housingSituationOther',
         type: 'text',
-        size: 6,
         description:
-          'What is your current housing situation? (e.g., rent, live with family, couch surfing, homeless, foster care, etc.)',
-
+          'If you answered "other" to "What is your current housing situation?", please specify:',
+        label: 'If other, please specify',
+        size: 6,
         multiline: true,
+        dependsOnOtherField: {
+          name: 'housingSituation',
+          list: false,
+          value: 'Other',
+        },
       },
       {
         name: 'rent',
@@ -469,7 +512,7 @@ export const formSteps = [
         name: 'formOfIncomeOther',
         type: 'text',
         description:
-          'If you chose "other" to "What is your current form of income?", please specify:',
+          'If you answered "other" to "What is your current form of income?", please specify:',
         label: 'If other, please specify',
         size: 12,
         multiline: true,
