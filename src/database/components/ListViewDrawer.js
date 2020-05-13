@@ -32,25 +32,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ListViewDrawer = inject('uiStore')(
-  observer(({ numNew }) => {
+  observer(({ numNew, onParticipantViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
-    const { setCurrentViewMode, viewModes } = uiStore;
+    const { setCurrentViewMode, viewModes, collectionType } = uiStore;
 
     const statuses = [
       { name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { name: 'Approved', icon: <Check /> },
-      { name: 'Denied', icon: <Clear /> },
+      { name: 'Declined', icon: <Clear /> },
     ];
 
-    const expandClick = () => {
+    const expandClick = (event) => {
+      event.stopPropagation();
       setParticipantsListExpanded(!participantsListExpanded);
     };
 
   return (
     <div>
       <List disablePadding>
-        <ListItem button key="participants" onClick={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}>
+        <ListItem
+          button
+          key="participants"
+          onClick={() => {
+            setCurrentViewMode(viewModes.PARTICIPANT_LIST);
+            onParticipantViewChanged(collectionType.PERMANENT, null);
+          }}
+        >
           <ListItemIcon>
             <Person />
           </ListItemIcon>
@@ -66,6 +74,10 @@ export const ListViewDrawer = inject('uiStore')(
                 button
                 key={status.name.toLowerCase()}
                 className={classes.nested}
+                onClick={() => {
+                  setCurrentViewMode(viewModes.PARTICIPANT_LIST);
+                  onParticipantViewChanged(collectionType.PERMANENT, status.name);
+                }}
               >
                 <ListItemIcon>{status.icon}</ListItemIcon>
                 <ListItemText primary={status.name} />
@@ -74,7 +86,14 @@ export const ListViewDrawer = inject('uiStore')(
           </List>
         </Collapse>
         <Divider />
-        <ListItem button key="newApplications">
+        <ListItem
+          button
+          key="newApplications"
+          onClick={() => {
+            setCurrentViewMode(viewModes.PARTICIPANT_LIST);
+            onParticipantViewChanged(collectionType.NEW, null);
+          }}
+        >
           <ListItemIcon>
             <Badge badgeContent={numNew} color="error" overlap="circle">
               <Inbox />

@@ -25,7 +25,7 @@ class ParticipantStore {
 
   _currentParticipant = null;
 
-  _collection = this.collectionType.NEW;
+  _collection = this.collectionType.PERMANENT;
 
   _controller = null;
 
@@ -105,7 +105,7 @@ class ParticipantStore {
       default:
       // Do nothing
     }
-  });
+  }, { delay: 500 });
 
   setCurrentParticipant = participant => {
     this._currentParticipant = participant;
