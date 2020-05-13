@@ -74,7 +74,7 @@ export default class Controller {
   }
 
   back(onDirecting) {
-    // You're at the fist page. Cannot go back anymore.
+    // You're at the first page. Cannot go back anymore.
     if (this._currentPage === 0) {
       return;
     }
