@@ -41,8 +41,21 @@ export const Database = inject(
       goToPreviousPage,
       goToNextPage,
       isLastPage,
+      setFilter,
+      setSorter,
       setLimit,
+      setCollection,
     } = participantStore;
+
+    const handleParticipantViewChanged = (collection, status) => {
+      alert(status);
+      setCollection(collection);
+      setFilter({
+        status: status,
+        // TODO: add up to one startWith comparison (value from search bar)
+      });
+      // TODO: setSorter
+    };
 
     /**
      * Gets content of side drawer
@@ -57,7 +70,12 @@ export const Database = inject(
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
         default:
-          return <ListViewDrawer numNew={numOfNewParticipants} classes={classes} />;
+          return (
+            <ListViewDrawer
+              numNew={numOfNewParticipants}
+              classes={classes}
+              onParticipantViewChanged={handleParticipantViewChanged}/>
+          );
       }
     };
 

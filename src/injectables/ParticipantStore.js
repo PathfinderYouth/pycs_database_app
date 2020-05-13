@@ -17,7 +17,7 @@ class ParticipantStore {
 
   _filter = {};
 
-  _sorter = { lastName: 'asc' };
+  _sorter = {};
 
   _limit = 20;
 
@@ -105,7 +105,7 @@ class ParticipantStore {
       default:
       // Do nothing
     }
-  });
+  }, { delay: 500 });
 
   setCurrentParticipant = participant => {
     this._currentParticipant = participant;
