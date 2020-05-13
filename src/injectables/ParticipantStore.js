@@ -139,6 +139,10 @@ class ParticipantStore {
     return this._participants;
   }
 
+  get collection() {
+    return this._collection
+  }
+
   /**
    * Gets the currently-selected participant
    */
@@ -174,6 +178,7 @@ decorate(ParticipantStore, {
   setCollection: action,
   goToPreviousPage: action,
   goToNextPage: action,
+  collection: computed,
   participants: computed,
   numOfNewParticipants: computed,
   isLastPage: computed,

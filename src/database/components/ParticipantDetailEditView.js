@@ -4,40 +4,76 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import DoneIcon from '@material-ui/icons/Done';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 import { Formik } from 'formik';
-import { mockParticipantRecord } from './mockParticipantRecord';
 import { useSnackbar } from 'notistack';
 import { FormFieldBuilder, formSteps } from '../../fields';
+import service from '../../facade/service';
+import { participantStore } from '../../injectables';
 
-export const ParticipantDetailEditView = ({ currentStep, handleClickChangeMode }) => {
+export const ParticipantDetailEditView = ({
+  participant,
+  collection,
+  currentStep,
+  handleClickChangeMode,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { collectionType } = participantStore;
 
   const handleClickOk = () => {
-    if (window.confirm('Confirm changes?')) {
-      // TODO: show success message on successful database update, fail message if failed
-      enqueueSnackbar('Participant record updated.', {
-        variant: 'success',
-      });
-      handleClickChangeMode();
-      return true;
-    }
-    return false;
+    return window.confirm('Confirm changes?');
   };
 
   const handleClickCancel = () => {
-    if (window.confirm('Cancel editing? Changes will not be saved.')) {
+    if (window.confirm('Discard changes? Changes will not be saved.')) {
       handleClickChangeMode();
     }
   };
 
+  const handleSubmit = (values, setSubmitting) => {
+    const db = service.getDatabase();
+    collection === collectionType.NEW
+      ? db.updateNew(
+          'docID', // TODO: replace with real document ID
+          values,
+          (docId) => {
+            setSubmitting(false);
+            enqueueSnackbar('Participant record updated.', {
+              variant: 'success',
+            });
+            handleClickChangeMode();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem updating the participant record.', {
+              variant: 'error',
+            });
+            handleClickChangeMode();
+          },
+        )
+      : db.updatePermanent(
+          'docID', // TODO: replace with real document ID
+          values,
+          (docId) => {
+            setSubmitting(false);
+            enqueueSnackbar('Participant record updated.', {
+              variant: 'success',
+            });
+            handleClickChangeMode();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem updating the participant record.', {
+              variant: 'error',
+            });
+            handleClickChangeMode();
+          },
+        );
+  }
+
   return (
     <Formik
-      initialValues={mockParticipantRecord}
+      initialValues={participant}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log(JSON.stringify(values, null, 2));
-          // setSubmitting(false);
-        });
+        handleSubmit(values, setSubmitting)
       }}
     >
       {(form) => (
@@ -47,18 +83,22 @@ export const ParticipantDetailEditView = ({ currentStep, handleClickChangeMode }
               {`Edit Participant Details - ${formSteps[currentStep].stepName}`}
             </Typography>
             <div>
-              <IconButton
-                onClick={() => {
-                  if (handleClickOk()) {
-                    form.submitForm();
-                  }
-                }}
-              >
-                <DoneIcon />
-              </IconButton>
-              <IconButton onClick={handleClickCancel}>
-                <CloseIcon />
-              </IconButton>
+              <Tooltip title="Confirm changes" aria-label="confirm">
+                <IconButton
+                  onClick={() => {
+                    if (handleClickOk()) {
+                      form.submitForm();
+                    }
+                  }}
+                >
+                  <DoneIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Discard changes" aria-label="discard">
+                <IconButton onClick={handleClickCancel}>
+                  <CloseIcon />
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
           <div className="participant-detail-form-contents">

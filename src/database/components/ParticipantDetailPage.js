@@ -3,13 +3,18 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
+import Tooltip from '@material-ui/core/Tooltip';
 import { ParticipantDetailEditView } from './ParticipantDetailEditView';
 import { inject, observer } from 'mobx-react';
-import { uiStore } from '../../injectables';
+import { participantStore, uiStore } from '../../injectables';
 import './style/ParticipantDetailPage.css';
 
-export const ParticipantDetailPage = inject('uiStore')(
+export const ParticipantDetailPage = inject(
+  'participantStore',
+  'uiStore',
+)(
   observer(() => {
+    const { currentParticipant, collection } = participantStore;
     const { currentParticipantDetailStep } = uiStore;
     const [participantDetailMode, setParticipantDetailMode] = useState('view'); // view or edit
 
@@ -28,9 +33,11 @@ export const ParticipantDetailPage = inject('uiStore')(
       <>
         <div className="participant-detail-header">
           <Typography variant="h5">Participant Details</Typography>
-          <IconButton onClick={handleClickChangeMode}>
-            <EditIcon />
-          </IconButton>
+          <Tooltip title="Edit participant record" aria-label="edit">
+            <IconButton onClick={handleClickChangeMode}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
         </div>
         <Typography>Participant details go here</Typography>
         <Typography>{`Viewing step #${currentStep}`}</Typography>
@@ -43,6 +50,8 @@ export const ParticipantDetailPage = inject('uiStore')(
           <div className="participant-detail-contents">
             {participantDetailMode === 'edit' ? (
               <ParticipantDetailEditView
+                participant={currentParticipant}
+                collection={collection}
                 currentStep={currentParticipantDetailStep}
                 handleClickChangeMode={handleClickViewMode}
               />
