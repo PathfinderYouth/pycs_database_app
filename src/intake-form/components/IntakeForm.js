@@ -48,14 +48,10 @@ export const IntakeForm = (props) => {
    * Called when a user is verified via ReCaptcha
    */
   const onCaptchaChanged = () => {
-    toNextPage();
-  };
-
-  /**
-   * Goes to next step in form
-   */
-  const toNextPage = () => {
-    setCurrentStep(currentStep + 1);
+    handleSubmit(values, form);
+    // TODO: only proceed to next step if pushing to database was successful,
+    // otherwise, show an error message somehow
+    handleClickNext(form);
   };
 
   /**
@@ -97,11 +93,7 @@ export const IntakeForm = (props) => {
   const handleClickNext = () => {
     if (!stepHasErrors()) {
       if (currentStep < lastStepNumber) {
-        if (currentStep === lastStepNumber - 1) {
-          recaptchaRef.current.execute();
-        } else {
-          toNextPage();
-        }
+        setCurrentStep(currentStep + 1);
       }
     }
   };
@@ -231,10 +223,7 @@ export const IntakeForm = (props) => {
               color="primary"
               variant="contained"
               onClick={() => {
-                handleSubmit(values, form);
-                // TODO: only proceed to next step if pushing to database was successful,
-                // otherwise, show an error message somehow
-                handleClickNext(form);
+                recaptchaRef.current.execute();
               }}
               disabled={isSubmitting}
             >
