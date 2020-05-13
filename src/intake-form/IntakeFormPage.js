@@ -1,13 +1,9 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
-<<<<<<< HEAD
-import { initialValues, IntakeForm, validationSchema } from './components';
 import service from '../facade/service';
-=======
 import { IntakeForm, validationSchema } from './components';
 import { initialValues } from '../fields'
->>>>>>> Created base participant detail view page and participant edit page and connected them to the UI store.
 
 export const IntakeFormPage = () => {
   const { enqueueSnackbar } = useSnackbar();
