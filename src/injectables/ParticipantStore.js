@@ -3,7 +3,7 @@ import service from '../facade/service';
 
 const db = service.getDatabase();
 
-const compareObject = (obj1, obj2) => {
+const checkEqual = (obj1, obj2) => {
   return Object.entries(obj1).sort().toString() === Object.entries(obj2).sort().toString();
 }
 
@@ -116,14 +116,14 @@ class ParticipantStore {
   };
 
   setFilter = filter => {
-    if (compareObject(filter, this._filter)) {
+    if (checkEqual(filter, this._filter)) {
       return;
     }
     this._filter = filter;
   };
 
   setSorter = sorter => {
-    if (compareObject(sorter, this._sorter)) {
+    if (checkEqual(sorter, this._sorter)) {
       return;
     }
     this._sorter = sorter;
