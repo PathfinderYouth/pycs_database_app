@@ -24,10 +24,29 @@ class UIStore {
     STATISTICS: 'statistics',
   };
 
+
+  participantSearchFilters = [
+    { id: 'nameLast', label: 'Last Name' },
+    { id: 'nameGiven', label: 'Given Name(s)' },
+    { id: 'addressStreet', label: 'Street Address' },
+    { id: 'addressCity', label: 'City' },
+    { id: 'email', label: 'Email' },
+    { id: 'phoneHome', label: 'Home Phone' },
+    { id: 'phoneCell', label: 'Cell Phone' },
+    { id: 'sin', label: 'SIN' },
+  ];
+
+  staffSearchFilters = [
+    { id: 'name', label: 'Name' },
+    { id: 'email', label: 'Email' },
+    { id: 'role', label: 'Role' },
+  ];
+
   participantDetailViewModes = {
     VIEW: 'view',
     EDIT: 'edit'
   }
+
 
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
@@ -49,6 +68,12 @@ class UIStore {
     return this.currentViewMode === this.viewModes.STAFF_LIST
       ? this.staffHeaders
       : this.participantHeaders;
+  }
+
+  get searchFilters() {
+    return this.currentViewMode === this.viewModes.PARTICIPANT_LIST
+      ? this.participantSearchFilters
+      : this.staffSearchFilters;
   }
 
   get currentDetailViewMode() {
