@@ -11,7 +11,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { getComparator } from './sortingHelpers';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
 
