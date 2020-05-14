@@ -47,11 +47,13 @@ export const IntakeForm = (props) => {
   /**
    * Called when a user is verified via ReCaptcha
    */
-  const onCaptchaChanged = () => {
-    handleSubmit(values, form);
-    // TODO: only proceed to next step if pushing to database was successful,
-    // otherwise, show an error message somehow
-    handleClickNext(form);
+  const onCaptchaChanged = (response) => {
+    if (response !== null) {
+      handleSubmit(values, form);
+      // TODO: only proceed to next step if pushing to database was successful,
+      // otherwise, show an error message somehow
+      handleClickNext(form);
+    }
   };
 
   /**
@@ -152,7 +154,7 @@ export const IntakeForm = (props) => {
         ref={recaptchaRef}
         sitekey="6LfukvMUAAAAAGkE5uDvYCqdi-DEKey3J8AiZl8v"
         size="invisible"
-        onChange={onCaptchaChanged}
+        onChange={(response) => onCaptchaChanged(response)}
       />
       <div className="intake-form-topBar">
         <Typography display="inline">
