@@ -9,8 +9,7 @@ export const ParticipantTabs = inject('uiStore')(
   observer(({ handleClick }) => {
     const handleCategoryClick = (clickedCategory) => {
       handleClick(clickedCategory);
-      console.log(`Clicked on ${stepNames[clickedCategory]}`);
-    };
+  };
 
     const { currentParticipantDetailStep } = uiStore;
 
