@@ -74,7 +74,7 @@ export const Database = inject(
       sorter[orderBy] = order;
 
       if (currentViewMode === viewModes.STAFF_LIST) {
-        setUserSorter(sorter);
+        // TODO: update UserStore's sorter
       } else {
         setParticipantSorter(sorter);
       }
@@ -110,6 +110,7 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
+
               records: users,
               onRowClicked: setSelectedUser,
               onPrevButtonClicked: goToUserPreviousPage,
