@@ -1,16 +1,10 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
+import { STATUS, eventType } from '../constants';
+import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
-const Timestamp = firebase.firestore.Timestamp;
-
-const STATUS = {
-  pending: 'Pending',
-  approved: 'Approved',
-  declined: 'Declined',
-  deleted: 'Deleted',
-};
 
 export default class DatabaseManager {
   static instance;
@@ -56,6 +50,58 @@ export default class DatabaseManager {
 
   /**
    * Private helper method to get single document.
+   * Generates a list of updated fields
+   * @param {Object} oldData
+   * @param {Object} newData
+   */
+  getUpdatedFields(oldData, newData) {
+    if (oldData.notes !== newData.notes) {
+      return 'notes';
+    } else {
+      let updatedFields = [];
+      Object.entries(newData).forEach(([key, value]) => {
+        if (value !== oldData[key]) {
+          updatedFields.push({
+            name: key, // name of field
+            oldValue: oldData[key], // old field value
+            newValue: value, // new field value
+          });
+        }
+      });
+      return updatedFields;
+    }
+  }
+
+  /**
+   * Updates the history list of a participant
+   * @param {string} userName
+   * @param {string} eventType
+   * @param {string} eventText
+   * @param {array} oldHistory
+   * @param {array} fields
+   */
+  getUpdatedHistory(userName, eventType, eventText, oldHistory = undefined, fields = undefined) {
+    const timestamp = moment.utc().format();
+    const event = !!fields
+      ? {
+          user: userName,
+          event: eventType,
+          text: eventText,
+          fields: fields,
+          timestamp: timestamp,
+        }
+      : {
+          user: userName,
+          event: eventType,
+          text: eventText,
+          timestamp: timestamp,
+        };
+    const history = !!oldHistory ? oldHistory : [];
+    return [event, ...history];
+  }
+
+  /**
+   * Private helper method to get single document
    */
   _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
@@ -83,19 +129,20 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  addNew(participant, onSuccess, onError) {
-    let document = Object.assign({}, participant, {
+  addNew(data, onSuccess, onError) {
+    const newHistory = this.getUpdatedHistory(
+      'System',
+      eventType.CREATED,
+      'Received registration data from participant',
+    );
+    let document = {
+      ...data,
       status: STATUS.pending,
-      createdAt: FieldValue.serverTimestamp(),
-      history: FieldValue.arrayUnion({
-        user: 'System',
-        event: 'Received registration data from participant.',
-        timestamp: Timestamp.now(),
-      }),
-    });
+      createdAt: moment.utc().format(),
+      history: newHistory,
+    };
 
     let docRef = this.newRef.doc();
-
     let batch = this.db.batch();
     batch.set(docRef, document);
     batch.update(this.statRef, { numOfNew: FieldValue.increment(1) });
@@ -125,6 +172,45 @@ export default class DatabaseManager {
   }
 
   /**
+   * Update a participant document in the specified collection.
+   * @param {ref: database reference}
+   *  Database reference
+   * @param {docId: string}
+   *  Document id
+   * @param {data: Object}
+   *  Object containing updated values
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   */
+  _updateDocument(ref, oldData, newData, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory } = oldData;
+    const updatedFields = this.getUpdatedFields(oldData, newData);
+    const updatedHistory =
+      updatedFields === 'notes'
+        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added')
+        : this.getUpdatedHistory(
+            userName,
+            eventType.UPDATED,
+            'Participant record updated',
+            oldHistory,
+            updatedFields,
+          );
+
+    const participant = {
+      ...newData,
+      history: updatedHistory,
+    };
+
+    // make a copy of the participant object to strip out id
+    let document = participant;
+    delete document.id;
+
+    ref.doc(docId).update(document).then(onSuccess(participant)).catch(onError);
+  }
+
+  /**
    * Update a participant document in new collection.
    * @param {docId: string}
    *  Document id
@@ -135,16 +221,8 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  updateNew(docId, data, onSuccess, onError) {
-    let document = Object.assign({}, data, {
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Updated',
-        timestamp: Timestamp.now(),
-      }),
-    });
-
-    this.newRef.doc(docId).update(document).then(onSuccess).catch(onError);
+  updateNew(oldData, newData, userName, onSuccess, onError) {
+    this._updateDocument(this.newRef, oldData, newData, userName, onSuccess, onError);
   }
 
   /**
@@ -174,16 +252,19 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  addPermanent(participant, onSuccess, onError) {
-    let document = Object.assign({}, participant, {
+  addPermanent(userName, data, onSuccess, onError) {
+    const newHistory = this.getUpdatedHistory(
+      userName,
+      eventType.CREATED,
+      'Created new participant record',
+      data.history,
+    );
+    let document = {
+      ...data,
       status: STATUS.pending,
-      createdAt: FieldValue.serverTimestamp(),
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Created',
-        timestamp: Timestamp.now(),
-      }),
-    });
+      createdAt: moment.utc().format(),
+      history: newHistory,
+    };
 
     this.permanentRef
       .add(document)
@@ -223,16 +304,8 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  updatePermanent(docId, data, onSuccess, onError) {
-    let document = Object.assign({}, data, {
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Updated',
-        timestamp: Timestamp.now(),
-      }),
-    });
-
-    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
+  updatePermanent(oldData, newData, userName, onSuccess, onError) {
+    this._updateDocument(this.permanentRef, oldData, newData, userName, onSuccess, onError);
   }
 
   /**
@@ -244,14 +317,18 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  deletePermanent(docId, onSuccess, onError) {
+  deletePermanent(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory, status } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.DELETED,
+      'Participant record deleted',
+      oldHistory,
+    );
     let document = {
       status: STATUS.deleted,
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Deleted',
-        timestamp: Timestamp.now(),
-      }),
+      prevStatus: status,
+      history: updatedHistory,
     };
 
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
@@ -266,15 +343,18 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  undoDeletePermanent(docId, onSuccess, onError) {
+  undoDeletePermanent(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory, prevStatus } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.RESTORED,
+      'Participant record restored',
+      oldHistory,
+    );
+
     let document = {
-      // TODO: revert back to old state
-      status: STATUS.pending,
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Undid deleting',
-        timestamp: Timestamp.now(),
-      }),
+      status: prevStatus,
+      history: updatedHistory,
     };
 
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
@@ -289,7 +369,15 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  moveToPermanent(docId, onSuccess, onError) {
+  moveToPermanent(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.MOVED,
+      'Participant record moved to permanent collection',
+      oldHistory,
+    );
+
     let oldDocRef = this.newRef.doc(docId);
     let newDocRef = this.permanentRef.doc(); // put docId in to keep same ID
     let updateFunction = (transaction) => {
@@ -300,13 +388,9 @@ export default class DatabaseManager {
         }
 
         doc.status = STATUS.pending;
-        doc.history.push({
-          user: 'TODO',
-          event: 'TODO: Moved',
-          timestamp: Timestamp.now(),
-        });
+        doc.history = updatedHistory;
 
-        transaction.set(newDocRef, doc);
+        transaction.set(newDocRef, document);
         transaction.delete(oldDocRef);
       });
     };
@@ -330,14 +414,18 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  approvePending(docId, onSuccess, onError) {
+  approvePending(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.APPROVED,
+      'Participant approved',
+      oldHistory,
+    );
+
     let document = {
       status: STATUS.approved,
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Approved',
-        timestamp: Timestamp.now(),
-      }),
+      history: updatedHistory,
     };
 
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
@@ -352,14 +440,17 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  declinePending(docId, onSuccess, onError) {
+  declinePending(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.DECLINED,
+      'Participant declined',
+      oldHistory,
+    );
     let document = {
       status: STATUS.declined,
-      history: FieldValue.arrayUnion({
-        user: 'TODO',
-        event: 'TODO: Declined',
-        timestamp: Timestamp.now(),
-      }),
+      history: updatedHistory,
     };
 
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);

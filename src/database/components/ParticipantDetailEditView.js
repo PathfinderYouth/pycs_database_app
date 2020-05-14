@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -7,8 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { FormFieldBuilder, FormNotesField, participantDetailSteps, noteField } from '../../fields';
+import { FormFieldBuilder, participantDetailSteps } from '../../fields';
 import service from '../../facade/service';
+import { AuthContext } from '../../sign-in';
 import { participantStore } from '../../injectables';
 
 export const ParticipantDetailEditView = ({
@@ -21,6 +22,9 @@ export const ParticipantDetailEditView = ({
   const { enqueueSnackbar } = useSnackbar();
   const { collectionType } = participantStore;
   const step = participantDetailSteps[currentStep];
+  const {
+    currentUser: { email: userID },
+  } = useContext(AuthContext);
 
   const handleClickOk = () => {
     return window.confirm('Confirm changes?');
@@ -33,18 +37,18 @@ export const ParticipantDetailEditView = ({
   };
 
   const handleSubmit = (values, setSubmitting) => {
-    const { id: docID } = values;
     const db = service.getDatabase();
     collection === collectionType.NEW
       ? db.updateNew(
-          docID,
-          values,
-          (docId) => {
+          participant, // old data
+          values, // new data from form
+          userID, // user
+          (updatedParticipant) => {
             setSubmitting(false);
             enqueueSnackbar('Participant record updated.', {
               variant: 'success',
             });
-            onSuccessfulEdit(values);
+            onSuccessfulEdit(updatedParticipant);
             handleClickChangeMode();
           },
           (error) => {
@@ -55,13 +59,15 @@ export const ParticipantDetailEditView = ({
           },
         )
       : db.updatePermanent(
-          docID,
+          participant,
           values,
-          (docId) => {
+          userID,
+          (updatedParticipant) => {
             setSubmitting(false);
             enqueueSnackbar('Participant record updated.', {
               variant: 'success',
             });
+            onSuccessfulEdit(updatedParticipant);
             handleClickChangeMode();
           },
           (error) => {
@@ -72,43 +78,6 @@ export const ParticipantDetailEditView = ({
           },
         );
   };
-
-  const handleNoteSubmit = (values, setSubmitting) => {
-    const { id: docID } = values;
-    const db = service.getDatabase();
-    collection === collectionType.NEW
-      ? db.updateNew(
-          docID,
-          values,
-          (docId) => {
-            setSubmitting(false);
-            enqueueSnackbar('Note added.', {
-              variant: 'success',
-            });
-            onSuccessfulEdit(values);
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem adding the note.', {
-              variant: 'error',
-            });
-          },
-        )
-      : db.updatePermanent(
-          docID,
-          values,
-          (docId) => {
-            setSubmitting(false);
-            enqueueSnackbar('Note added.', {
-              variant: 'success',
-            });
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem adding the note.', {
-              variant: 'error',
-            });
-          },
-        );
-  }
 
   return (
     <Formik
@@ -142,18 +111,9 @@ export const ParticipantDetailEditView = ({
           </div>
           <div className="participant-detail-form-contents">
             <Grid container spacing={2}>
-              {step.stepName !== 'Notes' ? (
-                step.fields.map((field) => (
-                  <FormFieldBuilder key={field.name} form={form} field={field} />
-                ))
-              ) : (
-                <FormNotesField
-                  form={form}
-                  field={noteField}
-                  participant={participant}
-                  onSubmit={handleNoteSubmit}
-                />
-              )}
+              {step.fields.map((field) => (
+                <FormFieldBuilder key={field.name} form={form} field={field} />
+              ))}
             </Grid>
           </div>
         </>
