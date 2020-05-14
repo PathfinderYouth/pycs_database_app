@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { AuthContext } from '../sign-in/components';
-import { participantStore, uiStore } from '../injectables';
+import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 // container that holds all database UI objects
 export const Database = inject(
   'participantStore',
+  'userStore',
   'uiStore',
 )(
   observer(() => {
@@ -43,6 +44,10 @@ export const Database = inject(
       isLastPage,
       setLimit,
     } = participantStore;
+    const {
+      users,
+      setSelectedUser,
+    } = userStore;
 
     /**
      * Gets content of side drawer
@@ -68,7 +73,7 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
-              records: [], // TODO: get user list from user store
+              records: users, // TODO: get user list from user store
               // TODO: set other properties like the one for participant
               onRowClicked: (clickedRow) => console.log('Opening staff record'),
             }
