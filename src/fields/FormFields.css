@@ -1,0 +1,34 @@
+.field-text-descriptionLabel {
+  padding-bottom: 0.5em;
+}
+
+.field-notes-addButton {
+  margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.field-notes-historyContainer {
+  margin-top: 2em;
+}
+
+.field-notes-noteContainer {
+  padding: 1em;
+}
+
+.field-notes-noteHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.field-notes-noteBody {
+  white-space: pre-line;
+}
+
+.field-notes-emptyHistory {
+  height: 10em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

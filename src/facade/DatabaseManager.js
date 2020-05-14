@@ -45,7 +45,7 @@ export default class DatabaseManager {
    */
   _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
-      next: docSnap => {
+      next: (docSnap) => {
         let doc = docSnap.data();
         if (doc) {
           onNext(doc);
@@ -130,11 +130,7 @@ export default class DatabaseManager {
       }),
     });
 
-    this.newRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.newRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -152,10 +148,7 @@ export default class DatabaseManager {
 
     batch.delete(docRef);
     batch.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
-    batch
-      .commit()
-      .then(onSuccess)
-      .catch(onError);
+    batch.commit().then(onSuccess).catch(onError);
   }
 
   /**
@@ -180,7 +173,7 @@ export default class DatabaseManager {
 
     this.permanentRef
       .add(document)
-      .then(docRef => {
+      .then((docRef) => {
         if (onSuccess) {
           // Could use docRef.data() to get doc content instead
           onSuccess(docRef.id);
@@ -225,11 +218,7 @@ export default class DatabaseManager {
       }),
     });
 
-    this.permanentRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -251,11 +240,7 @@ export default class DatabaseManager {
       }),
     };
 
-    this.permanentRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -278,11 +263,7 @@ export default class DatabaseManager {
       }),
     };
 
-    this.permanentRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -297,8 +278,8 @@ export default class DatabaseManager {
   moveToPermanent(docId, onSuccess, onError) {
     let oldDocRef = this.newRef.doc(docId);
     let newDocRef = this.permanentRef.doc(); // put docId in to keep same ID
-    let updateFunction = transaction => {
-      return transaction.get(oldDocRef).then(docSnap => {
+    let updateFunction = (transaction) => {
+      return transaction.get(oldDocRef).then((docSnap) => {
         let doc = docSnap.data();
         if (!doc) {
           throw new Error('Document does not exist');
@@ -345,11 +326,7 @@ export default class DatabaseManager {
       }),
     };
 
-    this.permanentRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -371,11 +348,7 @@ export default class DatabaseManager {
       }),
     };
 
-    this.permanentRef
-      .doc(docId)
-      .update(document)
-      .then(onSuccess)
-      .catch(onError);
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
   /**
@@ -395,14 +368,7 @@ export default class DatabaseManager {
    *  A controller object
    */
   getNewList(filter, sorter, limit, onChildNext, onError) {
-    return new Controller(
-      this.newRef,
-      filter,
-      sorter,
-      limit,
-      onChildNext,
-      onError,
-    );
+    return new Controller(this.newRef, filter, sorter, limit, onChildNext, onError);
   }
 
   /**
@@ -422,14 +388,7 @@ export default class DatabaseManager {
    *  A controller object
    */
   getPermanentList(filter, sorter, limit, onChildNext, onError) {
-    return new Controller(
-      this.permanentRef,
-      filter,
-      sorter,
-      limit,
-      onChildNext,
-      onError,
-    );
+    return new Controller(this.permanentRef, filter, sorter, limit, onChildNext, onError);
   }
 
   /**
@@ -443,7 +402,7 @@ export default class DatabaseManager {
    */
   getStatistics(onNext, onError) {
     return this.statRef.onSnapshot({
-      next: docSnap => {
+      next: (docSnap) => {
         onNext(docSnap.data());
       },
       error: onError,
