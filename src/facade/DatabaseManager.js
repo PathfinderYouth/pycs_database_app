@@ -372,7 +372,7 @@ export default class DatabaseManager {
   }
 
   /**
-   * Get all participant documents from permanent collection.
+   * Get participant documents from permanent collection.
    * @param {filter: Object}
    *  Object containing fields and values for filtering
    * @param {sorter: Object}
@@ -389,6 +389,25 @@ export default class DatabaseManager {
    */
   getPermanentList(filter, sorter, limit, onChildNext, onError) {
     return new Controller(this.permanentRef, filter, sorter, limit, onChildNext, onError);
+  }
+
+  /**
+   * Get entire permanent participants collection. Use only for statistics.
+   * @param callback
+   */
+  getAllPermanentParticipants(callback) {
+    let participantsList = [];
+    this.permanentRef
+      .where('status', 'in', ['Pending', 'Approved', 'Declined'])
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, ' => ', doc.data());
+          participantsList.push(doc.data());
+        });
+        callback(participantsList);
+      });
   }
 
   /**

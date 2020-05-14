@@ -17,7 +17,7 @@ export const StatisticsCard = (props) => {
               xs={6}
               key={index}
               className="statItem"
-              justify="start"
+              justify="flex-start"
               alignItems="flex-end"
             >
               <Grid item xs={12}>

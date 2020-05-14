@@ -114,6 +114,12 @@ class ParticipantStore {
     { delay: 500 },
   );
 
+  getAllParticipants = (callback) => {
+    db.getAllPermanentParticipants((participantsList) => {
+      callback(participantsList);
+    });
+  };
+
   setCurrentParticipant = (participant) => {
     this._currentParticipant = participant;
   };

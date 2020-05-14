@@ -8,32 +8,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-
-const percent = (amount, total) => {
-  return Math.round(amount / total);
-};
+import { updateStatistics } from './statisticsHelpers';
+import Button from '@material-ui/core/Button';
 
 export const StatisticsView = inject('participantStore')(
   observer(() => {
     const [currentGroup, setCurrentGroup] = useState('');
     //TODO replace with actual numbers
-    const totalParticipants = [
-      {
-        label: 'Total Participants',
-        number: 0,
-      },
-    ];
-    const mtdParticipants = [
-      {
-        label: 'Month to Date',
-        number: 0,
-      },
-    ];
-    const ytdParticipants = [
-      {
-        label: 'Year to Date',
-        number: 0,
-      },
+    const topRow = [
+      { cardName: 'totalParticipants', contents: [{ label: 'Total Participants', number: 0 }] },
+      { cardName: 'mtdParticipants', contents: [{ label: 'Month to Date', number: 0 }] },
+      { cardName: 'ytdParticipants', contents: [{ label: 'Year to Date', number: 0 }] },
     ];
 
     const onDropdownChange = (event) => {
@@ -43,12 +28,13 @@ export const StatisticsView = inject('participantStore')(
     const statisticsGroups = [
       { id: 'gender', label: 'Gender' },
       { id: 'homelessness', label: 'Homelessness' },
-      { id: 'mentalHealth', label: 'Mental Health' },
+      { id: 'hasMentalHealthIssues', label: 'Mental Health' },
       { id: 'personWithDisability', label: 'Disability' },
       { id: 'memberOfVisibleMinority', label: 'Visible Minority' },
       { id: 'indigenousGroup', label: 'Indigenous Group' },
       { id: 'newImmigrant', label: 'New Immigrant' },
       { id: 'levelOfEducation', label: 'Level of Education' },
+      { id: 'learnedAboutPathfinder', label: 'Referral Source' },
     ];
 
     return (
@@ -63,9 +49,9 @@ export const StatisticsView = inject('participantStore')(
             New Participants
           </Typography>
         </Grid>
-        {[totalParticipants, mtdParticipants, ytdParticipants].map((list) => (
-          <Grid item xs={4}>
-            <StatisticsCard statsList={list} />
+        {topRow.map((card) => (
+          <Grid item xs={4} key={card.cardName}>
+            <StatisticsCard statsList={card.contents} />
           </Grid>
         ))}
         <Grid item xs={12}>
@@ -80,6 +66,7 @@ export const StatisticsView = inject('participantStore')(
             </Select>
           </FormControl>
         </Grid>
+        <Button onClick={updateStatistics}>Push me!</Button>
       </Grid>
     );
   }),
