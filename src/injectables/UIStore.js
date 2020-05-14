@@ -24,6 +24,7 @@ class UIStore {
     STATISTICS: 'statistics',
   };
 
+
   participantSearchFilters = [
     { id: 'nameLast', label: 'Last Name' },
     { id: 'nameGiven', label: 'Given Name(s)' },
@@ -41,9 +42,25 @@ class UIStore {
     { id: 'role', label: 'Role' },
   ];
 
+  participantDetailViewModes = {
+    VIEW: 'view',
+    EDIT: 'edit'
+  }
+
+
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)
+
+  currentParticipantDetailViewMode = this.participantDetailViewModes.VIEW;
+
+  currentParticipantViewOrder = 'asc';
+
+  currentParticipantViewOrderBy = this.participantHeaders[0].id;
+
+  currentStaffViewOrder = 'asc';
+
+  currentStaffViewOrderBy = this.staffHeaders[0].id;
 
   navigationDrawerOpen = false;
 
@@ -71,6 +88,18 @@ class UIStore {
       : this.viewModes.PARTICIPANT_LIST;
   }
 
+  get currentListViewOrder() {
+    return this.currentViewMode === this.viewModes.STAFF_LIST
+      ? this.currentStaffViewOrder
+      : this.currentParticipantViewOrder;
+  }
+
+  get currentListViewOrderBy() {
+    return this.currentViewMode === this.viewModes.STAFF_LIST
+      ? this.currentStaffViewOrderBy
+      : this.currentParticipantViewOrderBy;
+  }
+
   setCurrentViewMode = (viewMode) => {
     this.currentViewMode = viewMode;
   };
@@ -79,21 +108,51 @@ class UIStore {
     this.currentParticipantDetailStep = stepIndex;
   };
 
+  setCurrentParticipantDetailViewMode = (viewMode) => {
+    this.currentParticipantDetailViewMode = viewMode;
+  };
+
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
   };
+  
+  setCurrentListViewOrder = (order) => {
+    if (this.currentViewMode === this.viewModes.STAFF_LIST) {
+      this.currentStaffViewOrder = order;
+    } else {
+      this.currentParticipantViewOrder = order;
+    }
+  }
+  
+  setCurrentListViewOrderBy = (orderBy) => {
+    if (this.currentViewMode === this.viewModes.STAFF_LIST) {
+      this.currentStaffViewOrderBy = orderBy;
+    } else {
+      this.currentParticipantViewOrderBy = orderBy;
+    }
+  }
 }
 
 decorate(UIStore, {
   currentViewMode: observable,
   navigationDrawerOpen: observable,
   currentParticipantDetailStep: observable,
+  currentParticipantDetailViewMode: observable,
+  currentParticipantViewOrder: observable,
+  currentParticipantViewOrderBy: observable,
+  currentStaffViewOrder: observable,
+  currentStaffViewOrderBy: observable,
   headers: computed,
   currentDetailViewMode: computed,
   currentListViewMode: computed,
+  currentListViewOrder: computed,
+  currentListViewOrderBy: computed,
   setCurrentViewMode: action,
   setCurrentParticipantDetailStep: action,
+  setCurrentParticipantDetailViewMode: action,
   setNavigationDrawerOpen: action,
+  setCurrentListViewOrder: action,
+  setCurrentListViewOrderBy: action,
 });
 
 let participantStore = new UIStore();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
@@ -14,22 +14,18 @@ export const ParticipantDetailPage = inject(
   'uiStore',
 )(
   observer(() => {
-    const { currentParticipant, collection } = participantStore;
-    const { currentParticipantDetailStep } = uiStore;
-    const [participantDetailMode, setParticipantDetailMode] = useState('view'); // view or edit
-
-    const handleClickEditMode = () => {
-      setParticipantDetailMode('edit');
-    };
-
-    const handleClickViewMode = () => {
-      setParticipantDetailMode('view');
-    };
+    const { currentParticipant, collection, setCurrentParticipant } = participantStore;
+    const {
+      currentParticipantDetailStep,
+      currentParticipantDetailViewMode,
+      setCurrentParticipantDetailViewMode,
+      participantDetailViewModes,
+    } = uiStore;
 
     /**
      * Placeholder component for detail view mode
      */
-    const ParticipantDetailView = ({ currentStep, handleClickChangeMode }) => (
+    const ParticipantDetailView = ({ currentParticipant, currentStep, handleClickChangeMode }) => (
       <>
         <div className="participant-detail-header">
           <Typography variant="h5">Participant Details</Typography>
@@ -48,17 +44,22 @@ export const ParticipantDetailPage = inject(
       <div className="participant-detail-container">
         <Card>
           <div className="participant-detail-contents">
-            {participantDetailMode === 'edit' ? (
+            {currentParticipantDetailViewMode === participantDetailViewModes.EDIT ? (
               <ParticipantDetailEditView
                 participant={currentParticipant}
                 collection={collection}
                 currentStep={currentParticipantDetailStep}
-                handleClickChangeMode={handleClickViewMode}
+                handleClickChangeMode={() =>
+                  setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW)
+                }
+                onSuccessfulEdit={setCurrentParticipant}
               />
             ) : (
               <ParticipantDetailView
                 currentStep={currentParticipantDetailStep}
-                handleClickChangeMode={handleClickEditMode}
+                handleClickChangeMode={() =>
+                  setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
+                }
               />
             )}
           </div>
