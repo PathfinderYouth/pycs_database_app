@@ -31,13 +31,13 @@ export default class AuthenticationManager {
    * existing user's password
    * @param {onSuccess?: () => void}
    *  Callback function when success
-   * @param {onError?: () => void}
+   * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
   logIn(email, password, onSuccess, onError) {
     this.authen
       .signInWithEmailAndPassword(email, password)
-      .then(userCred => {
+      .then((userCred) => {
         if (onSuccess) {
           let authObj = {
             type: userCred.opertionType,
@@ -60,13 +60,13 @@ export default class AuthenticationManager {
    * new user's password
    * @param {onSuccess?: () => void}
    *  Callback function when success
-   * @param {onError?: () => void}
+   * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
   signUp(email, password, onSuccess, onError) {
     this.authen
       .createUserWithEmailAndPassword(email, password)
-      .then(userCred => {
+      .then((userCred) => {
         if (onSuccess) {
           let authObj = {
             type: userCred.operationType,
@@ -84,13 +84,31 @@ export default class AuthenticationManager {
    * sign out the current user
    * @param {onSuccess?: () => void}
    *  Callback function when success
-   * @param {onError?: () => void}
+   * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
   signOut(onSuccess, onError) {
-    this.authen
-      .signOut()
-      .then(onSuccess)
-      .catch(onError);
+    this.authen.signOut().then(onSuccess).catch(onError);
+  }
+
+  /**
+   * get current user
+   */
+  getCurrentUser() {
+    return this.authen.currentUser;
+  }
+
+  /**
+   * send password reset email to the staff's email address (admin privilege)
+   * @param {email: string}
+   * email of a user account to reset
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   *
+   */
+  resetPassword(email, onSuccess, onError) {
+    this.authen.sendPasswordResetEmail(email).then(onSuccess).catch(onError);
   }
 }
