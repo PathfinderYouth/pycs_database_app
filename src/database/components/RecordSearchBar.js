@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StaffSearchSelect = ({ handleChange }) => {
-  const options = uiStore.staffHeaders;
+  const options = uiStore.staffSearchFilters;
   return (
     <Select
       className="formControl"
@@ -34,12 +34,13 @@ const StaffSearchSelect = ({ handleChange }) => {
           </MenuItem>
         );
       })}
+      s
     </Select>
   );
 };
 
 const ParticipantSearchSelect = ({ handleChange }) => {
-  const options = uiStore.participantHeaders;
+  const options = uiStore.participantSearchFilters;
   return (
     <Select
       className="formControl"
