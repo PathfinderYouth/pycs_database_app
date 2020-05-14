@@ -12,8 +12,6 @@ const STATUS = {
   deleted: 'Deleted',
 };
 
-// TODO: converter, query, order, limit, paging, indices, cached
-
 export default class DatabaseManager {
   static instance;
 
@@ -41,7 +39,23 @@ export default class DatabaseManager {
   }
 
   /**
-   * Private helper method to get single document
+   * Private helper method to help build a query for getting a list of documents.
+   */
+  _buildQuery(ref, filter, sorter) {
+    let entries = Object.entries(filter);
+    if (entries.length > 0) {
+      const [ field, value ] = entries[0];
+      // TODO: Apply startWith trick
+      ref = ref.where(field, '==', value);
+    }
+
+    const [ orderBy, order ] = Object.entries(sorter)[0];
+    ref = ref.orderBy(orderBy, order ? order : undefined);
+    return ref;
+  }
+
+  /**
+   * Private helper method to get single document.
    */
   _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
@@ -368,7 +382,9 @@ export default class DatabaseManager {
    *  A controller object
    */
   getNewList(filter, sorter, limit, onChildNext, onError) {
-    return new Controller(this.newRef, filter, sorter, limit, onChildNext, onError);
+    let { status, ...newFilter } = filter;
+    let query = this._buildQuery(this.newRef, newFilter, sorter);
+    return new Controller(query, limit, onChildNext, onError);
   }
 
   /**
@@ -388,7 +404,15 @@ export default class DatabaseManager {
    *  A controller object
    */
   getPermanentList(filter, sorter, limit, onChildNext, onError) {
-    return new Controller(this.permanentRef, filter, sorter, limit, onChildNext, onError);
+    let { status, ...newFilter } = filter;
+    let query = this._buildQuery(this.permanentRef, newFilter, sorter);
+
+    if (status) {
+      query = query.where('status', '==', status);
+    } else {
+      query = query.where('status', 'in', ['Pending', 'Approved', 'Declined']);
+    }
+    return new Controller(query, limit, onChildNext, onError);
   }
 
   /**

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { inject, observer } from 'mobx-react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,13 +7,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles } from '@material-ui/core/styles';
-import { TablePagination } from '@material-ui/core';
+import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
-import { RecordSearchBar } from './RecordSearchBar';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,10 +30,9 @@ export const ListContainer = inject('uiStore')(
       onNextButtonClicked,
       nextButtonDisabled,
       onChangeRowsPerPage,
+      onOrderChanged,
     }) => {
       const classes = useStyles();
-      const [order, setOrder] = useState('asc');
-      const [orderBy, setOrderBy] = useState('lastName');
       const [page, setPage] = useState(0);
       const [rowsPerPage, setRowsPerPage] = useState(20);
       const {
@@ -41,6 +41,10 @@ export const ListContainer = inject('uiStore')(
         currentDetailViewMode,
         currentViewMode,
         viewModes,
+        currentListViewOrder,
+        currentListViewOrderBy,
+        setCurrentListViewOrder,
+        setCurrentListViewOrderBy,
       } = uiStore;
 
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
@@ -51,9 +55,11 @@ export const ListContainer = inject('uiStore')(
       };
 
       const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
+        const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
+        const order = isAsc ? 'desc' : 'asc';
+        setCurrentListViewOrder(order);
+        setCurrentListViewOrderBy(property);
+        onOrderChanged(property, order);
       };
 
       const handleChangePage = (event, newPage) => {
@@ -79,8 +85,8 @@ export const ListContainer = inject('uiStore')(
               <Table className={classes.table} size="medium">
                 <SortingTableHead
                   classes={classes}
-                  order={order}
-                  orderBy={orderBy}
+                  order={currentListViewOrder}
+                  orderBy={currentListViewOrderBy}
                   onRequestSort={handleRequestSort}
                   rowCount={records.length}
                   headerCells={headers}

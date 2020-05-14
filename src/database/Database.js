@@ -28,7 +28,14 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
+    const {
+      viewModes,
+      currentViewMode,
+      navigationDrawerOpen,
+      setNavigationDrawerOpen,
+      currentListViewOrder,
+      currentListViewOrderBy,
+    } = uiStore;
     const {
       participants,
       numOfNewParticipants,
@@ -45,7 +52,21 @@ export const Database = inject(
     const handleParticipantViewChanged = (collection, status) => {
       setCollection(collection);
       setFilter({ status: status });
-      setSorter({ nameLast: 'asc' });
+
+      let sorter = {};
+      sorter[currentListViewOrderBy] = currentListViewOrder;
+      setSorter(sorter);
+    };
+
+    const handleOrderChanged = (orderBy, order) => {
+      let sorter = {};
+      sorter[orderBy] = order;
+
+      if (currentViewMode === viewModes.STAFF_LIST) {
+        // TODO: update UserStore's sorter
+      } else {
+        setSorter(sorter);
+      }
     };
 
     /**
@@ -81,6 +102,7 @@ export const Database = inject(
               records: [], // TODO: get user list from user store
               // TODO: set other properties like the one for participant
               onRowClicked: (clickedRow) => console.log('Opening staff record'),
+              onOrderChanged: handleOrderChanged,
             }
           : {
               records: participants,
@@ -89,6 +111,7 @@ export const Database = inject(
               onNextButtonClicked: goToNextPage,
               nextButtonDisabled: isLastPage,
               onChangeRowsPerPage: setLimit,
+              onOrderChanged: handleOrderChanged,
             };
 
       return <ListContainer {...listViewProps} />;

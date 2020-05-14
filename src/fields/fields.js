@@ -849,6 +849,25 @@ export const formSteps = [
   },
 ];
 
+export const noteField = {
+  name: 'notes',
+  label: 'Enter a note',
+  type: 'notes',
+  size: 12
+}
+
+export const noteStep = {
+  stepName: 'Notes',
+  fields: [
+    noteField
+  ]
+}
+
+export const participantDetailSteps = [
+  ...formSteps,
+  noteStep
+]
+
 export const initialValues = formSteps.reduce((values, step) => {
   const fields = step.fields;
   fields.forEach((field) => {
@@ -869,4 +888,4 @@ export const requiredFields = formSteps.reduce((reqs, step) => {
   return reqs;
 }, []);
 
-export const stepNames = formSteps.map((step) => step.stepName);
+export const stepNames = participantDetailSteps.map((step) => step.stepName);
