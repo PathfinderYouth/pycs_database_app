@@ -402,8 +402,6 @@ export default class DatabaseManager {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, ' => ', doc.data());
           participantsList.push(doc.data());
         });
         callback(participantsList);
