@@ -1,13 +1,13 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
-  ParticipantDetailPage,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
+  ParticipantDetailPage,
   StatisticsView,
   TopNavBar,
 } from './components';

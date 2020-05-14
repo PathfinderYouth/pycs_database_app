@@ -8,7 +8,7 @@ import { NumberMask } from './NumberMask';
 import './style/FormFields.css';
 
 export const FormTextField = ({ form, field, isFieldDisabled }) => {
-  const { values, errors, touched, handleChange, handleBlur} = form;
+  const { values, errors, touched, handleChange, handleBlur } = form;
   const {
     name,
     type,

@@ -61,7 +61,7 @@ export const NavDrawer = (props) => {
     if (authService.getCurrentUser()) {
       setUserEmail(authService.getCurrentUser().email);
     }
-  });
+  }, []);
 
   const drawer = (
     <div>

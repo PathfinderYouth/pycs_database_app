@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selected: {},
-  hover: {},
 }));
 
 export const StyledListItem = (props) => {

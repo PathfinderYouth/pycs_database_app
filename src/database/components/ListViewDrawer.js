@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -19,7 +18,7 @@ import {
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
-import { uiStore, participantStore } from '../../injectables';
+import { participantStore, uiStore } from '../../injectables';
 import './style/NavDrawer.css';
 import { StyledListItem } from './StyledListItem';
 
@@ -58,7 +57,6 @@ export const ListViewDrawer = inject(
         <List disablePadding>
           <StyledListItem
             button
-            key="participants"
             selected={
               currentViewMode === viewModes.PARTICIPANT_LIST &&
               collection === collectionType.PERMANENT
@@ -97,7 +95,6 @@ export const ListViewDrawer = inject(
           <Divider />
           <StyledListItem
             button
-            key="newApplications"
             selected={
               currentViewMode === viewModes.PARTICIPANT_LIST && collection === collectionType.NEW
             }
@@ -116,7 +113,6 @@ export const ListViewDrawer = inject(
           <Divider />
           <StyledListItem
             button
-            key="statistics"
             selected={currentViewMode === viewModes.STATISTICS}
             onClick={() => setCurrentViewMode(viewModes.STATISTICS)}
           >
@@ -129,7 +125,6 @@ export const ListViewDrawer = inject(
           {/*//TODO: only render this if user is admin*/}
           <StyledListItem
             button
-            key="staff"
             selected={currentViewMode === viewModes.STAFF_LIST}
             onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}
           >

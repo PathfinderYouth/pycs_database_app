@@ -18,7 +18,7 @@ export const ParticipantTabs = inject('uiStore')(
       <>
         {stepNames.map((tab, index) => {
           return (
-            tab !== undefined && (
+            !!tab && (
               <StyledListItem
                 button
                 selected={currentParticipantDetailStep === index}
