@@ -1,4 +1,5 @@
 import { action, autorun, computed, decorate, observable } from 'mobx';
+import { collectionType } from '../constants';
 import service from '../facade/service';
 
 const db = service.getDatabase();
@@ -8,10 +9,6 @@ const checkEqual = (obj1, obj2) => {
 };
 
 class ParticipantStore {
-  collectionType = {
-    NEW: 'new',
-    PERMANENT: 'permanent',
-  };
 
   documentType = {
     ADDED: 'added',
@@ -29,7 +26,7 @@ class ParticipantStore {
 
   _currentParticipant = null;
 
-  _collection = this.collectionType.PERMANENT;
+  _collection = collectionType.PERMANENT;
 
   _controller = null;
 
@@ -89,7 +86,7 @@ class ParticipantStore {
       }
 
       switch (this._collection) {
-        case this.collectionType.NEW:
+        case collectionType.NEW:
           this._controller = db.getNewList(
             this._filter,
             this._sorter,
@@ -98,7 +95,7 @@ class ParticipantStore {
           );
           break;
 
-        case this.collectionType.PERMANENT:
+        case collectionType.PERMANENT:
           this._controller = db.getPermanentList(
             this._filter,
             this._sorter,

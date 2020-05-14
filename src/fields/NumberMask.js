@@ -1,11 +1,6 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
-
-const masks = {
-  sin: '### ### ###',
-  bcCareCardNumber: '#### ### ###',
-  phone: '(###) ###-####',
-};
+import { masks }  from '../constants';
 
 export const NumberMask = (props) => {
   const { inputRef, onChange, name, ...other } = props;

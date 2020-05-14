@@ -19,6 +19,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore, uiStore } from '../../injectables';
+import { collectionType } from '../../constants';
 import './style/NavDrawer.css';
 import { StyledListItem } from './StyledListItem';
 
@@ -39,7 +40,7 @@ export const ListViewDrawer = inject(
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
     const { currentViewMode, setCurrentViewMode, viewModes } = uiStore;
-    const { collectionType, collection } = participantStore;
+    const { collection } = participantStore;
 
     const statuses = [
       { name: 'Pending', icon: <HourglassEmptyOutlined /> },
