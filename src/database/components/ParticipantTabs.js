@@ -1,25 +1,36 @@
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
 import { stepNames } from '../../fields';
+import { StyledListItem } from './StyledListItem';
+import { inject, observer } from 'mobx-react';
+import { uiStore } from '../../injectables';
 
-export const ParticipantTabs = ({handleClick}) => {
-  const handleCategoryClick = (clickedCategory) => {
-    handleClick(clickedCategory);
-    console.log(`Clicked on ${stepNames[clickedCategory]}`)
-  };
+export const ParticipantTabs = inject('uiStore')(
+  observer(({ handleClick }) => {
+    const handleCategoryClick = (clickedCategory) => {
+      handleClick(clickedCategory);
+      console.log(`Clicked on ${stepNames[clickedCategory]}`);
+    };
 
-  return (
-    <>
-      {stepNames.map((tab, index) => {
-        return (
-          tab !== undefined && (
-            <ListItem button onClick={() => handleCategoryClick(index)} key={tab}>
-              <ListItemText>{tab}</ListItemText>
-            </ListItem>
-          )
-        );
-      })}
-    </>
-  );
-};
+    const { currentParticipantDetailStep } = uiStore;
+
+    return (
+      <>
+        {stepNames.map((tab, index) => {
+          return (
+            !!tab && (
+              <StyledListItem
+                button
+                selected={currentParticipantDetailStep === index}
+                onClick={() => handleCategoryClick(index)}
+                key={tab}
+              >
+                <ListItemText>{tab}</ListItemText>
+              </StyledListItem>
+            )
+          );
+        })}
+      </>
+    );
+  }),
+);

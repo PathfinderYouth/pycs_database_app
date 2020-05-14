@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -19,8 +18,9 @@ import {
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
-import { uiStore, participantStore } from '../../injectables';
+import { participantStore, uiStore } from '../../injectables';
 import './style/NavDrawer.css';
+import { StyledListItem } from './StyledListItem';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,8 +38,8 @@ export const ListViewDrawer = inject(
   observer(({ numNew, onParticipantViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
-    const { setCurrentViewMode, viewModes } = uiStore;
-    const { collectionType } = participantStore;
+    const { currentViewMode, setCurrentViewMode, viewModes } = uiStore;
+    const { collectionType, collection } = participantStore;
 
     const statuses = [
       { name: 'Pending', icon: <HourglassEmptyOutlined /> },
@@ -55,9 +55,13 @@ export const ListViewDrawer = inject(
     return (
       <div>
         <List disablePadding>
-          <ListItem
+          <StyledListItem
             button
-            key="participants"
+            selected={
+              currentViewMode === viewModes.PARTICIPANT_LIST &&
+              collection === collectionType.PERMANENT
+            }
+
             onClick={() => {
               setCurrentViewMode(viewModes.PARTICIPANT_LIST);
               onParticipantViewChanged(collectionType.PERMANENT, null);
@@ -70,11 +74,11 @@ export const ListViewDrawer = inject(
             <div className="expandButton" onClick={expandClick}>
               {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
             </div>
-          </ListItem>
+          </StyledListItem>
           <Collapse in={participantsListExpanded} timeout="auto">
             <List component="div" disablePadding>
               {statuses.map((status) => (
-                <ListItem
+                <StyledListItem
                   button
                   key={status.name.toLowerCase()}
                   className={classes.nested}
@@ -85,14 +89,17 @@ export const ListViewDrawer = inject(
                 >
                   <ListItemIcon>{status.icon}</ListItemIcon>
                   <ListItemText primary={status.name} />
-                </ListItem>
+                </StyledListItem>
+
               ))}
             </List>
           </Collapse>
           <Divider />
-          <ListItem
+          <StyledListItem
             button
-            key="newApplications"
+            selected={
+              currentViewMode === viewModes.PARTICIPANT_LIST && collection === collectionType.NEW
+            }
             onClick={() => {
               setCurrentViewMode(viewModes.PARTICIPANT_LIST);
               onParticipantViewChanged(collectionType.NEW, null);
@@ -104,26 +111,30 @@ export const ListViewDrawer = inject(
               </Badge>
             </ListItemIcon>
             <ListItemText primary="New Applications" />
-          </ListItem>
+          </StyledListItem>
           <Divider />
-          <ListItem
+          <StyledListItem
             button
-            key="statistics"
+            selected={currentViewMode === viewModes.STATISTICS}
             onClick={() => setCurrentViewMode(viewModes.STATISTICS)}
           >
             <ListItemIcon>
               <PieChart />
             </ListItemIcon>
             <ListItemText primary="Statistics" />
-          </ListItem>
+          </StyledListItem>
           <Divider />
           {/*//TODO: only render this if user is admin*/}
-          <ListItem button key="staff" onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}>
+          <StyledListItem
+            button
+            selected={currentViewMode === viewModes.STAFF_LIST}
+            onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}
+          >
             <ListItemIcon>
               <Work />
             </ListItemIcon>
             <ListItemText primary="Staff Management" />
-          </ListItem>
+          </StyledListItem>
           <Divider />
         </List>
       </div>

@@ -67,13 +67,13 @@ export const ParticipantDetailEditView = ({
             handleClickChangeMode();
           },
         );
-  }
+  };
 
   return (
     <Formik
       initialValues={participant}
       onSubmit={(values, { setSubmitting }) => {
-        handleSubmit(values, setSubmitting)
+        handleSubmit(values, setSubmitting);
       }}
     >
       {(form) => (

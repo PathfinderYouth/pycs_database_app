@@ -7,32 +7,16 @@ import { FormCheckBox } from './FormCheckBox';
 
 export const FormCheckList = ({ form, field }) => {
   const { errors, touched } = form;
-  const {
-    name,
-    options,
-    label = undefined,
-    required = undefined,
-  } = field;
+  const { name, options, label = undefined, required = undefined } = field;
   return (
-    <FormControl
-      component="fieldset"
-      error={!!errors[name] && touched[name]}
-      required={required}
-    >
+    <FormControl component="fieldset" error={!!errors[name] && touched[name]} required={required}>
       <FormLabel component="legend">{label}</FormLabel>
       <FormGroup>
         {options.map((option) => (
-          <FormCheckBox
-            key={`${name}-${option}`}
-            form={form}
-            field={field}
-            value={option}
-          />
+          <FormCheckBox key={`${name}-${option}`} form={form} field={field} value={option} />
         ))}
       </FormGroup>
-      {!!errors[name] && touched[name] && (
-        <FormHelperText>{errors[name]}</FormHelperText>
-      )}
+      {!!errors[name] && touched[name] && <FormHelperText>{errors[name]}</FormHelperText>}
     </FormControl>
   );
 };

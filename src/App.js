@@ -6,8 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import { Database } from './database';
 import { IntakeFormPage } from './intake-form';
 import { NotFound } from './404-page';
-import { SignIn } from './sign-in';
-import { AuthProvider } from './sign-in';
+import { AuthProvider, SignIn } from './sign-in';
 import { participantStore, uiStore } from './injectables';
 import { theme } from './ui';
 import './App.css';
@@ -31,7 +30,7 @@ const App = () => (
         </SnackbarProvider>
       </ThemeProvider>
     </Provider>
-   </AuthProvider>
+  </AuthProvider>
 );
 
 export default App;

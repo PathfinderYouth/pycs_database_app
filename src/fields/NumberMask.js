@@ -2,10 +2,10 @@ import React from 'react';
 import NumberFormat from 'react-number-format';
 
 const masks = {
-  sin: "### ### ###",
-  bcCareCardNumber: "#### ### ###",
-  phone: "(###) ###-####",
-}
+  sin: '### ### ###',
+  bcCareCardNumber: '#### ### ###',
+  phone: '(###) ###-####',
+};
 
 export const NumberMask = (props) => {
   const { inputRef, onChange, name, ...other } = props;
@@ -26,4 +26,4 @@ export const NumberMask = (props) => {
       isNumericString
     />
   );
-}
+};
