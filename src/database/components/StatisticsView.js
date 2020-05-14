@@ -8,8 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-import { updateStatistics } from './statisticsHelpers';
-import Button from '@material-ui/core/Button';
 
 export const StatisticsView = inject('participantStore')(
   observer(() => {
@@ -66,7 +64,6 @@ export const StatisticsView = inject('participantStore')(
             </Select>
           </FormControl>
         </Grid>
-        <Button onClick={updateStatistics}>Push me!</Button>
       </Grid>
     );
   }),
