@@ -50,9 +50,13 @@ export const Database = inject(
     };
 
     const handleSearchClicked = (searchBy, searchText) => {
-      let filter = { status: currentStatus };
-      filter[searchBy] = searchText;
-      setFilter(filter);
+      if (currentViewMode === viewModes.STAFF_LIST) {
+        // TODO: update UserStore's filter
+      } else {
+        let filter = { status: currentStatus };
+        filter[searchBy] = searchText;
+        setFilter(filter);
+      }
     };
 
     /**
