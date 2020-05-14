@@ -34,7 +34,6 @@ const StaffSearchSelect = ({ handleChange }) => {
           </MenuItem>
         );
       })}
-      s
     </Select>
   );
 };
