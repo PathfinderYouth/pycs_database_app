@@ -11,9 +11,6 @@ import {
   StatisticsView,
   TopNavBar,
 } from './components';
-import { makeStyles } from '@material-ui/core/styles';
-import { navigate } from '@reach/router';
-import { inject, observer } from 'mobx-react';
 import { AuthContext } from '../sign-in/components';
 import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
@@ -32,33 +29,19 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const {
-      viewModes,
-      currentViewMode,
-      navigationDrawerOpen,
-      setNavigationDrawerOpen,
-    } = uiStore;
+    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
     const {
       participants,
       numOfNewParticipants,
       setCurrentParticipant,
-      goToPreviousPage,
-      goToNextPage,
-      isLastPage,
-      setFilter,
-      setSorter,
-      setLimit,
       setCollection,
     } = participantStore;
-    const {
-      users,
-      setSelectedUser,
-    } = userStore;
+    const { users, setSelectedUser } = userStore;
 
     const handleParticipantViewChanged = (collection, status) => {
       setCollection(collection);
-      setFilter({ status: status });
-      setSorter({ nameLast: 'asc' });
+      participantStore.setFilter({ status: status });
+      participantStore.setSorter({ nameLast: 'asc' });
     };
 
     /**
@@ -78,7 +61,8 @@ export const Database = inject(
             <ListViewDrawer
               numNew={numOfNewParticipants}
               classes={classes}
-              onParticipantViewChanged={handleParticipantViewChanged}/>
+              onParticipantViewChanged={handleParticipantViewChanged}
+            />
           );
       }
     };
@@ -90,17 +74,20 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
-              records: users, // TODO: get user list from user store
-              // TODO: set other properties like the one for participant
-              onRowClicked: (clickedRow) => console.log('Opening staff record'),
+              records: users,
+              onRowClicked: setSelectedUser,
+              onPrevButtonClicked: userStore.goToPreviousPage,
+              onNextButtonClicked: userStore.goToNextPage,
+              nextButtonDisabled: userStore.isLastPage,
+              onChangeRowsPerPage: userStore.setLimit,
             }
           : {
               records: participants,
               onRowClicked: setCurrentParticipant,
-              onPrevButtonClicked: goToPreviousPage,
-              onNextButtonClicked: goToNextPage,
-              nextButtonDisabled: isLastPage,
-              onChangeRowsPerPage: setLimit,
+              onPrevButtonClicked: participantStore.goToPreviousPage,
+              onNextButtonClicked: participantStore.goToNextPage,
+              nextButtonDisabled: participantStore.isLastPage,
+              onChangeRowsPerPage: participantStore.setLimit,
             };
 
       return <ListContainer {...listViewProps} />;
@@ -112,11 +99,12 @@ export const Database = inject(
     const getContent = () => {
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
+          // We don't really need staff details page, because each user object only has 3 fields which are displayed on staff table.
           return <div>Staff Details</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <ParticipantDetailPage />;
-      
+
         case viewModes.STATISTICS:
           return <StatisticsView />;
 
