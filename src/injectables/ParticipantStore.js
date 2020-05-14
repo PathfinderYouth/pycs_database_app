@@ -3,6 +3,10 @@ import service from '../facade/service';
 
 const db = service.getDatabase();
 
+const checkEqual = (obj1, obj2) => {
+  return Object.entries(obj1).sort().toString() === Object.entries(obj2).sort().toString();
+}
+
 class ParticipantStore {
   collectionType = {
     NEW: 'new',
@@ -15,9 +19,9 @@ class ParticipantStore {
     REMOVED: 'removed',
   };
 
-  _filter = {};
+  _filter = { status: null };
 
-  _sorter = { lastName: 'asc' };
+  _sorter = { nameLast: 'asc' };
 
   _limit = 20;
 
@@ -25,7 +29,7 @@ class ParticipantStore {
 
   _currentParticipant = null;
 
-  _collection = this.collectionType.NEW;
+  _collection = this.collectionType.PERMANENT;
 
   _controller = null;
 
@@ -105,17 +109,23 @@ class ParticipantStore {
       default:
       // Do nothing
     }
-  });
+  }, { delay: 500 });
 
   setCurrentParticipant = participant => {
     this._currentParticipant = participant;
   };
 
   setFilter = filter => {
+    if (checkEqual(filter, this._filter)) {
+      return;
+    }
     this._filter = filter;
   };
 
   setSorter = sorter => {
+    if (checkEqual(sorter, this._sorter)) {
+      return;
+    }
     this._sorter = sorter;
   };
 

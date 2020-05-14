@@ -1,6 +1,10 @@
 import React, { useEffect, useContext } from 'react';
+import { navigate } from '@reach/router';
+import { inject, observer } from 'mobx-react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
+  ParticipantDetailPage,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
@@ -20,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// container that holds all database UI objects
 export const Database = inject(
   'participantStore',
   'userStore',
@@ -42,12 +45,21 @@ export const Database = inject(
       goToPreviousPage,
       goToNextPage,
       isLastPage,
+      setFilter,
+      setSorter,
       setLimit,
+      setCollection,
     } = participantStore;
     const {
       users,
       setSelectedUser,
     } = userStore;
+
+    const handleParticipantViewChanged = (collection, status) => {
+      setCollection(collection);
+      setFilter({ status: status });
+      setSorter({ nameLast: 'asc' });
+    };
 
     /**
      * Gets content of side drawer
@@ -62,7 +74,12 @@ export const Database = inject(
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
         default:
-          return <ListViewDrawer numNew={numOfNewParticipants} classes={classes} />;
+          return (
+            <ListViewDrawer
+              numNew={numOfNewParticipants}
+              classes={classes}
+              onParticipantViewChanged={handleParticipantViewChanged}/>
+          );
       }
     };
 
@@ -95,11 +112,11 @@ export const Database = inject(
     const getContent = () => {
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
-          return <div>Staff Detail</div>; //TODO replace with staff detail page
-
+          return <div>Staff Details</div>; //TODO replace with staff detail page
+        
         case viewModes.PARTICIPANT_DETAIL:
-          return <div>Participant Detail</div>; //TODO replace with participant detail page
-
+          return <ParticipantDetailPage />;
+      
         case viewModes.STATISTICS:
           return <StatisticsView />;
 

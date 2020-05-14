@@ -1,7 +1,7 @@
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-import { stepNames } from '../../intake-form/components';
+import { stepNames } from '../../fields';
 
 export const ParticipantTabs = ({handleClick}) => {
   const handleCategoryClick = (clickedCategory) => {

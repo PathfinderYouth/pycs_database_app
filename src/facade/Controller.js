@@ -38,6 +38,8 @@ export default class Controller {
     const { status, ...temp } = filter;
     if (status) {
       ref = ref.where('status', '==', status);
+    } else {
+      ref = ref.where('status', 'in', ['Pending', 'Approved', 'Declined']);
     }
 
     for (const field in temp) {

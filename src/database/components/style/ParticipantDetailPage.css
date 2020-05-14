@@ -1,0 +1,18 @@
+.participant-detail-container {
+  width: 100%;
+}
+
+.participant-detail-contents {
+  width: 100%;
+  padding: 2em;
+}
+
+.participant-detail-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.participant-detail-form-contents {
+  margin-top: 2em;
+}

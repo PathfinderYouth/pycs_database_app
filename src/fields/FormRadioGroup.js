@@ -19,10 +19,9 @@ export const FormRadioGroup = ({ form, field, isFieldDisabled }) => {
     options,
     label = undefined,
     required = undefined,
-    dependsOnOtherField = undefined,
   } = field;
 
-  const disabled = isFieldDisabled(dependsOnOtherField, values, name);
+  const disabled = isFieldDisabled(field, values, name);
 
   return (
     <FormControl

@@ -107,7 +107,10 @@ export class LogIn extends Component {
             </Button>
             <Grid container onClick={this.handlePasswordResetEmail}>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={(event) => {
+                  event.preventDefault()
+                  this.handlePasswordResetEmail()
+                }>
                   Forgot password?
                 </Link>
               </Grid>

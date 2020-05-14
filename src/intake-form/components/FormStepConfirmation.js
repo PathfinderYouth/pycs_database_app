@@ -2,19 +2,19 @@ import React from 'react';
 import Logo from '../../assets/Pathfinder-Logo.jpg';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import './style/FormSteps.css';
+import './style/IntakeForm.css';
 
 export const FormStepConfirmation = () => {
   return (
-    <div className="form-pageContainer">
-      <div className="form-pageContents">
-        <img className="logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
+    <div className="intake-form-pageContainer">
+      <div className="intake-form-pageContents">
+        <img className="intake-form-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
         <Typography gutterBottom variant="h4">
           Self-Enrollment System
         </Typography>
         <Typography variant="h5">Your application has been successfully received.</Typography>
         <Typography>You will be contacted soon for an interview.</Typography>
-        <div className="form-textContainer">
+        <div className="intake-form-textContainer">
           <Typography variant="h5">Next steps</Typography>
           <Typography>
             In order to complete your application, Pathfinder requires participants to fill out an
