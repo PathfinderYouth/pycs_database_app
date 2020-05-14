@@ -11,7 +11,7 @@ import {
   StatisticsView,
   TopNavBar,
 } from './components';
-import { AuthContext } from '../sign-in/components';
+import { AuthContext } from '../sign-in';
 import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
 
@@ -29,19 +29,55 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
+    const {
+      viewModes,
+      currentViewMode,
+      navigationDrawerOpen,
+      setNavigationDrawerOpen,
+      currentListViewOrder,
+      currentListViewOrderBy,
+    } = uiStore;
     const {
       participants,
       numOfNewParticipants,
       setCurrentParticipant,
+      goToPreviousPage: goToParticipantPreviousPage,
+      goToNextPage: goToParticipantNextPage,
+      isLastPage: isParticipantLastPage,
+      setFilter: setParticipantFilter,
+      setSorter: setParticipantSorter,
+      setLimit: setParticipantLimit,
       setCollection,
     } = participantStore;
-    const { users, setSelectedUser } = userStore;
+    const {
+      users,
+      setSelectedUser,
+      goToPreviousPage: goToUserPreviousPage,
+      goToNextPage: goToUserNextPage,
+      isLastPage: isUserLastPage,
+      setFilter: setUserFilter,
+      setSorter: setUserSorter,
+      setLimit: setUserLimit,
+    } = userStore;
 
     const handleParticipantViewChanged = (collection, status) => {
       setCollection(collection);
-      participantStore.setFilter({ status: status });
-      participantStore.setSorter({ nameLast: 'asc' });
+      setParticipantFilter({ status: status });
+
+      let sorter = {};
+      sorter[currentListViewOrderBy] = currentListViewOrder;
+      setParticipantSorter(sorter);
+    };
+
+    const handleOrderChanged = (orderBy, order) => {
+      let sorter = {};
+      sorter[orderBy] = order;
+
+      if (currentViewMode === viewModes.STAFF_LIST) {
+        setUserSorter(sorter);
+      } else {
+        setParticipantSorter(sorter);
+      }
     };
 
     /**
@@ -76,18 +112,20 @@ export const Database = inject(
           ? {
               records: users,
               onRowClicked: setSelectedUser,
-              onPrevButtonClicked: userStore.goToPreviousPage,
-              onNextButtonClicked: userStore.goToNextPage,
-              nextButtonDisabled: userStore.isLastPage,
-              onChangeRowsPerPage: userStore.setLimit,
+              onPrevButtonClicked: goToUserPreviousPage,
+              onNextButtonClicked: goToUserNextPage,
+              nextButtonDisabled: isUserLastPage,
+              onChangeRowsPerPage: setUserLimit,
+              onOrderChanged: handleOrderChanged,
             }
           : {
               records: participants,
               onRowClicked: setCurrentParticipant,
-              onPrevButtonClicked: participantStore.goToPreviousPage,
-              onNextButtonClicked: participantStore.goToNextPage,
-              nextButtonDisabled: participantStore.isLastPage,
-              onChangeRowsPerPage: participantStore.setLimit,
+              onPrevButtonClicked: goToParticipantPreviousPage,
+              onNextButtonClicked: goToParticipantNextPage,
+              nextButtonDisabled: isParticipantLastPage,
+              onChangeRowsPerPage: setParticipantLimit,
+              onOrderChanged: handleOrderChanged,
             };
 
       return <ListContainer {...listViewProps} />;
