@@ -105,7 +105,7 @@ export class LogIn extends Component {
             >
               Sign In
             </Button>
-            <Grid container onClick={this.handlePasswordResetEmail}>
+            <Grid container>
               <Grid item xs>
                 <Link
                   href="#"
