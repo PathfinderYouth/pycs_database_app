@@ -24,11 +24,6 @@ class UIStore {
     STATISTICS: 'statistics',
   };
 
-  collectionType = {
-    NEW: 'new',
-    PERMANENT: 'permanent',
-  };
-
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)

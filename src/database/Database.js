@@ -1,13 +1,13 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
-  ParticipantDetailPage,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
+  ParticipantDetailPage,
   StatisticsView,
   TopNavBar,
 } from './components';
@@ -28,12 +28,7 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
 
-    const {
-      viewModes,
-      currentViewMode,
-      navigationDrawerOpen,
-      setNavigationDrawerOpen,
-    } = uiStore;
+    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
     const {
       participants,
       numOfNewParticipants,
@@ -70,7 +65,8 @@ export const Database = inject(
             <ListViewDrawer
               numNew={numOfNewParticipants}
               classes={classes}
-              onParticipantViewChanged={handleParticipantViewChanged}/>
+              onParticipantViewChanged={handleParticipantViewChanged}
+            />
           );
       }
     };
@@ -105,10 +101,10 @@ export const Database = inject(
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
           return <div>Staff Details</div>; //TODO replace with staff detail page
-        
+
         case viewModes.PARTICIPANT_DETAIL:
           return <ParticipantDetailPage />;
-      
+
         case viewModes.STATISTICS:
           return <StatisticsView />;
 

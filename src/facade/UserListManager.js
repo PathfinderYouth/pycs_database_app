@@ -37,7 +37,7 @@ export default class UserListManager {
   addUser(user, onSuccess, onError) {
     this.userRef
       .add(user)
-      .then(docRef => {
+      .then((docRef) => {
         if (onSuccess) {
           onSuccess(docRef.id);
         }
@@ -58,7 +58,7 @@ export default class UserListManager {
    */
   getUser(docId, onNext, onError) {
     return this.userRef.doc(docId).onSnapshot({
-      next: docSnap => {
+      next: (docSnap) => {
         let doc = docSnap.data();
         if (doc) {
           onNext(doc);
@@ -85,11 +85,7 @@ export default class UserListManager {
    *  Callback function when fail
    */
   updateUser(docId, data, onSuccess, onError) {
-    this.userRef
-      .doc(docId)
-      .update(data)
-      .then(onSuccess)
-      .catch(onError);
+    this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
   }
 
   /**
@@ -107,15 +103,12 @@ export default class UserListManager {
     this.userRef
       .where('email', '==', email)
       .get()
-      .then(querySnap => {
+      .then((querySnap) => {
         if (querySnap.docs.length === 0) {
           throw new Error('Email does not exist');
         }
 
-        querySnap.docs[0].ref
-          .update({ uid: uid })
-          .then(onSuccess)
-          .catch(onError);
+        querySnap.docs[0].ref.update({ uid: uid }).then(onSuccess).catch(onError);
       })
       .catch(onError);
   }
@@ -130,11 +123,7 @@ export default class UserListManager {
    *  Callback function when fail
    */
   deleteUser(docId, onSuccess, onError) {
-    this.userRef
-      .doc(docId)
-      .delete()
-      .then(onSuccess)
-      .catch(onError);
+    this.userRef.doc(docId).delete().then(onSuccess).catch(onError);
   }
 
   /**
@@ -165,8 +154,8 @@ export default class UserListManager {
     }
 
     return ref.onSnapshot({
-      next: querySnap => {
-        querySnap.docChanges().forEach(docChg => {
+      next: (querySnap) => {
+        querySnap.docChanges().forEach((docChg) => {
           let doc = docChg.doc.data();
           doc = docChg.doc.id;
           onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);

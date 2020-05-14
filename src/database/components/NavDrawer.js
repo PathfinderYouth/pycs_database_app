@@ -61,11 +61,11 @@ export const NavDrawer = (props) => {
     if (authService.getCurrentUser()) {
       setUserEmail(authService.getCurrentUser().email);
     }
-  });
+  }, []);
 
   const drawer = (
     <div>
-      <div className={`${classes.drawerHeader} drawerHeaderCss`}>
+      <div className={`${classes.drawerHeader} drawerHeader`}>
         <Typography variant="inherit">{userEmail}</Typography>
 
         {matches ? (

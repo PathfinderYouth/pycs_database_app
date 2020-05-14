@@ -7,28 +7,13 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 export const FormRadioGroup = ({ form, field, isFieldDisabled }) => {
-  const {
-    values,
-    errors,
-    touched,
-    handleChange,
-    handleBlur
-  } = form;
-  const {
-    name,
-    options,
-    label = undefined,
-    required = undefined,
-  } = field;
+  const { values, errors, touched, handleChange, handleBlur } = form;
+  const { name, options, label = undefined, required = undefined } = field;
 
   const disabled = isFieldDisabled(field, values, name);
 
   return (
-    <FormControl
-      component="fieldset"
-      error={!!errors[name] && touched[name]}
-      required={required}
-    >
+    <FormControl component="fieldset" error={!!errors[name] && touched[name]} required={required}>
       <FormLabel component="legend">{label}</FormLabel>
       <RadioGroup
         aria-label={name}
@@ -48,9 +33,7 @@ export const FormRadioGroup = ({ form, field, isFieldDisabled }) => {
           />
         ))}
       </RadioGroup>
-      {!!errors[name] && touched[name] && (
-        <FormHelperText>{errors[name]}</FormHelperText>
-      )}
+      {!!errors[name] && touched[name] && <FormHelperText>{errors[name]}</FormHelperText>}
     </FormControl>
   );
 };

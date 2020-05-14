@@ -30,14 +30,7 @@ const sampleData = {
 export const RecordDialog = (props) => {
   const classes = useStyles();
 
-  const {
-    lastName,
-    firstName,
-    address,
-    city,
-    status,
-    birthDate,
-  } = props.recordListClicked;
+  const { lastName, firstName, address, city, status, birthDate } = props.recordListClicked;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -92,12 +85,7 @@ export const RecordDialog = (props) => {
       maxWidth={'lg'}
     >
       <DialogTitle id="form-dialog-title">
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
+        <Grid container direction="row" justify="space-between" alignItems="center">
           {lastName},{firstName}
           {menuButton}
         </Grid>

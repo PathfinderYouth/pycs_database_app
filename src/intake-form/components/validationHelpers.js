@@ -42,7 +42,7 @@ export const calculateAge = (value) => {
  * @param value: date object
  */
 const ageValidation = (value) => {
-  const age = calculateAge(value)
+  const age = calculateAge(value);
   return age >= 15 && age <= 30;
 };
 
@@ -51,7 +51,9 @@ export const validationSchema = yup.object().shape(
     nameGiven: yup.string().required('Given name is required'),
     nameLast: yup.string().required('Last name is required'),
     programAppliedFor: yup.string().required('Must select an option'),
-    addressPostalCode: yup.string().matches(/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/, 'Invalid postal code'),
+    addressPostalCode: yup
+      .string()
+      .matches(/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/, 'Invalid postal code'),
     phoneHome: yup
       .string()
       .length(10, 'Must be 10 digits long')
@@ -76,9 +78,7 @@ export const validationSchema = yup.object().shape(
     birthDate: yup
       .date()
       .required('Birthdate is required')
-      .test('age-test', 'Must be between 15 and 30 years old', (value) =>
-        ageValidation(value),
-      ),
+      .test('age-test', 'Must be between 15 and 30 years old', (value) => ageValidation(value)),
     emergencyContact1PhoneHome: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneWork: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneCell: yup.string().length(10, 'Must be 10 digits long'),
@@ -102,19 +102,13 @@ export const validationSchema = yup.object().shape(
       .string()
       .required('SIN is required')
       .length(9, 'Must be 9 digits long')
-      .test('sin-valid', 'Invalid SIN', (value) =>
-        sinValidation(value),
-      ),
-    whyApplied: yup
-      .string()
-      .required('Please enter the reason you applied to Pathfinder'),
+      .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
+    whyApplied: yup.string().required('Please enter the reason you applied to Pathfinder'),
     whyShouldBeAccepted: yup
       .string()
-      .required(
-        'Please enter why you think you should be accepted to Pathfinder',
-      ),
+      .required('Please enter why you think you should be accepted to Pathfinder'),
     hasMentalHealthIssues: yup.string().required('Please select an option'),
-    housingSituation: yup.string().required('Please select an option')
+    housingSituation: yup.string().required('Please select an option'),
   },
   [
     ['phoneHome', 'phoneCell'],
