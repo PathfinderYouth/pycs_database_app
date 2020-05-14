@@ -31,6 +31,7 @@ export const ListContainer = inject('uiStore')(
       onNextButtonClicked,
       nextButtonDisabled,
       onChangeRowsPerPage,
+      onSearchClicked,
     }) => {
       const classes = useStyles();
       const [order, setOrder] = useState('asc');
@@ -76,7 +77,11 @@ export const ListContainer = inject('uiStore')(
       return (
         <div className={`${classes.root} maxWidth`}>
           <Paper className={`${classes.paper} maxWidth`}>
-            <RecordSearchBar title={pageTitle} headers={headers} />
+            <RecordSearchBar
+              title={pageTitle}
+              headers={headers}
+              onSearchClicked={onSearchClicked}
+            />
             <TableContainer>
               <Table className={classes.table} size="medium">
                 <SortingTableHead

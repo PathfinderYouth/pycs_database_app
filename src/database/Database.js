@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,7 +27,7 @@ export const Database = inject(
 )(
   observer(() => {
     const classes = useStyles();
-
+    const [currentStatus, setCurrentStatus] = useState(null);
     const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
     const {
       participants,
@@ -43,9 +43,16 @@ export const Database = inject(
     } = participantStore;
 
     const handleParticipantViewChanged = (collection, status) => {
+      setCurrentStatus(status);
       setCollection(collection);
       setFilter({ status: status });
       setSorter({ nameLast: 'asc' });
+    };
+
+    const handleSearchClicked = (searchBy, searchText) => {
+      let filter = { status: currentStatus };
+      filter[searchBy] = searchText;
+      setFilter(filter);
     };
 
     /**
@@ -81,6 +88,7 @@ export const Database = inject(
               records: [], // TODO: get user list from user store
               // TODO: set other properties like the one for participant
               onRowClicked: (clickedRow) => console.log('Opening staff record'),
+              onSearchClicked: handleSearchClicked,
             }
           : {
               records: participants,
@@ -89,6 +97,7 @@ export const Database = inject(
               onNextButtonClicked: goToNextPage,
               nextButtonDisabled: isLastPage,
               onChangeRowsPerPage: setLimit,
+              onSearchClicked: handleSearchClicked,
             };
 
       return <ListContainer {...listViewProps} />;
