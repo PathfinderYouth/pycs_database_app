@@ -44,12 +44,12 @@ export default class DatabaseManager {
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
     if (entries.length > 0) {
-      const [ field, value ] = entries[0];
+      const [field, value] = entries[0];
       // TODO: Apply startWith trick
       ref = ref.where(field, '==', value);
     }
 
-    const [ orderBy, order ] = Object.entries(sorter)[0];
+    const [orderBy, order] = Object.entries(sorter)[0];
     ref = ref.orderBy(orderBy, order ? order : undefined);
     return ref;
   }
