@@ -8,20 +8,31 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { uiStore } from '../../injectables';
+import { uiStore, participantStore } from '../../injectables';
+import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
 import './style/ListContainer.css';
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginBottom: theme.spacing(2),
   },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
+  },
 }));
 
-export const ListContainer = inject('uiStore')(
+export const ListContainer = inject(
+  'uiStore',
+  'participantStore',
+)(
   observer(
     ({
       records,
@@ -36,28 +47,34 @@ export const ListContainer = inject('uiStore')(
       const classes = useStyles();
       const [page, setPage] = useState(0);
       const [rowsPerPage, setRowsPerPage] = useState(20);
+      const { collection } = participantStore;
       const {
         headers,
         setCurrentViewMode,
         currentDetailViewMode,
         currentViewMode,
-        viewModes,
         currentListViewOrder,
         currentListViewOrderBy,
         setCurrentListViewOrder,
         setCurrentListViewOrderBy,
+        setCurrentParticipantDetailViewMode,
       } = uiStore;
 
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
+      const handleClickNew = () => {
+        setCurrentViewMode(viewModes.PARTICIPANT_DETAIL);
+        setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
+      };
+
       const handleRowClicked = (clickedRow) => {
         onRowClicked(clickedRow);
         setCurrentViewMode(currentDetailViewMode);
+        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
       };
 
       const handleRequestSort = (event, property) => {
         setPage(0);
-
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
         const order = isAsc ? 'desc' : 'asc';
         setCurrentListViewOrder(order);
@@ -68,7 +85,7 @@ export const ListContainer = inject('uiStore')(
       const handleSearchClicked = (searchBy, searchText) => {
         setPage(0);
         onSearchClicked(searchBy, searchText);
-      }
+      };
 
       const handleChangePage = (event, newPage) => {
         if (newPage < page) {
@@ -105,10 +122,12 @@ export const ListContainer = inject('uiStore')(
                 />
                 <TableBody>
                   {records.map((row) => (
-                    <TableRow hover key={row.id} onClick={handleRowClicked.bind(this, row)}>
+                    <TableRow hover key={row.id} onClick={() => handleRowClicked(row)}>
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
-                          <Typography>{row[column.id]}</Typography>
+                          <div className="list-row">
+                            <Typography>{row[column.id]}</Typography>
+                          </div>
                         </TableCell>
                       ))}
                     </TableRow>
@@ -130,6 +149,30 @@ export const ListContainer = inject('uiStore')(
               }}
             />
           </Paper>
+          {collection !== collectionType.NEW && (
+            <Tooltip
+              title={
+                currentViewMode === viewModes.PARTICIPANT_LIST
+                  ? 'Create new participant record'
+                  : 'Add user account'
+              }
+              aria-label="create"
+              placement="left"
+            >
+              <Fab
+                color="primary"
+                className={classes.fab}
+                onClick={() => {
+                  currentViewMode === viewModes.PARTICIPANT_LIST
+                    ? handleClickNew()
+                    : // TODO: Add add staff method
+                      console.log('Add new staff account');
+                }}
+              >
+                <AddIcon />
+              </Fab>
+            </Tooltip>
+          )}
         </div>
       );
     },

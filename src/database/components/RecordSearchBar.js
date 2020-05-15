@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import './style/RecordSearchBar.css';
 import Button from '@material-ui/core/Button';
 import { inject, observer } from 'mobx-react';
+import { viewModes } from '../../constants';
 import { uiStore } from '../../injectables';
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +62,7 @@ const ParticipantSearchSelect = ({ handleChange }) => {
 
 export const RecordSearchBar = inject('uiStore')(
   observer((props) => {
-    const { currentViewMode, viewModes } = uiStore;
+    const { currentViewMode } = uiStore;
     const classes = useStyles();
     const { title, headers, onSearchClicked } = props;
     const [searchBy, setSearchBy] = useState(headers[0].id);

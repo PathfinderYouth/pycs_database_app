@@ -7,6 +7,7 @@ import { ParticipantTabs } from './ParticipantTabs';
 import { ArrowBack } from '@material-ui/icons';
 import { inject, observer } from 'mobx-react';
 import { uiStore } from '../../injectables';
+import { participantDetailViewModes, viewModes } from '../../constants';
 import './style/NavDrawer.css';
 import { StyledListItem } from './StyledListItem';
 
@@ -19,8 +20,6 @@ export const DetailViewDrawer = inject('uiStore')(
       currentParticipantDetailViewMode,
       setCurrentParticipantDetailStep,
       setCurrentParticipantDetailViewMode,
-      viewModes,
-      participantDetailViewModes,
     } = uiStore;
 
     const handleClickBack = () => {
