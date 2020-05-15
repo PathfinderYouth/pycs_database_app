@@ -19,7 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import service from '../../facade/service';
 
 const percent = (amount, total) => {
-  return total === 0 ? 0 : Math.round((amount / total) * 100) + '%';
+  return total === 0 ? '' : Math.round((amount / total) * 100) + '%';
 };
 
 const getCountByID = (object, value) => {
