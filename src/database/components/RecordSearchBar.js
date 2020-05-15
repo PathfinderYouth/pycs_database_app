@@ -63,7 +63,7 @@ export const RecordSearchBar = inject('uiStore')(
   observer((props) => {
     const { currentViewMode, viewModes } = uiStore;
     const classes = useStyles();
-    const { title, headers } = props;
+    const { title, headers, onSearchClicked } = props;
     const [searchBy, setSearchBy] = useState(headers[0].id);
     const [searchText, setSearchText] = useState('');
 
@@ -87,8 +87,7 @@ export const RecordSearchBar = inject('uiStore')(
     };
 
     const onSubmit = () => {
-      console.log(searchText + ' ' + searchBy);
-      //TODO return this to whatever is doing the search
+      onSearchClicked(searchBy, searchText);
     };
 
     return (

@@ -47,7 +47,6 @@ class UIStore {
     EDIT: 'edit'
   }
 
-
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)
@@ -98,6 +97,14 @@ class UIStore {
     return this.currentViewMode === this.viewModes.STAFF_LIST
       ? this.currentStaffViewOrderBy
       : this.currentParticipantViewOrderBy;
+  }
+
+  get currentParticipantListOrder() {
+    return this.currentParticipantViewOrder;
+  }
+
+  get currentParticipantListOrderBy() {
+    return this.currentParticipantViewOrderBy;
   }
 
   setCurrentViewMode = (viewMode) => {

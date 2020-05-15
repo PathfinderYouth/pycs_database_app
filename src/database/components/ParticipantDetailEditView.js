@@ -11,6 +11,7 @@ import { FormFieldBuilder, participantDetailSteps } from '../../fields';
 import service from '../../facade/service';
 import { AuthContext } from '../../sign-in';
 import { participantStore } from '../../injectables';
+import { collectionType } from '../../constants';
 
 export const ParticipantDetailEditView = ({
   participant,
@@ -20,7 +21,7 @@ export const ParticipantDetailEditView = ({
   onSuccessfulEdit,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { collectionType } = participantStore;
+  
   const step = participantDetailSteps[currentStep];
   const {
     currentUser: { email: userID },

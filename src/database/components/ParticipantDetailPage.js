@@ -8,6 +8,7 @@ import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailEditView } from './ParticipantDetailEditView';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
+import { ParticipantDetailView } from './ParticipantDetailView';
 import { inject, observer } from 'mobx-react';
 import { participantStore, uiStore } from '../../injectables';
 import './style/ParticipantDetailPage.css';
@@ -26,24 +27,6 @@ export const ParticipantDetailPage = inject(
     } = uiStore;
     const notesStep = participantDetailSteps.length - 2;
     const historyStep = participantDetailSteps.length - 1;
-
-    /**
-     * Placeholder component for detail view mode
-     */
-    const ParticipantDetailView = ({ currentParticipant, currentStep, handleClickChangeMode }) => (
-      <>
-        <div className="participant-detail-header">
-          <Typography variant="h5">Participant Details</Typography>
-          <Tooltip title="Edit participant record" aria-label="edit">
-            <IconButton onClick={handleClickChangeMode}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-        <Typography>Participant details go here</Typography>
-        <Typography>{`Viewing step #${currentStep}`}</Typography>
-      </>
-    );
 
     const getParticipantDetailContents = () => {
       if (currentParticipantDetailStep === notesStep) {
@@ -66,11 +49,18 @@ export const ParticipantDetailPage = inject(
         } else {
           return (
             <ParticipantDetailView
-              currentStep={currentParticipantDetailStep}
-              handleClickChangeMode={() =>
-                setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
-              }
-            />
+                participant={currentParticipant}
+                collection={collection}
+                currentStep={currentParticipantDetailStep}
+                handleClickChangeMode={() =>
+                  setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
+                }
+                handleClickMove={() => console.log('Move clicked')} // placeholder
+                // swap between deleteNew & deletePermanent depending on current collection
+                handleClickDelete={() => console.log('Delete clicked')} // placeholder
+                handleClickApprove={() => console.log('Approve clicked')} // placeholder
+                handleClickDeny={() => console.log('Deny clicked')} // placeholder
+              /> 
           );
         }
       }

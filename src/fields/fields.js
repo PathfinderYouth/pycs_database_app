@@ -116,6 +116,7 @@ export const formSteps = [
         label: 'Emergency contact name',
         type: 'text',
         size: 12,
+        detailSize: 6
       },
       {
         name: 'emergencyContact1Relationship',
@@ -123,6 +124,7 @@ export const formSteps = [
         label: 'Relationship to you',
         type: 'text',
         size: 12,
+        detailSize: 6
       },
       {
         name: 'emergencyContact1PhoneHome',
@@ -155,6 +157,7 @@ export const formSteps = [
         label: 'Emergency contact name',
         type: 'text',
         size: 12,
+        detailSize: 6
       },
       {
         name: 'emergencyContact2Relationship',
@@ -162,6 +165,7 @@ export const formSteps = [
         label: 'Relationship to you',
         type: 'text',
         size: 12,
+        detailSize: 6
       },
       {
         name: 'emergencyContact2PhoneHome',
@@ -241,6 +245,7 @@ export const formSteps = [
         prettyName: 'Found out about Pathfinder',
         label: 'How did you find out about our program?',
         size: 12,
+        detailSize: 6,
         type: 'radio',
         options: [
           'Family and/or friends',
@@ -265,6 +270,7 @@ export const formSteps = [
           'If you answered "other" to "How did you find out about our program?", please specify:',
         label: 'If other, please specify',
         size: 12,
+        detailSize: 6,
         multiline: true,
         dependsOnOtherField: {
           name: 'learnedAboutPathfinder',
@@ -278,6 +284,7 @@ export const formSteps = [
         label: 'Have you ever attended a job club or paid employment training program?',
         type: 'radio',
         size: 8,
+        detailSize: 6,
         options: ['Yes', 'No'],
       },
       {
@@ -286,6 +293,7 @@ export const formSteps = [
         label: 'Did you complete the job club or paid employment program?',
         type: 'radio',
         size: 4,
+        detailSize: 6,
         options: ['Yes', 'No'],
         dependsOnOtherField: {
           name: 'hasEmploymentProgramTraining',
@@ -319,6 +327,7 @@ export const formSteps = [
         type: 'radio',
         required: true,
         size: 12,
+        detailSize: 6,
         options: ['Male', 'Female', 'Other', 'Decline to answer'],
       },
       {
@@ -346,6 +355,7 @@ export const formSteps = [
         type: 'radio',
         required: true,
         size: 12,
+        detailSize: 6,
         options: [
           'Registered on-reserve',
           'Registered off-reserve',
@@ -372,6 +382,7 @@ export const formSteps = [
         type: 'radio',
         required: true,
         size: 12,
+        detailSize: 6,
         options: [
           'Elementary',
           'Secondary incomplete',
@@ -419,6 +430,7 @@ export const formSteps = [
         label: 'Do you have any mental health issues? (e.g., anxiety, depression, mood disorder, schizophrenia, etc.)',
         required: true,
         size: 12,
+        detailSize: 4,
         options: ['Yes', 'No', 'Decline to answer'],
       },
       {
@@ -430,6 +442,7 @@ export const formSteps = [
         label: 'If yes, please specify',
         multiline: true,
         size: 12,
+        detailSize: 8,
         dependsOnOtherField: {
           name: 'hasMentalHealthIssues',
           list: false,
@@ -486,6 +499,7 @@ export const formSteps = [
         prettyName: "Housing situation",
         type: 'radio',
         size: 12,
+        detailSize: 4,
         required: true,
         label:
           'What is your current housing situation?',
@@ -506,6 +520,7 @@ export const formSteps = [
           'If you answered "other" to "What is your current housing situation?", please specify:',
         label: 'If other, please specify',
         size: 6,
+        detailSize: 8,
         multiline: true,
         dependsOnOtherField: {
           name: 'housingSituation',
@@ -518,10 +533,11 @@ export const formSteps = [
         prettyName: "Rent",
         type: 'number',
         size: 6,
+        detailSize: 12,
         description:
           'How much do you pay for rent per month? (Please put $0 if you are not required to pay rent at your place of residence or where you are staying)',
-
         adornment: '$',
+        mask: 'rent'
       },
       {
         name: 'hasBankAccount',
@@ -529,6 +545,7 @@ export const formSteps = [
         label: 'Do you have a bank account?',
         type: 'radio',
         size: 4,
+        detailSize: 4,
         options: ['Yes', 'No'],
       },
       {
@@ -537,6 +554,7 @@ export const formSteps = [
         label: 'If yes, is your bank account a chequing or savings account or do you have both?',
         type: 'radio',
         size: 8,
+        detailSize: 8,
         dependsOnOtherField: {
           name: 'hasBankAccount',
           list: false,
@@ -550,6 +568,7 @@ export const formSteps = [
         label: 'What is your current form of income?',
         type: 'radio',
         size: 12,
+        detailSize: 4,
         options: [
           'None',
           'Employment insurance',
@@ -569,6 +588,7 @@ export const formSteps = [
           'If you answered "other" to "What is your current form of income?", please specify:',
         label: 'If other, please specify',
         size: 12,
+        detailSize: 8,
         multiline: true,
         dependsOnOtherField: {
           name: 'formOfIncome',
@@ -872,6 +892,7 @@ export const formSteps = [
         label: 'Do you have any brothers or sisters?',
         type: 'radio',
         size: 4,
+        detailSize: 6,
         options: ['Yes', 'No'],
       },
       {
@@ -879,6 +900,7 @@ export const formSteps = [
         prettyName: "Siblings details",
         type: 'text',
         size: 8,
+        detailSize: 6,
         description: 'If you have brothers or sisters, who do you like the most and why?',
         multiline: true,
         dependsOnOtherField: {
@@ -892,6 +914,7 @@ export const formSteps = [
         prettyName: "Has children",
         label: 'Do you have any children?',
         size: 4,
+        detailSize: 6,
         type: 'radio',
         options: ['Yes', 'No'],
       },
@@ -900,6 +923,7 @@ export const formSteps = [
         prettyName: "Children details",
         type: 'text',
         size: 8,
+        detailSize: 6,
         description: 'If you have children, how many and what are their names?',
         multiline: true,
         dependsOnOtherField: {
@@ -914,6 +938,7 @@ export const formSteps = [
         label: 'Have you ever travelled outside British Columbia?',
         type: 'radio',
         size: 4,
+        detailSize: 6,
         options: ['Yes', 'No'],
       },
       {
@@ -922,6 +947,7 @@ export const formSteps = [
         label: 'Do you have a current resume and cover page?',
         type: 'radio',
         size: 4,
+        detailSize: 6,
         options: ['Yes', 'No'],
       },
       {

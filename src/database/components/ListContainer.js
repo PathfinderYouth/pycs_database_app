@@ -31,6 +31,7 @@ export const ListContainer = inject('uiStore')(
       nextButtonDisabled,
       onChangeRowsPerPage,
       onOrderChanged,
+      onSearchClicked,
     }) => {
       const classes = useStyles();
       const [page, setPage] = useState(0);
@@ -55,12 +56,19 @@ export const ListContainer = inject('uiStore')(
       };
 
       const handleRequestSort = (event, property) => {
+        setPage(0);
+
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
         const order = isAsc ? 'desc' : 'asc';
         setCurrentListViewOrder(order);
         setCurrentListViewOrderBy(property);
         onOrderChanged(property, order);
       };
+
+      const handleSearchClicked = (searchBy, searchText) => {
+        setPage(0);
+        onSearchClicked(searchBy, searchText);
+      }
 
       const handleChangePage = (event, newPage) => {
         if (newPage < page) {
@@ -80,7 +88,11 @@ export const ListContainer = inject('uiStore')(
       return (
         <div className={`${classes.root} maxWidth`}>
           <Paper className={`${classes.paper} maxWidth`}>
-            <RecordSearchBar title={pageTitle} headers={headers} />
+            <RecordSearchBar
+              title={pageTitle}
+              headers={headers}
+              onSearchClicked={handleSearchClicked}
+            />
             <TableContainer>
               <Table className={classes.table} size="medium">
                 <SortingTableHead

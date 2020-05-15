@@ -7,13 +7,13 @@ import { Database } from './database';
 import { IntakeFormPage } from './intake-form';
 import { NotFound } from './404-page';
 import { AuthProvider, SignIn } from './sign-in';
-import { participantStore, uiStore } from './injectables';
+import { participantStore, userStore, uiStore } from './injectables';
 import { theme } from './ui';
 import './App.css';
 
 const App = () => (
   <AuthProvider>
-    <Provider participantStore={participantStore} uiStore={uiStore}>
+    <Provider participantStore={participantStore} userStore={userStore} uiStore={uiStore}>
       <ThemeProvider theme={theme}>
         <SnackbarProvider
           anchorOrigin={{
