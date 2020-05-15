@@ -12,7 +12,7 @@ import {
   TopNavBar,
 } from './components';
 import { AuthContext } from '../sign-in';
-import { participantStore, uiStore } from '../injectables';
+import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Database = inject(
   'participantStore',
+  'userStore',
   'uiStore',
 )(
   observer(() => {
@@ -41,22 +42,32 @@ export const Database = inject(
       participants,
       numOfNewParticipants,
       setCurrentParticipant,
-      goToPreviousPage,
-      goToNextPage,
-      isLastPage,
-      setFilter,
-      setSorter,
-      setLimit,
+      goToPreviousPage: goToParticipantPreviousPage,
+      goToNextPage: goToParticipantNextPage,
+      isLastPage: isParticipantLastPage,
+      setFilter: setParticipantFilter,
+      setSorter: setParticipantSorter,
+      setLimit: setParticipantLimit,
       setCollection,
     } = participantStore;
+    const {
+      users,
+      setSelectedUser,
+      goToPreviousPage: goToUserPreviousPage,
+      goToNextPage: goToUserNextPage,
+      isLastPage: isUserLastPage,
+      setFilter: setUserFilter,
+      setSorter: setUserSorter,
+      setLimit: setUserLimit,
+    } = userStore;
 
     const handleParticipantViewChanged = (collection, status) => {
       setCollection(collection);
-      setFilter({ status: status });
+      setParticipantFilter({ status: status });
 
       let sorter = {};
       sorter[currentListViewOrderBy] = currentListViewOrder;
-      setSorter(sorter);
+      setParticipantSorter(sorter);
     };
 
     const handleOrderChanged = (orderBy, order) => {
@@ -66,7 +77,7 @@ export const Database = inject(
       if (currentViewMode === viewModes.STAFF_LIST) {
         // TODO: update UserStore's sorter
       } else {
-        setSorter(sorter);
+        setParticipantSorter(sorter);
       }
     };
 
@@ -100,18 +111,22 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
-              records: [], // TODO: get user list from user store
-              // TODO: set other properties like the one for participant
-              onRowClicked: (clickedRow) => console.log('Opening staff record'),
+
+              records: users,
+              onRowClicked: setSelectedUser,
+              onPrevButtonClicked: goToUserPreviousPage,
+              onNextButtonClicked: goToUserNextPage,
+              nextButtonDisabled: isUserLastPage,
+              onChangeRowsPerPage: setUserLimit,
               onOrderChanged: handleOrderChanged,
             }
           : {
               records: participants,
               onRowClicked: setCurrentParticipant,
-              onPrevButtonClicked: goToPreviousPage,
-              onNextButtonClicked: goToNextPage,
-              nextButtonDisabled: isLastPage,
-              onChangeRowsPerPage: setLimit,
+              onPrevButtonClicked: goToParticipantPreviousPage,
+              onNextButtonClicked: goToParticipantNextPage,
+              nextButtonDisabled: isParticipantLastPage,
+              onChangeRowsPerPage: setParticipantLimit,
               onOrderChanged: handleOrderChanged,
             };
 
@@ -124,6 +139,7 @@ export const Database = inject(
     const getContent = () => {
       switch (currentViewMode) {
         case viewModes.STAFF_DETAIL:
+          // We don't really need staff details page, because each user object only has 3 fields which are displayed on staff table.
           return <div>Staff Details</div>; //TODO replace with staff detail page
 
         case viewModes.PARTICIPANT_DETAIL:
