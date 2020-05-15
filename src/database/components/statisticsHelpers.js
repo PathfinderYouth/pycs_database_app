@@ -35,7 +35,7 @@ export const statisticsGroups = [
     ],
   },
   {
-    id: 'livingSituation',
+    id: 'housingSituation',
     label: 'Homelessness',
     subcategories: [
       {
@@ -266,7 +266,6 @@ export const statisticsGroups = [
 
 export const updateStatistics = () => {
   db.getAllPermanentParticipants((participantsList) => {
-    console.log(participantsList);
     return calculateStats(participantsList);
   });
 };
@@ -299,9 +298,11 @@ const calculateStats = (participantsList) => {
           value.count++;
         }
         if (createdDate >= monthStart && value.id === 'mtd') {
+          createdMTD = true;
           value.count++;
         }
         if (createdDate >= yearStart && value.id === 'ytd') {
+          createdYTD = true;
           value.count++;
         }
       });

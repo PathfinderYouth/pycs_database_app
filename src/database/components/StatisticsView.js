@@ -19,7 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import service from '../../facade/service';
 
 const percent = (amount, total) => {
-  return total === 0 ? 0 : Math.round(amount / total) + '%';
+  return total === 0 ? 0 : Math.round((amount / total) * 100) + '%';
 };
 
 const getCountByID = (object, value) => {
@@ -91,7 +91,10 @@ export const StatisticsView = inject('participantStore')(
             const count = totalCounts[index];
             return (
               <Grid item xs={4} key={count.id}>
-                <StatisticsCard statsList={[{ label: count.label, number: count.count }]} />
+                <StatisticsCard
+                  key={count.id}
+                  statsList={[{ label: count.label, number: count.count }]}
+                />
               </Grid>
             );
           })}
@@ -111,29 +114,32 @@ export const StatisticsView = inject('participantStore')(
             currentGroup.subcategories.map((category) => {
               return (
                 <>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} key={category.id}>
                     <Typography variant="h6">{category.label}</Typography>
                   </Grid>
                   {[
                     { id: 'total', label: 'Total Participants' },
                     { id: 'mtd', label: 'Month to Date' },
                     { id: 'ytd', label: 'Year to Date' },
-                  ].map((time) => (
-                    <Grid item xs={4}>
-                      <StatisticsCard
-                        statsList={[
-                          { label: time.label, number: category.counts[time.id] },
-                          {
-                            label: 'Percentage',
-                            number: percent(
-                              category.counts[time.id],
-                              getCountByID(totalCounts, time.id).count,
-                            ),
-                          },
-                        ]}
-                      />
-                    </Grid>
-                  ))}
+                  ].map((time) => {
+                    return (
+                      <Grid item xs={4} key={category.id + '_' + time.id}>
+                        <StatisticsCard
+                          key={category.id + '_' + time.id}
+                          statsList={[
+                            { label: time.label, number: category.counts[time.id] },
+                            {
+                              label: 'Percentage',
+                              number: percent(
+                                category.counts[time.id],
+                                getCountByID(totalCounts, time.id).count,
+                              ),
+                            },
+                          ]}
+                        />
+                      </Grid>
+                    );
+                  })}
                 </>
               );
             })}
