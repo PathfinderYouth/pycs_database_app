@@ -38,14 +38,22 @@ export default class DatabaseManager {
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
     if (entries.length > 0) {
-      const [ field, value ] = entries[0];
-      // TODO: Apply startWith trick
-      ref = ref.where(field, '==', value);
+      const [ searchBy, searchText ] = entries[0];
+
+      if (searchText) {
+        let lastIndex = searchText.length - 1;
+        let searchTextEnd = searchText.substring(0, lastIndex);
+        searchTextEnd += String.fromCharCode(searchText.charCodeAt(lastIndex) + 1);
+
+        return ref
+          .where(searchBy, '>=', searchText)
+          .where(searchBy, '<', searchTextEnd)
+          .orderBy(searchBy, sorter[searchBy] ? sorter[searchBy] : 'asc');
+      }
     }
 
     const [ orderBy, order ] = Object.entries(sorter)[0];
-    ref = ref.orderBy(orderBy, order ? order : undefined);
-    return ref;
+    return ref.orderBy(orderBy, order ? order : 'asc');
   }
 
   /**

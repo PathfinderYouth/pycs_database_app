@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,14 +29,14 @@ export const Database = inject(
 )(
   observer(() => {
     const classes = useStyles();
-
+    const [currentStatus, setCurrentStatus] = useState(null);
     const {
       viewModes,
       currentViewMode,
       navigationDrawerOpen,
       setNavigationDrawerOpen,
-      currentListViewOrder,
-      currentListViewOrderBy,
+      currentParticipantListOrder,
+      currentParticipantListOrderBy,
     } = uiStore;
     const {
       participants,
@@ -62,11 +62,12 @@ export const Database = inject(
     } = userStore;
 
     const handleParticipantViewChanged = (collection, status) => {
+      setCurrentStatus(status);
       setCollection(collection);
       setParticipantFilter({ status: status });
 
       let sorter = {};
-      sorter[currentListViewOrderBy] = currentListViewOrder;
+      sorter[currentParticipantListOrderBy] = currentParticipantListOrder;
       setParticipantSorter(sorter);
     };
 
@@ -78,6 +79,16 @@ export const Database = inject(
         // TODO: update UserStore's sorter
       } else {
         setParticipantSorter(sorter);
+      }
+    };
+
+    const handleSearchClicked = (searchBy, searchText) => {
+      if (currentViewMode === viewModes.STAFF_LIST) {
+        // TODO: update UserStore's filter
+      } else {
+        let filter = { status: currentStatus };
+        filter[searchBy] = searchText;
+        setParticipantFilter(filter);
       }
     };
 
@@ -119,6 +130,7 @@ export const Database = inject(
               nextButtonDisabled: isUserLastPage,
               onChangeRowsPerPage: setUserLimit,
               onOrderChanged: handleOrderChanged,
+              onSearchClicked: handleSearchClicked,
             }
           : {
               records: participants,
@@ -128,6 +140,7 @@ export const Database = inject(
               nextButtonDisabled: isParticipantLastPage,
               onChangeRowsPerPage: setParticipantLimit,
               onOrderChanged: handleOrderChanged,
+              onSearchClicked: handleSearchClicked,
             };
 
       return <ListContainer {...listViewProps} />;
