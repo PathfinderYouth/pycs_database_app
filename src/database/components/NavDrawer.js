@@ -66,7 +66,7 @@ export const NavDrawer = (props) => {
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeader`}>
-        <Typography variant="inherit">{userEmail}</Typography>
+        <Typography variant="h6">{userEmail}</Typography>
 
         {matches ? (
           <IconButton

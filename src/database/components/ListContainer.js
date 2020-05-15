@@ -8,12 +8,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -68,7 +69,7 @@ export const ListContainer = inject('uiStore')(
       const handleSearchClicked = (searchBy, searchText) => {
         setPage(0);
         onSearchClicked(searchBy, searchText);
-      }
+      };
 
       const handleChangePage = (event, newPage) => {
         if (newPage < page) {
@@ -83,6 +84,15 @@ export const ListContainer = inject('uiStore')(
         setPage(0);
         setRowsPerPage(event.target.value);
         onChangeRowsPerPage(event.target.value);
+      };
+
+      const handleEditIconClicked = (event, row) => {
+        // TODO onClick covert Typography into TextField
+        // TODO handle Edit functionality of user management
+      };
+
+      const handleDeleteIconClicked = (event, row) => {
+        // TODO handle Delete functionlity of user management
       };
 
       return (
@@ -108,7 +118,14 @@ export const ListContainer = inject('uiStore')(
                     <TableRow hover key={row.id} onClick={handleRowClicked.bind(this, row)}>
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
-                          <Typography>{row[column.id]}</Typography>
+                          {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
+                            <>
+                              <EditIcon onClick={handleEditIconClicked(this, row)} />
+                              <DeleteIcon onClick={handleDeleteIconClicked(this, row)} />
+                            </>
+                          ) : (
+                            <Typography>{row[column.id]}</Typography>
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>

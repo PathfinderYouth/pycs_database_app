@@ -14,6 +14,7 @@ class UIStore {
     { id: 'name', label: 'Name' },
     { id: 'email', label: 'Email' },
     { id: 'role', label: 'Role' },
+    { id: 'action', label: 'Action'},
   ];
 
   viewModes = {
