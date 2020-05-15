@@ -54,18 +54,16 @@ export const ParticipantDetailPage = inject(
         } else {
           return (
             <ParticipantDetailView
-              participant={currentParticipant}
-              collection={collection}
-              currentStep={currentParticipantDetailStep}
-              handleClickChangeMode={() =>
-                setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
-              }
-              handleClickMove={() => console.log('Move clicked')} // placeholder
-              // swap between deleteNew & deletePermanent depending on current collection
-              handleClickDelete={() => console.log('Delete clicked')} // placeholder
-              handleClickApprove={() => console.log('Approve clicked')} // placeholder
-              handleClickDeny={() => console.log('Deny clicked')} // placeholder
-            />
+                participant={currentParticipant}
+                collection={collection}
+                currentStep={currentParticipantDetailStep}
+                handleClickChangeMode={() =>
+                  setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
+                }
+                handleClickChangeView={() => {
+                  setCurrentViewMode(viewModes.PARTICIPANT_LIST)
+                }}
+              /> 
           );
         }
       }

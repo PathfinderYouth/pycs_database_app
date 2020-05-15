@@ -15,7 +15,6 @@ export const ParticipantDetailEdit = ({
   onSuccessfulEdit,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-
   const step = participantDetailSteps[currentStep];
   const {
     currentUser: { email, displayName },

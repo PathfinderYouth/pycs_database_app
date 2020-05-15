@@ -23,6 +23,7 @@ export const ParticipantDetailForm = ({
         <ParticipantDetailPageHeader
           title={`${formTitle} - ${step.stepName}`}
           form={form}
+          participant={initialValues}
           participantDetailViewMode={participantDetailViewMode}
           handleClickOk={handleClickOk}
           handleClickCancel={handleClickCancel}

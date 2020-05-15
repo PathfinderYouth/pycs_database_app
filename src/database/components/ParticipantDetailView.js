@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import NumberFormat from 'react-number-format';
@@ -6,20 +6,25 @@ import { participantDetailSteps } from '../../fields';
 import { masks } from '../../constants';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import './style/ParticipantDetailView.css';
-import { participantDetailViewModes } from '../../constants';
+import { participantDetailViewModes, collectionType } from '../../constants';
+import service from '../../facade/service';
+import { AuthContext } from '../../sign-in';
+import { useSnackbar } from 'notistack';
 
 export const ParticipantDetailView = ({
   participant,
   collection,
   currentStep,
   handleClickChangeMode,
-  handleClickMove,
-  handleClickDelete,
-  handleClickApprove,
-  handleClickDeny,
+  handleClickChangeView,
 }) => {
   const step = participantDetailSteps[currentStep];
   const participantName = `${participant.nameGiven} ${participant.nameLast}`;
+  const {
+    currentUser: { email, displayName },
+  } = useContext(AuthContext);
+  const userID = !!displayName ? displayName : email;
+  const { enqueueSnackbar } = useSnackbar();
 
   const MaskedSIN = ({ sin }) => {
     const maskedSIN = `XXX XXX ${sin.slice(6)} (click to show)`;
@@ -63,10 +68,99 @@ export const ParticipantDetailView = ({
     return <Typography color="textSecondary">{renderedData}</Typography>;
   };
 
+  const handleClickMove = () => {
+    const db = service.getDatabase();
+    db.moveToPermanent(
+      participant,
+      userID,
+      (updatedParticipant) => {
+        enqueueSnackbar('Participant record saved to database.', {
+          variant: 'success',
+        });
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem saving the participant record.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
+  };
+
+  const handleClickDelete = () => {
+    const db = service.getDatabase();
+    const { id: docID } = participant;
+    collection === collectionType.NEW
+      ? db.deleteNew(
+          docID,
+          (success) => {
+            enqueueSnackbar('Submission deleted.');
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem updating the submission.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        )
+      : db.deletePermanent(
+          participant,
+          userID,
+          (success) => {
+            enqueueSnackbar('Participant record removed. Undo?');
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem removing the participant record.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        );
+  };
+
+  const handleClickApprove = () => {
+    const db = service.getDatabase();
+    db.approvePending(
+          participant,
+          userID,
+          (success) => {
+            enqueueSnackbar('Participant approved.', { variant: 'success' });
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem approving the participant.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        )
+  };
+
+  const handleClickDecline = () => {
+    const db = service.getDatabase();
+    db.declinePending(
+          participant,
+          userID,
+          (success) => {
+            enqueueSnackbar('Participant declined.');
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem declining the participant.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        )
+  };
+
   return (
     <ParticipantDetailPageHeader
       title={`Viewing participant record - ${step.stepName}`}
-      participantName={participantName}
+      participant={participant}
       step={step}
       collection={collection}
       participantDetailViewMode={participantDetailViewModes.VIEW}
@@ -74,7 +168,7 @@ export const ParticipantDetailView = ({
       handleClickMove={handleClickMove}
       handleClickDelete={handleClickDelete}
       handleClickApprove={handleClickApprove}
-      handleClickDeny={handleClickDeny}
+      handleClickDecline={handleClickDecline}
     >
       {step.fields.map((field) => {
         const { name, size, detailSize, prettyName } = field;
