@@ -265,8 +265,14 @@ export const statisticsGroups = [
 ];
 
 export const updateStatistics = () => {
+  totalCounts.forEach((item) => (item.count = 0));
+  statisticsGroups.forEach((group) => {
+    group.subcategories.forEach((sub) => {
+      Object.keys(sub.counts).forEach((key) => (sub[key] = 0));
+    });
+  });
   db.getAllPermanentParticipants((participantsList) => {
-    return calculateStats(participantsList);
+    calculateStats(participantsList);
   });
 };
 
