@@ -12,6 +12,7 @@ import {
   TopNavBar,
 } from './components';
 import { AuthContext } from '../sign-in';
+import { viewModes } from '../constants';
 import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
 
@@ -31,7 +32,6 @@ export const Database = inject(
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
     const {
-      viewModes,
       currentViewMode,
       navigationDrawerOpen,
       setNavigationDrawerOpen,

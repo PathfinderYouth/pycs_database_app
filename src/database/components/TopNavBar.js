@@ -6,12 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddIcon from '@material-ui/icons/Add';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import './style/TopNavBar.css';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Tooltip from '@material-ui/core/Tooltip';
 import service from '../../facade/service';
+import './style/TopNavBar.css';
 
 const authService = service.getAuthentication();
 
@@ -43,20 +41,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const TopNavBar = (props) => {
+export const TopNavBar = ({ drawerState, handleDrawerOpen }) => {
   const classes = useStyles();
   const title = 'Pathfinder Youth Centre Society Participant Database';
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleLogoutMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleSignOut = () => {
     authService.signOut();
@@ -66,7 +53,7 @@ export const TopNavBar = (props) => {
     <AppBar
       position="fixed"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: props.drawerState,
+        [classes.appBarShift]: drawerState,
       })}
     >
       <Toolbar>
@@ -75,50 +62,20 @@ export const TopNavBar = (props) => {
           className={classes.menuButton}
           color="inherit"
           aria-label="menu"
-          onClick={props.handleDrawerOpen}
+          onClick={handleDrawerOpen}
         >
           <MenuIcon />
         </IconButton>
+
         <Typography variant="h6" className="title" noWrap>
           {title}
         </Typography>
-        <IconButton
-          aria-label="Add entry"
-          color="inherit"
-          // onClick={} // handle edit dialog
-        >
-          <AddIcon />
-        </IconButton>
 
-        <div>
-          <IconButton
-            aria-label="more options"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleLogoutMenu}
-            color="inherit"
-          >
-            <MoreVertIcon />
+        <Tooltip title="Sign out" aria-label="create" placement="bottom">
+          <IconButton color="inherit" aria-label="log out" onClick={handleSignOut}>
+            <ExitToAppIcon />
           </IconButton>
-
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleSignOut}>Log out</MenuItem>
-          </Menu>
-        </div>
+        </Tooltip>
       </Toolbar>
     </AppBar>
   );
