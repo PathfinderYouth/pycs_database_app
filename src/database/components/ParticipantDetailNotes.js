@@ -11,6 +11,7 @@ import moment from 'moment';
 import { inject, observer } from 'mobx-react';
 import { participantStore } from '../../injectables';
 import { AuthContext } from '../../sign-in';
+import { collectionType } from '../../constants';
 import './style/ParticipantDetailNotes.css';
 import './style/ParticipantDetailPage.css';
 
@@ -18,7 +19,6 @@ export const ParticipantDetailNotes = inject('participantStore')(
   observer(() => {
     const {
       currentParticipant,
-      collectionType,
       setCurrentParticipant,
       collection,
     } = participantStore;
