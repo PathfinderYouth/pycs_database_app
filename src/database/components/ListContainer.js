@@ -9,6 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
@@ -102,6 +105,15 @@ export const ListContainer = inject(
         onChangeRowsPerPage(event.target.value);
       };
 
+      const handleEditIconClicked = (event, row) => {
+        // TODO onClick covert Typography into TextField
+        // TODO handle Edit functionality of user management
+      };
+
+      const handleDeleteIconClicked = (event, row) => {
+        // TODO handle Delete functionlity of user management
+      };
+
       return (
         <div className={`${classes.root} maxWidth`}>
           <Paper className={`${classes.paper} maxWidth`}>
@@ -125,9 +137,24 @@ export const ListContainer = inject(
                     <TableRow hover key={row.id} onClick={() => handleRowClicked(row)}>
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
-                          <div className="list-row">
-                            <Typography>{row[column.id]}</Typography>
-                          </div>
+                          {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
+                            <>
+                              <Tooltip title="Edit user" aria-label="edit" placement="bottom">
+                                <IconButton color="inherit">
+                                  <EditIcon onClick={() => handleEditIconClicked(row)} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete user" aria-label="delete" placement="bottom">
+                                <IconButton color="inherit">
+                                  <DeleteIcon onClick={() => handleDeleteIconClicked(row)} />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          ) : (
+                            <div className="list-row">
+                              <Typography>{row[column.id]}</Typography>
+                            </div>
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>

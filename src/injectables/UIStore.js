@@ -15,6 +15,7 @@ class UIStore {
     { id: 'name', queryId: 'name', label: 'Name' },
     { id: 'email', queryId: 'email', label: 'Email' },
     { id: 'role', queryId: 'role', label: 'Role' },
+    { id: 'action', label: 'Action'},
   ];
 
   participantSearchFilters = [
