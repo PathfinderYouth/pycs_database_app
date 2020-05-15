@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import { participantDetailSteps, initialValues } from '../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import service from '../../facade/service';
+import { participantDetailViewModes } from '../../constants';
 import { AuthContext } from '../../sign-in';
 
 export const ParticipantDetailCreate = ({
@@ -50,6 +51,7 @@ export const ParticipantDetailCreate = ({
     <ParticipantDetailForm
       formTitle='Create participant record'
       initialValues={initialValues}
+      participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}
       handleClickOk={handleClickOk}
       handleClickCancel={handleClickCancel}
