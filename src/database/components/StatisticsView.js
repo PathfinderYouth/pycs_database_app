@@ -157,8 +157,9 @@ export const StatisticsView = inject('participantStore')(
                 )
               ) {
                 setLoaded(false);
-                updateStatistics();
-                readStats();
+                updateStatistics(() => {
+                  readStats();
+                });
               }
             }}
           >
