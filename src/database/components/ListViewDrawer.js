@@ -19,9 +19,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore, uiStore } from '../../injectables';
-import { collectionType } from '../../constants';
+import { collectionType, viewModes } from '../../constants';
 import './style/NavDrawer.css';
 import { StyledListItem } from './StyledListItem';
+import './style/NavDrawer.css';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,7 +40,7 @@ export const ListViewDrawer = inject(
   observer(({ numNew, onParticipantViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
-    const { currentViewMode, setCurrentViewMode, viewModes } = uiStore;
+    const { currentViewMode, setCurrentViewMode } = uiStore;
     const { collection } = participantStore;
 
     const statuses = [

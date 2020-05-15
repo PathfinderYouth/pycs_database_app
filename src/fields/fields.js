@@ -1017,7 +1017,8 @@ export const requiredFields = formSteps.reduce((reqs, step) => {
   return reqs;
 }, []);
 
-export const stepNames = participantDetailSteps.map((step) => step.stepName);
+export const stepNames = formSteps.map((step) => step.stepName);
+export const participantDetailStepNames = participantDetailSteps.map((step) => step.stepName);
 
 export const fieldNames = formSteps.reduce((values, step) => {
   const fields = step.fields;

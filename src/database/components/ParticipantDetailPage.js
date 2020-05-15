@@ -1,12 +1,14 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import { participantDetailSteps } from '../../fields';
-import { ParticipantDetailEditView } from './ParticipantDetailEditView';
+import { ParticipantDetailCreate } from './ParticipantDetailCreate';
+import { ParticipantDetailEdit } from './ParticipantDetailEdit';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
 import { ParticipantDetailView } from './ParticipantDetailView';
 import { inject, observer } from 'mobx-react';
 import { participantStore, uiStore } from '../../injectables';
+import { participantDetailViewModes, viewModes } from '../../constants';
 import './style/ParticipantDetailPage.css';
 
 export const ParticipantDetailPage = inject(
@@ -18,8 +20,8 @@ export const ParticipantDetailPage = inject(
     const {
       currentParticipantDetailStep,
       currentParticipantDetailViewMode,
+      setCurrentViewMode,
       setCurrentParticipantDetailViewMode,
-      participantDetailViewModes,
     } = uiStore;
     const notesStep = participantDetailSteps.length - 2;
     const historyStep = participantDetailSteps.length - 1;
@@ -32,7 +34,7 @@ export const ParticipantDetailPage = inject(
       } else {
         if (currentParticipantDetailViewMode === participantDetailViewModes.EDIT) {
           return (
-            <ParticipantDetailEditView
+            <ParticipantDetailEdit
               participant={currentParticipant}
               collection={collection}
               currentStep={currentParticipantDetailStep}
@@ -40,6 +42,13 @@ export const ParticipantDetailPage = inject(
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW)
               }
               onSuccessfulEdit={setCurrentParticipant}
+            />
+          );
+        } else if (currentParticipantDetailViewMode === participantDetailViewModes.CREATE) {
+          return (
+            <ParticipantDetailCreate
+              currentStep={currentParticipantDetailStep}
+              handleClickChangeMode={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}
             />
           );
         } else {

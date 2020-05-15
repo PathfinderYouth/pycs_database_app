@@ -12,7 +12,8 @@ import {
   TopNavBar,
 } from './components';
 import { AuthContext } from '../sign-in';
-import { participantStore, uiStore, userStore } from '../injectables';
+import { viewModes } from '../constants';
+import { participantStore, userStore, uiStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +32,6 @@ export const Database = inject(
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
     const {
-      viewModes,
       currentViewMode,
       navigationDrawerOpen,
       setNavigationDrawerOpen,

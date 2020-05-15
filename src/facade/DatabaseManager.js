@@ -260,7 +260,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  addPermanent(userName, data, onSuccess, onError) {
+  addPermanent(data, userName, onSuccess, onError) {
     const newHistory = this.getUpdatedHistory(
       userName,
       eventType.CREATED,
