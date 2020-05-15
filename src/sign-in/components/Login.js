@@ -18,8 +18,8 @@ export class LogIn extends Component {
     this.handleLogin = this.handleLogin.bind(this);
     this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
     this.state = {
-      email: 'test@test.com',
-      password: '123123',
+      email: '',
+      password: '',
     };
   }
 
