@@ -1,15 +1,18 @@
-import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-import { stepNames } from '../../fields';
-import { StyledListItem } from './StyledListItem';
 import { inject, observer } from 'mobx-react';
+import { stepNames, participantDetailStepNames } from '../../fields';
+import { StyledListItem } from './StyledListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { uiStore } from '../../injectables';
+import { participantDetailViewModes } from '../../constants';
 
 export const ParticipantTabs = inject('uiStore')(
   observer(({ handleClick }) => {
-    const {
-      currentParticipantDetailStep,
-    } = uiStore;
+    const { currentParticipantDetailStep, currentParticipantDetailViewMode } = uiStore;
+    const steps =
+      currentParticipantDetailViewMode === participantDetailViewModes.CREATE
+        ? stepNames
+        : participantDetailStepNames;
 
     const handleCategoryClick = (clickedCategory) => {
       handleClick(clickedCategory);
@@ -17,7 +20,7 @@ export const ParticipantTabs = inject('uiStore')(
 
     return (
       <>
-        {stepNames.map((tab, index) => {
+        {steps.map((tab, index) => {
           return (
             !!tab && (
               <StyledListItem

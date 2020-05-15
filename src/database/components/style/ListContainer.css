@@ -5,3 +5,7 @@ table {
 .maxWidth {
   width: 100%;
 }
+
+tr {
+  cursor: pointer;
+}

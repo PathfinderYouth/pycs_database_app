@@ -1,18 +1,10 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { STATUS, eventType } from '../constants';
+import { STATUS, eventType, QUERY_FIELDS } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
-
-const QUERY_FIELDS = Object.entries({
-  nameLast: 'nameLastLower',
-  nameGiven: 'nameGivenLower',
-  addressStreet: 'addressStreetLower',
-  addressCity: 'addressCityLower',
-  email: 'emailLower',
-});
 
 export default class DatabaseManager {
   static instance;
@@ -282,7 +274,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  addPermanent(userName, data, onSuccess, onError) {
+  addPermanent(data, userName, onSuccess, onError) {
     const newHistory = this.getUpdatedHistory(
       userName,
       eventType.CREATED,
