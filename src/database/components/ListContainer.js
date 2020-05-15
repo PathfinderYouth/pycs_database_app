@@ -8,6 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
@@ -120,8 +122,20 @@ export const ListContainer = inject('uiStore')(
                         <TableCell key={`${row.id}-${column.id}`}>
                           {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
                             <>
-                              <EditIcon onClick={handleEditIconClicked(this, row)} />
-                              <DeleteIcon onClick={handleDeleteIconClicked(this, row)} />
+                              <Tooltip title="Edit user" aria-label="edit" placement="bottom">
+                                <IconButton
+                                  color="inherit"
+                                >
+                                  <EditIcon onClick={() => handleEditIconClicked(row)} />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete user" aria-label="delete" placement="bottom">
+                                <IconButton
+                                  color="inherit"
+                                >
+                                  <DeleteIcon onClick={() => handleDeleteIconClicked(row)} />
+                                </IconButton>
+                              </Tooltip>
                             </>
                           ) : (
                             <Typography>{row[column.id]}</Typography>
