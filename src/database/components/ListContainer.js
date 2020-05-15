@@ -14,7 +14,6 @@ import { SortingTableHead } from './SortingTableHead';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginBottom: theme.spacing(2),
@@ -68,7 +67,7 @@ export const ListContainer = inject('uiStore')(
       const handleSearchClicked = (searchBy, searchText) => {
         setPage(0);
         onSearchClicked(searchBy, searchText);
-      }
+      };
 
       const handleChangePage = (event, newPage) => {
         if (newPage < page) {

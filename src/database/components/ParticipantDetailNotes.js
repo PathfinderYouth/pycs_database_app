@@ -17,11 +17,7 @@ import './style/ParticipantDetailPage.css';
 
 export const ParticipantDetailNotes = inject('participantStore')(
   observer(() => {
-    const {
-      currentParticipant,
-      setCurrentParticipant,
-      collection,
-    } = participantStore;
+    const { currentParticipant, setCurrentParticipant, collection } = participantStore;
     const { label } = noteField;
     const {
       currentUser: { email: userID },

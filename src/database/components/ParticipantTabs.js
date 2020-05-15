@@ -7,9 +7,7 @@ import { uiStore } from '../../injectables';
 
 export const ParticipantTabs = inject('uiStore')(
   observer(({ handleClick }) => {
-    const {
-      currentParticipantDetailStep,
-    } = uiStore;
+    const { currentParticipantDetailStep } = uiStore;
 
     const handleCategoryClick = (clickedCategory) => {
       handleClick(clickedCategory);

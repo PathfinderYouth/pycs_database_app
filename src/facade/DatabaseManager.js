@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { STATUS, eventType } from '../constants';
+import { eventType, STATUS } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -38,7 +38,7 @@ export default class DatabaseManager {
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
     if (entries.length > 0) {
-      const [ searchBy, searchText ] = entries[0];
+      const [searchBy, searchText] = entries[0];
 
       if (searchText) {
         let lastIndex = searchText.length - 1;
@@ -52,7 +52,7 @@ export default class DatabaseManager {
       }
     }
 
-    const [ orderBy, order ] = Object.entries(sorter)[0];
+    const [orderBy, order] = Object.entries(sorter)[0];
     return ref.orderBy(orderBy, order ? order : 'asc');
   }
 
@@ -519,11 +519,11 @@ export default class DatabaseManager {
    * @param callback
    */
   getAllPermanentParticipants(callback) {
-    let participantsList = [];
     this.permanentRef
       .where('status', 'in', ['Pending', 'Approved', 'Declined'])
       .get()
       .then(function (querySnapshot) {
+        let participantsList = [];
         querySnapshot.forEach(function (doc) {
           participantsList.push(doc.data());
         });
@@ -564,6 +564,16 @@ export default class DatabaseManager {
         onNext(docSnap.data());
       },
       error: onError,
+    });
+  }
+
+  getAllStatistics(callback) {
+    return this.statRef.get().then(function (querySnapshot) {
+      let statistics = {};
+      querySnapshot.forEach(function (doc) {
+        statistics[doc.id] = doc.data();
+      });
+      callback(statistics);
     });
   }
 

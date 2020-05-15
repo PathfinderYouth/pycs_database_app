@@ -62,7 +62,6 @@ export const ListViewDrawer = inject(
               currentViewMode === viewModes.PARTICIPANT_LIST &&
               collection === collectionType.PERMANENT
             }
-
             onClick={() => {
               setCurrentViewMode(viewModes.PARTICIPANT_LIST);
               onParticipantViewChanged(collectionType.PERMANENT, null);
@@ -91,7 +90,6 @@ export const ListViewDrawer = inject(
                   <ListItemIcon>{status.icon}</ListItemIcon>
                   <ListItemText primary={status.name} />
                 </StyledListItem>
-
               ))}
             </List>
           </Collapse>

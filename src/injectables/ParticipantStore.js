@@ -23,10 +23,6 @@ class ParticipantStore {
 
   _participants = [];
 
-  _statisticsGroupCounts = [];
-
-  _totalCounts = [];
-
   _currentParticipant = null;
 
   _collection = collectionType.PERMANENT;
@@ -40,12 +36,6 @@ class ParticipantStore {
   constructor() {
     db.getNumOfNew((doc) => {
       this._statistics = doc;
-    });
-    db.getStatisticsGroups((doc) => {
-      this._statisticsGroupCounts = doc;
-    });
-    db.getTotalCounts((doc) => {
-      this._totalCounts = doc;
     });
   }
 
@@ -156,14 +146,6 @@ class ParticipantStore {
 
   get participants() {
     return this._participants;
-  }
-
-  get statisticsGroupCounts() {
-    return this._statisticsGroupCounts;
-  }
-
-  get totalCounts() {
-    return this._totalCounts;
   }
 
   get collection() {

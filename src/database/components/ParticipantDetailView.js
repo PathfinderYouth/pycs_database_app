@@ -95,53 +95,51 @@ export const ParticipantDetailView = ({
               }
             }}
           >
-            <DeleteIcon 
-            color="error"/>
+            <DeleteIcon color="error" />
           </IconButton>
         </Tooltip>
       </div>
     ) : (
       <div>
-      <Tooltip title="Edit participant record" aria-label="edit">
-        <IconButton onClick={handleClickChangeMode}>
-          <EditIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Approve participant" aria-label="accept">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Approve participant')) {
-              handleClickApprove();
-            }
-          }}
-        >
-          <ThumbUpIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Deny participant" aria-label="accept">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Approve participant')) {
-              handleClickDeny();
-            }
-          }}
-        >
-          <ThumbDownIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete participant record" aria-label="delete">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Delete participant record?')) {
-              handleClickDelete();
-            }
-          }}
-        >
-          <DeleteIcon 
-          color="error"/>
-        </IconButton>
-      </Tooltip>
-    </div>
+        <Tooltip title="Edit participant record" aria-label="edit">
+          <IconButton onClick={handleClickChangeMode}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Approve participant" aria-label="accept">
+          <IconButton
+            onClick={() => {
+              if (window.confirm('Approve participant')) {
+                handleClickApprove();
+              }
+            }}
+          >
+            <ThumbUpIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Deny participant" aria-label="accept">
+          <IconButton
+            onClick={() => {
+              if (window.confirm('Approve participant')) {
+                handleClickDeny();
+              }
+            }}
+          >
+            <ThumbDownIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete participant record" aria-label="delete">
+          <IconButton
+            onClick={() => {
+              if (window.confirm('Delete participant record?')) {
+                handleClickDelete();
+              }
+            }}
+          >
+            <DeleteIcon color="error" />
+          </IconButton>
+        </Tooltip>
+      </div>
     );
   };
 

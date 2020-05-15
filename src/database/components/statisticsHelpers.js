@@ -3,11 +3,11 @@ import moment from 'moment';
 
 const db = service.getDatabase();
 
-export const totalCounts = {
-  id: 'total',
-  label: 'All Participants',
-  counts: { total: 0, mtd: 0, ytd: 0 },
-};
+export const totalCounts = [
+  { id: 'total', label: 'Total Participants', count: 0 },
+  { id: 'mtd', label: 'Month to Date', count: 0 },
+  { id: 'ytd', label: 'Year to Date', count: 0 },
+];
 
 export const statisticsGroups = [
   {
@@ -285,7 +285,6 @@ const writeStats = () => {
 };
 
 const calculateStats = (participantsList) => {
-  const today = moment.utc().format();
   const monthStart = moment().startOf('month');
   const yearStart = moment().startOf('year');
 
@@ -294,16 +293,18 @@ const calculateStats = (participantsList) => {
     let createdYTD = false;
 
     if (participant.hasOwnProperty('createdAt')) {
-      const createdDate = new Date(participant.createdAt.seconds * 1000);
-      if (createdDate >= monthStart) {
-        createdMTD = true;
-        totalCounts.counts.mtd++;
-      }
-      if (createdDate >= yearStart) {
-        createdYTD = true;
-        totalCounts.counts.ytd++;
-      }
-      totalCounts.counts.total++;
+      const createdDate = moment(participant.createdAt);
+      totalCounts.forEach((value) => {
+        if (value.id === 'total') {
+          value.count++;
+        }
+        if (createdDate >= monthStart && value.id === 'mtd') {
+          value.count++;
+        }
+        if (createdDate >= yearStart && value.id === 'ytd') {
+          value.count++;
+        }
+      });
     }
 
     const incrementGroup = (group) => {
@@ -322,7 +323,5 @@ const calculateStats = (participantsList) => {
       }
     });
   });
-  console.log(totalCounts);
-  console.log(statisticsGroups);
   writeStats();
 };

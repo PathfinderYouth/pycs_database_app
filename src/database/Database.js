@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,14 +12,14 @@ import {
   TopNavBar,
 } from './components';
 import { AuthContext } from '../sign-in';
-import { participantStore, userStore, uiStore } from '../injectables';
+import { participantStore, uiStore, userStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(2),
     width: 'calc(100% - 240px)', // full width - size of nav drawer
-  }
+  },
 }));
 
 export const Database = inject(
@@ -122,7 +122,6 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
-
               records: users,
               onRowClicked: setSelectedUser,
               onPrevButtonClicked: goToUserPreviousPage,

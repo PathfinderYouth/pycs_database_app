@@ -24,7 +24,6 @@ class UIStore {
     STATISTICS: 'statistics',
   };
 
-
   participantSearchFilters = [
     { id: 'nameLast', label: 'Last Name' },
     { id: 'nameGiven', label: 'Given Name(s)' },
@@ -44,8 +43,8 @@ class UIStore {
 
   participantDetailViewModes = {
     VIEW: 'view',
-    EDIT: 'edit'
-  }
+    EDIT: 'edit',
+  };
 
   currentViewMode = this.viewModes.PARTICIPANT_LIST;
 
@@ -122,22 +121,22 @@ class UIStore {
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
   };
-  
+
   setCurrentListViewOrder = (order) => {
     if (this.currentViewMode === this.viewModes.STAFF_LIST) {
       this.currentStaffViewOrder = order;
     } else {
       this.currentParticipantViewOrder = order;
     }
-  }
-  
+  };
+
   setCurrentListViewOrderBy = (orderBy) => {
     if (this.currentViewMode === this.viewModes.STAFF_LIST) {
       this.currentStaffViewOrderBy = orderBy;
     } else {
       this.currentParticipantViewOrderBy = orderBy;
     }
-  }
+  };
 }
 
 decorate(UIStore, {

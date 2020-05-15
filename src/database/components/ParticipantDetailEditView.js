@@ -10,7 +10,6 @@ import { useSnackbar } from 'notistack';
 import { FormFieldBuilder, participantDetailSteps } from '../../fields';
 import service from '../../facade/service';
 import { AuthContext } from '../../sign-in';
-import { participantStore } from '../../injectables';
 import { collectionType } from '../../constants';
 
 export const ParticipantDetailEditView = ({
@@ -21,7 +20,7 @@ export const ParticipantDetailEditView = ({
   onSuccessfulEdit,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const step = participantDetailSteps[currentStep];
   const {
     currentUser: { email: userID },
