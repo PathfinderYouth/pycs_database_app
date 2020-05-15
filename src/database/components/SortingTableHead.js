@@ -7,15 +7,15 @@ import './style/SortingTableHead.css';
 
 export const SortingTableHead = (props) => {
   const { order, orderBy, onRequestSort, headerCells } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+  const createSortHandler = (property, queryProperty) => (event) => {
+    onRequestSort(event, property, queryProperty);
   };
 
   return (
     <TableHead>
       <TableRow>
         {headerCells.map((headCell) => {
-          const { id, label } = headCell;
+          const { id, queryId, label } = headCell;
           const isOrderBy = orderBy === id;
           return (
             <TableCell
@@ -27,7 +27,7 @@ export const SortingTableHead = (props) => {
               <TableSortLabel
                 active={isOrderBy}
                 direction={isOrderBy ? order : 'asc'}
-                onClick={createSortHandler(id)}
+                onClick={createSortHandler(id, queryId)}
               >
                 {label}
                 {isOrderBy && (
