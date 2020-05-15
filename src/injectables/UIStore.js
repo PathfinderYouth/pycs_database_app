@@ -1,4 +1,5 @@
 import { action, computed, decorate, observable } from 'mobx';
+import { viewModes, participantDetailViewModes } from '../constants';
 
 class UIStore {
   participantHeaders = [
@@ -17,15 +18,6 @@ class UIStore {
     { id: 'action', label: 'Action'},
   ];
 
-  viewModes = {
-    PARTICIPANT_LIST: 'participantList',
-    PARTICIPANT_DETAIL: 'participantDetail',
-    STAFF_LIST: 'staffList',
-    STAFF_DETAIL: 'staffDetail',
-    STATISTICS: 'statistics',
-  };
-
-
   participantSearchFilters = [
     { id: 'nameLast', label: 'Last Name' },
     { id: 'nameGiven', label: 'Given Name(s)' },
@@ -43,16 +35,11 @@ class UIStore {
     { id: 'role', label: 'Role' },
   ];
 
-  participantDetailViewModes = {
-    VIEW: 'view',
-    EDIT: 'edit'
-  }
-
-  currentViewMode = this.viewModes.PARTICIPANT_LIST;
+  currentViewMode = viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)
 
-  currentParticipantDetailViewMode = this.participantDetailViewModes.VIEW;
+  currentParticipantDetailViewMode = participantDetailViewModes.VIEW;
 
   currentParticipantViewOrder = 'asc';
 
@@ -65,37 +52,37 @@ class UIStore {
   navigationDrawerOpen = false;
 
   get headers() {
-    return this.currentViewMode === this.viewModes.STAFF_LIST
+    return this.currentViewMode === viewModes.STAFF_LIST
       ? this.staffHeaders
       : this.participantHeaders;
   }
 
   get searchFilters() {
-    return this.currentViewMode === this.viewModes.PARTICIPANT_LIST
+    return this.currentViewMode === viewModes.PARTICIPANT_LIST
       ? this.participantSearchFilters
       : this.staffSearchFilters;
   }
 
   get currentDetailViewMode() {
-    return this.currentViewMode === this.viewModes.STAFF_LIST
-      ? this.viewModes.STAFF_DETAIL
-      : this.viewModes.PARTICIPANT_DETAIL;
+    return this.currentViewMode === viewModes.STAFF_LIST
+      ? viewModes.STAFF_DETAIL
+      : viewModes.PARTICIPANT_DETAIL;
   }
 
   get currentListViewMode() {
-    return this.currentViewMode === this.viewModes.STAFF_DETAIL
-      ? this.viewModes.STAFF_LIST
-      : this.viewModes.PARTICIPANT_LIST;
+    return this.currentViewMode === viewModes.STAFF_DETAIL
+      ? viewModes.STAFF_LIST
+      : viewModes.PARTICIPANT_LIST;
   }
 
   get currentListViewOrder() {
-    return this.currentViewMode === this.viewModes.STAFF_LIST
+    return this.currentViewMode === viewModes.STAFF_LIST
       ? this.currentStaffViewOrder
       : this.currentParticipantViewOrder;
   }
 
   get currentListViewOrderBy() {
-    return this.currentViewMode === this.viewModes.STAFF_LIST
+    return this.currentViewMode === viewModes.STAFF_LIST
       ? this.currentStaffViewOrderBy
       : this.currentParticipantViewOrderBy;
   }
@@ -125,7 +112,7 @@ class UIStore {
   };
   
   setCurrentListViewOrder = (order) => {
-    if (this.currentViewMode === this.viewModes.STAFF_LIST) {
+    if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrder = order;
     } else {
       this.currentParticipantViewOrder = order;
@@ -133,7 +120,7 @@ class UIStore {
   }
   
   setCurrentListViewOrderBy = (orderBy) => {
-    if (this.currentViewMode === this.viewModes.STAFF_LIST) {
+    if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrderBy = orderBy;
     } else {
       this.currentParticipantViewOrderBy = orderBy;

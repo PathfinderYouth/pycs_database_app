@@ -8,5 +8,8 @@ export * from './DetailViewDrawer';
 export * from './ListViewDrawer';
 export * from './ParticipantTabs';
 export * from './StatisticsView';
-export * from './ParticipantDetailEditView'
+export * from './ParticipantDetailEdit'
+export * from './ParticipantDetailCreate'
+export * from './ParticipantDetailHistory'
+export * from './ParticipantDetailNotes'
 export * from './ParticipantDetailPage';
