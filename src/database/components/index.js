@@ -9,7 +9,6 @@ export * from './ListViewDrawer';
 export * from './ParticipantTabs';
 export * from './StatisticsView';
 export * from './ParticipantDetailEdit'
-// export * from './ParticipantDetailView'
 export * from './ParticipantDetailCreate'
 export * from './ParticipantDetailHistory'
 export * from './ParticipantDetailNotes'

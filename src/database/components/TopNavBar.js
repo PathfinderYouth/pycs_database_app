@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 import service from '../../facade/service';
 import './style/TopNavBar.css';
@@ -73,7 +73,7 @@ export const TopNavBar = ({ drawerState, handleDrawerOpen }) => {
 
         <Tooltip title="Sign out" aria-label="create" placement="bottom">
           <IconButton color="inherit" aria-label="log out" onClick={handleSignOut}>
-            <MeetingRoomIcon />
+            <ExitToAppIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>
