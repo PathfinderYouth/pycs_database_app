@@ -18,7 +18,8 @@ import './Database.css';
 const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(2),
-  },
+    width: 'calc(100% - 240px)', // full width - size of nav drawer
+  }
 }));
 
 export const Database = inject(
