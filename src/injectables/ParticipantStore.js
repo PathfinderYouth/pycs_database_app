@@ -9,7 +9,6 @@ const checkEqual = (obj1, obj2) => {
 };
 
 class ParticipantStore {
-
   documentType = {
     ADDED: 'added',
     MODIFIED: 'modified',
@@ -24,7 +23,7 @@ class ParticipantStore {
 
   _participants = [];
 
-  _statisticsGroups = [];
+  _statisticsGroupCounts = [];
 
   _totalCounts = [];
 
@@ -43,7 +42,7 @@ class ParticipantStore {
       this._statistics = doc;
     });
     db.getStatisticsGroups((doc) => {
-      this._statisticsGroups = doc;
+      this._statisticsGroupCounts = doc;
     });
     db.getTotalCounts((doc) => {
       this._totalCounts = doc;
@@ -159,8 +158,8 @@ class ParticipantStore {
     return this._participants;
   }
 
-  get statisticsGroups() {
-    return this._statisticsGroups;
+  get statisticsGroupCounts() {
+    return this._statisticsGroupCounts;
   }
 
   get totalCounts() {
@@ -186,8 +185,8 @@ class ParticipantStore {
   }
 
   get statisticsCounts() {
-    if (this._statisticsGroups) {
-      return this._statisticsGroups;
+    if (this._statisticsGroupCounts) {
+      return this._statisticsGroupCounts;
     }
     return null;
   }

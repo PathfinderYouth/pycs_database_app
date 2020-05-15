@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-import { updateStatistics } from './statisticsHelpers';
+import { updateStatistics, statisticsGroups } from './statisticsHelpers';
 import Button from '@material-ui/core/Button';
 import { participantStore } from '../../injectables';
 
@@ -19,23 +19,23 @@ const percent = (amount, total) => {
 export const StatisticsView = inject('participantStore')(
   observer(() => {
     const [currentGroup, setCurrentGroup] = useState('');
-    const { totalCounts, statisticsGroups } = participantStore;
+    const { totalCounts, statisticsGroupCounts } = participantStore;
 
     console.log(totalCounts);
-    console.log(statisticsGroups);
+    console.log(statisticsGroupCounts);
 
     const topRow = [
       {
         cardName: 'totalParticipants',
-        contents: [{ label: 'Total Participants', number: 0 }],
+        contents: [{ label: 'Total Participants', number: totalCounts.counts.total }],
       },
       {
         cardName: 'mtdParticipants',
-        contents: [{ label: 'Month to Date', number: 0 }],
+        contents: [{ label: 'Month to Date', number: totalCounts.counts.mtd }],
       },
       {
         cardName: 'ytdParticipants',
-        contents: [{ label: 'Year to Date', number: 0 }],
+        contents: [{ label: 'Year to Date', number: totalCounts.counts.ytd }],
       },
     ];
 
@@ -61,16 +61,16 @@ export const StatisticsView = inject('participantStore')(
           </Grid>
         ))}
         <Grid item xs={12}>
-          {/*<FormControl className="statisticsDropdown">*/}
-          {/*  <InputLabel>Select demographic</InputLabel>*/}
-          {/*  <Select defaultValue={currentGroup} onChange={onDropdownChange}>*/}
-          {/*    {statisticsGroups.map((group) => (*/}
-          {/*      <MenuItem value={group.id} key={group.id}>*/}
-          {/*        {group.label}*/}
-          {/*      </MenuItem>*/}
-          {/*    ))}*/}
-          {/*  </Select>*/}
-          {/*</FormControl>*/}
+          <FormControl className="statisticsDropdown">
+            <InputLabel>Select demographic</InputLabel>
+            <Select defaultValue={currentGroup} onChange={onDropdownChange}>
+              {statisticsGroups.map((group) => (
+                <MenuItem value={group.id} key={group.id}>
+                  {group.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Button onClick={updateStatistics}>Push me!</Button>
       </Grid>
