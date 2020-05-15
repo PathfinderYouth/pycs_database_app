@@ -4,7 +4,6 @@ import { FormTextField } from './FormTextField';
 import { FormRadioGroup } from './FormRadioGroup';
 import { FormCheckList } from './FormCheckList';
 import { FormSelect } from './FormSelect';
-import { FormNotesField } from './FormNotesField';
 
 const isFieldDisabled = (field, values, name) => {
   const { dependsOnOtherField } = field;

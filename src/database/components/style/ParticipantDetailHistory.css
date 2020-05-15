@@ -1,0 +1,18 @@
+.participant-detail-history-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.participant-detail-history-table {
+  width: 100%;
+}
+
+.participant-detail-history-container {
+  width: 100%;
+  padding: 1em 0;
+}
+
+.participant-detail-history-table {
+  width: 100%;
+  padding: 0 1em;
+}
