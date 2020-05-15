@@ -29,7 +29,7 @@ export default class DatabaseManager {
     this.db = firebase.firestore();
     this.permanentRef = this.db.collection('permanent');
     this.newRef = this.db.collection('new');
-    this.statRef = this.db.collection('statistics').doc('participant');
+    this.statRef = this.db.collection('statistics');
   }
 
   /**
@@ -153,7 +153,7 @@ export default class DatabaseManager {
     let docRef = this.newRef.doc();
     let batch = this.db.batch();
     batch.set(docRef, document);
-    batch.update(this.statRef, { numOfNew: FieldValue.increment(1) });
+    batch.update(this.statRef.doc('participant'), { numOfNew: FieldValue.increment(1) });
     batch
       .commit()
       .then(() => {
@@ -247,7 +247,7 @@ export default class DatabaseManager {
     let batch = this.db.batch();
 
     batch.delete(docRef);
-    batch.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
+    batch.update(this.statRef.doc('participant'), { numOfNew: FieldValue.increment(-1) });
     batch.commit().then(onSuccess).catch(onError);
   }
 
@@ -540,12 +540,41 @@ export default class DatabaseManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getStatistics(onNext, onError) {
-    return this.statRef.onSnapshot({
+  getNumOfNew(onNext, onError) {
+    return this.statRef.doc('participant').onSnapshot({
       next: (docSnap) => {
         onNext(docSnap.data());
       },
       error: onError,
     });
+  }
+
+  getStatisticsGroups(onNext, onError) {
+    return this.statRef.doc('statsCount').onSnapshot({
+      next: (docSnap) => {
+        onNext(docSnap.data());
+      },
+      error: onError,
+    });
+  }
+
+  getTotalCounts(onNext, onError) {
+    return this.statRef.doc('totalCounts').onSnapshot({
+      next: (docSnap) => {
+        onNext(docSnap.data());
+      },
+      error: onError,
+    });
+  }
+
+  addStatsCounts(totalCounts, statisticsGroups, onSuccess, onError) {
+    const batch = this.db.batch();
+    batch.set(this.statRef.doc('totalCounts'), { ...totalCounts });
+    batch.set(this.statRef.doc('statisticsGroups'), {
+      ...statisticsGroups,
+      createdAt: moment.utc().format(),
+    });
+
+    batch.commit().then(onSuccess(statisticsGroups)).catch(onError);
   }
 }

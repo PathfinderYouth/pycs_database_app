@@ -1,4 +1,7 @@
-import participantStore from '../../injectables/ParticipantStore';
+import service from '../../facade/service';
+import moment from 'moment';
+
+const db = service.getDatabase();
 
 export const totalCounts = {
   id: 'total',
@@ -66,7 +69,7 @@ export const statisticsGroups = [
     label: 'Disability',
     subcategories: [
       {
-        id: 'personWithDisablity',
+        id: 'personWithDisability',
         label: 'Disability',
         dbLabel: 'Yes',
         counts: { total: 0, mtd: 0, ytd: 0 },
@@ -262,15 +265,29 @@ export const statisticsGroups = [
 ];
 
 export const updateStatistics = () => {
-  participantStore.getAllParticipants((participantsList) => {
+  db.getAllPermanentParticipants((participantsList) => {
+    console.log(participantsList);
     return calculateStats(participantsList);
   });
 };
 
+const writeStats = () => {
+  db.addStatsCounts(
+    totalCounts,
+    statisticsGroups,
+    () => {
+      console.log('success!');
+    },
+    () => {
+      console.log('failed');
+    },
+  );
+};
+
 const calculateStats = (participantsList) => {
-  const today = new Date();
-  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0, 0);
-  const yearStart = new Date(today.getFullYear(), 0, 1, 0, 0, 0, 0);
+  const today = moment.utc().format();
+  const monthStart = moment().startOf('month');
+  const yearStart = moment().startOf('year');
 
   participantsList.forEach((participant) => {
     let createdMTD = false;
@@ -304,140 +321,8 @@ const calculateStats = (participantsList) => {
         });
       }
     });
-    //
-    //   if (participant.hasOwnProperty('gender')) {
-    //     switch (participant.gender) {
-    //       case 'Male':
-    //         incrementGroup(counts.gender.male);
-    //         break;
-    //       case 'Female':
-    //         incrementGroup(counts.gender.female);
-    //         break;
-    //       case 'Other':
-    //         incrementGroup(counts.gender.other);
-    //         break;
-    //       default:
-    //       //do nothing
-    //     }
-    //     if (
-    //       participant.hasOwnProperty('housingSituation') &&
-    //       (participant.housingSituation === 'Couch-surfing' ||
-    //         participant.housingSituation === 'Homeless')
-    //     ) {
-    //       incrementGroup(counts.homelessness);
-    //     }
-    //     if (
-    //       participant.hasOwnProperty('hasMentalHealthIssues') &&
-    //       participant.hasMentalHealthIssues === 'Yes'
-    //     ) {
-    //       incrementGroup(counts.mentalHealth);
-    //     }
-    //     if (
-    //       participant.hasOwnProperty('personWithDisability') &&
-    //       participant.personWithDisability === 'Yes'
-    //     ) {
-    //       incrementGroup(counts.personWithDisability);
-    //     }
-    //     if (
-    //       participant.hasOwnProperty('memberOfVisibleMinority') &&
-    //       participant.memberOfVisibleMinority === 'Yes'
-    //     ) {
-    //       incrementGroup(counts.memberOfVisibleMinority);
-    //     }
-    //     if (participant.hasOwnProperty('indigenousGroup')) {
-    //       switch (participant.indigenousGroup) {
-    //         case 'Registered on-reserve':
-    //           incrementGroup(counts.indigenousGroup.onReserve);
-    //           break;
-    //         case 'Registered off-reserve':
-    //           incrementGroup(counts.indigenousGroup.offReserve);
-    //           break;
-    //         case 'Non status':
-    //           incrementGroup(counts.indigenousGroup.nonStatus);
-    //           break;
-    //         case 'Métis':
-    //           incrementGroup(counts.indigenousGroup.metis);
-    //           break;
-    //         case 'Inuit':
-    //           incrementGroup(counts.indigenousGroup.inuit);
-    //           break;
-    //         default:
-    //         //do nothing
-    //       }
-    //     }
-    //     if (participant.hasOwnProperty('newImmigrant') && participant.newImmigrant === 'Yes') {
-    //       incrementGroup(counts.newImmigrant);
-    //     }
-    //     if (participant.hasOwnProperty('levelOfEducation')) {
-    //       switch (participant.levelOfEducation) {
-    //         case 'Elementary':
-    //           incrementGroup(counts.levelOfEducation.elementary);
-    //           break;
-    //         case 'Secondary incomplete':
-    //           incrementGroup(counts.levelOfEducation.secondaryIncomplete);
-    //           break;
-    //         case 'Secondary completed':
-    //           incrementGroup(counts.levelOfEducation.secondaryComplete);
-    //           break;
-    //         case 'Post-secondary incomplete (college, CEGEP, etc.)':
-    //           incrementGroup(counts.levelOfEducation.psIncomplete);
-    //           break;
-    //         case 'Post-secondary completed':
-    //           incrementGroup(counts.levelOfEducation.psComplete);
-    //           break;
-    //         case 'University incomplete (1 or more years)':
-    //           incrementGroup(counts.levelOfEducation.universityIncomplete);
-    //           break;
-    //         case 'University degree':
-    //           incrementGroup(counts.levelOfEducation.universityDegree);
-    //           break;
-    //         default:
-    //         //do nothing
-    //       }
-    //     }
-    //     if (participant.hasOwnProperty('learnedAboutPathfinder')) {
-    //       switch (participant.learnedAboutPathfinder) {
-    //         case 'Family and/or friends':
-    //           incrementGroup(counts.learnedAboutPathfinder.familyFriends);
-    //           break;
-    //         case 'Teacher/counselor':
-    //           incrementGroup(counts.learnedAboutPathfinder.teacherCounselor);
-    //           break;
-    //         case 'Our poster':
-    //           incrementGroup(counts.learnedAboutPathfinder.poster);
-    //           break;
-    //         case 'Probation officer':
-    //           incrementGroup(counts.learnedAboutPathfinder.probationOfficer);
-    //           break;
-    //         case 'Social worker':
-    //           incrementGroup(counts.learnedAboutPathfinder.socialWorker);
-    //           break;
-    //         case 'Government agency':
-    //           incrementGroup(counts.learnedAboutPathfinder.governmentAgency);
-    //           break;
-    //         case 'Employment office':
-    //           incrementGroup(counts.learnedAboutPathfinder.employmentOffice);
-    //           break;
-    //         case 'Case manager':
-    //           incrementGroup(counts.learnedAboutPathfinder.caseManager);
-    //           break;
-    //         case 'Website':
-    //           incrementGroup(counts.learnedAboutPathfinder.website);
-    //           break;
-    //         case 'Community agency':
-    //           incrementGroup(counts.learnedAboutPathfinder.communityAgency);
-    //           break;
-    //         case 'Drug counselor':
-    //           incrementGroup(counts.learnedAboutPathfinder.drugCounselor);
-    //           break;
-    //         case 'Other':
-    //           incrementGroup(counts.learnedAboutPathfinder.other);
-    //           break;
-    //       }
-    //     }
-    //   }
   });
   console.log(totalCounts);
   console.log(statisticsGroups);
-  // return counts;
+  writeStats();
 };

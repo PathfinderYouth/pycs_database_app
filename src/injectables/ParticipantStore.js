@@ -24,6 +24,10 @@ class ParticipantStore {
 
   _participants = [];
 
+  _statisticsGroups = [];
+
+  _totalCounts = [];
+
   _currentParticipant = null;
 
   _collection = collectionType.PERMANENT;
@@ -35,8 +39,14 @@ class ParticipantStore {
   _statistics = null;
 
   constructor() {
-    db.getStatistics((doc) => {
+    db.getNumOfNew((doc) => {
       this._statistics = doc;
+    });
+    db.getStatisticsGroups((doc) => {
+      this._statisticsGroups = doc;
+    });
+    db.getTotalCounts((doc) => {
+      this._totalCounts = doc;
     });
   }
 
@@ -111,12 +121,6 @@ class ParticipantStore {
     { delay: 500 },
   );
 
-  getAllParticipants = (callback) => {
-    db.getAllPermanentParticipants((participantsList) => {
-      callback(participantsList);
-    });
-  };
-
   setCurrentParticipant = (participant) => {
     this._currentParticipant = participant;
   };
@@ -155,6 +159,14 @@ class ParticipantStore {
     return this._participants;
   }
 
+  get statisticsGroups() {
+    return this._statisticsGroups;
+  }
+
+  get totalCounts() {
+    return this._totalCounts;
+  }
+
   get collection() {
     return this._collection;
   }
@@ -171,6 +183,13 @@ class ParticipantStore {
       return this._statistics.numOfNew;
     }
     return 0;
+  }
+
+  get statisticsCounts() {
+    if (this._statisticsGroups) {
+      return this._statisticsGroups;
+    }
+    return null;
   }
 
   get isLastPage() {
