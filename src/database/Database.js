@@ -28,7 +28,14 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
-    const { viewModes, currentViewMode, navigationDrawerOpen, setNavigationDrawerOpen } = uiStore;
+    const {
+      viewModes,
+      currentViewMode,
+      navigationDrawerOpen,
+      setNavigationDrawerOpen,
+      currentParticipantListOrder,
+      currentParticipantListOrderBy,
+    } = uiStore;
     const {
       participants,
       numOfNewParticipants,
@@ -46,7 +53,21 @@ export const Database = inject(
       setCurrentStatus(status);
       setCollection(collection);
       setFilter({ status: status });
-      setSorter({ nameLast: 'asc' });
+
+      let sorter = {};
+      sorter[currentParticipantListOrderBy] = currentParticipantListOrder;
+      setSorter(sorter);
+    };
+
+    const handleOrderChanged = (orderBy, order) => {
+      let sorter = {};
+      sorter[orderBy] = order;
+
+      if (currentViewMode === viewModes.STAFF_LIST) {
+        // TODO: update UserStore's sorter
+      } else {
+        setSorter(sorter);
+      }
     };
 
     const handleSearchClicked = (searchBy, searchText) => {
@@ -92,6 +113,7 @@ export const Database = inject(
               records: [], // TODO: get user list from user store
               // TODO: set other properties like the one for participant
               onRowClicked: (clickedRow) => console.log('Opening staff record'),
+              onOrderChanged: handleOrderChanged,
               onSearchClicked: handleSearchClicked,
             }
           : {
@@ -101,6 +123,7 @@ export const Database = inject(
               onNextButtonClicked: goToNextPage,
               nextButtonDisabled: isLastPage,
               onChangeRowsPerPage: setLimit,
+              onOrderChanged: handleOrderChanged,
               onSearchClicked: handleSearchClicked,
             };
 

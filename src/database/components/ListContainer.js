@@ -11,7 +11,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { getComparator, stableSort } from './sortingHelpers';
 import { uiStore } from '../../injectables';
 import './style/ListContainer.css';
 
@@ -31,11 +30,10 @@ export const ListContainer = inject('uiStore')(
       onNextButtonClicked,
       nextButtonDisabled,
       onChangeRowsPerPage,
+      onOrderChanged,
       onSearchClicked,
     }) => {
       const classes = useStyles();
-      const [order, setOrder] = useState('asc');
-      const [orderBy, setOrderBy] = useState('lastName');
       const [page, setPage] = useState(0);
       const [rowsPerPage, setRowsPerPage] = useState(20);
       const {
@@ -44,6 +42,10 @@ export const ListContainer = inject('uiStore')(
         currentDetailViewMode,
         currentViewMode,
         viewModes,
+        currentListViewOrder,
+        currentListViewOrderBy,
+        setCurrentListViewOrder,
+        setCurrentListViewOrderBy,
       } = uiStore;
 
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
@@ -54,10 +56,19 @@ export const ListContainer = inject('uiStore')(
       };
 
       const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
+        setPage(0);
+
+        const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
+        const order = isAsc ? 'desc' : 'asc';
+        setCurrentListViewOrder(order);
+        setCurrentListViewOrderBy(property);
+        onOrderChanged(property, order);
       };
+
+      const handleSearchClicked = (searchBy, searchText) => {
+        setPage(0);
+        onSearchClicked(searchBy, searchText);
+      }
 
       const handleChangePage = (event, newPage) => {
         if (newPage < page) {
@@ -80,14 +91,14 @@ export const ListContainer = inject('uiStore')(
             <RecordSearchBar
               title={pageTitle}
               headers={headers}
-              onSearchClicked={onSearchClicked}
+              onSearchClicked={handleSearchClicked}
             />
             <TableContainer>
               <Table className={classes.table} size="medium">
                 <SortingTableHead
                   classes={classes}
-                  order={order}
-                  orderBy={orderBy}
+                  order={currentListViewOrder}
+                  orderBy={currentListViewOrderBy}
                   onRequestSort={handleRequestSort}
                   rowCount={records.length}
                   headerCells={headers}

@@ -1,6 +1,6 @@
 export default class Controller {
-  constructor(ref, filter, sorter, limit, onChildNext, onError) {
-    this._query = this._buildQuery(ref, filter, sorter);
+  constructor(query, limit, onChildNext, onError) {
+    this._query = query;
 
     this._checkPoints = [];
     this._limit = limit;
@@ -27,37 +27,6 @@ export default class Controller {
     this._unsubContent = this._query.limit(limit).onSnapshot(this._observer);
 
     this.endId = null;
-  }
-
-  _buildQuery(ref, filter, sorter) {
-    if (!filter) {
-      // Default filter: none
-      filter = {};
-    }
-
-    const { status, ...temp } = filter;
-    if (status) {
-      ref = ref.where('status', '==', status);
-    } else {
-      ref = ref.where('status', 'in', ['Pending', 'Approved', 'Declined']);
-    }
-
-    for (const field in temp) {
-      if (temp[field]) {
-        // TODO: startsWith
-        ref = ref.where(field, '==', temp[field]);
-      }
-    }
-
-    if (!sorter || Object.keys(sorter).length === 0) {
-      // Default sorter: createdAt
-      sorter = { createdAt: 'asc' };
-    }
-
-    for (const field in sorter) {
-      ref = ref.orderBy(field, sorter[field] ? sorter[field] : undefined);
-    }
-    return ref;
   }
 
   _subscribeToEnd() {
