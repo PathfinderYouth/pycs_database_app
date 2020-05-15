@@ -23,6 +23,12 @@ export class LogIn extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.authService.getCurrentUser()) {
+      navigate('/database');
+    }
+  }
+
   /**
    * handles log in event
    * @param {event: onSubmit event}
