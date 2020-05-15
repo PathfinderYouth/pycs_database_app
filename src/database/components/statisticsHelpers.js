@@ -268,7 +268,9 @@ export const updateStatistics = (callback) => {
   totalCounts.forEach((item) => (item.count = 0));
   statisticsGroups.forEach((group) => {
     group.subcategories.forEach((sub) => {
-      Object.keys(sub.counts).forEach((key) => (sub[key] = 0));
+      Object.keys(sub.counts).forEach((key) => {
+        sub.counts[key] = 0;
+      });
     });
   });
   db.getAllPermanentParticipants((participantsList) => {
