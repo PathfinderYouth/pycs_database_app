@@ -23,14 +23,14 @@ const StaffSearchSelect = ({ handleChange }) => {
   return (
     <Select
       className="formControl"
-      defaultValue={options[0].id}
+      defaultValue={options[0].queryId}
       onChange={handleChange}
       disableUnderline
     >
       {options.map((option) => {
-        const { id, label } = option;
+        const { id, queryId, label } = option;
         return (
-          <MenuItem value={id} key={id}>
+          <MenuItem value={queryId} key={id}>
             {label}
           </MenuItem>
         );
@@ -44,14 +44,14 @@ const ParticipantSearchSelect = ({ handleChange }) => {
   return (
     <Select
       className="formControl"
-      defaultValue={options[0].id}
+      defaultValue={options[0].queryId}
       onChange={handleChange}
       disableUnderline
     >
       {options.map((option) => {
-        const { id, label } = option;
+        const { id, queryId, label } = option;
         return (
-          <MenuItem value={id} key={id}>
+          <MenuItem value={queryId} key={id}>
             {label}
           </MenuItem>
         );
@@ -62,16 +62,11 @@ const ParticipantSearchSelect = ({ handleChange }) => {
 
 export const RecordSearchBar = inject('uiStore')(
   observer((props) => {
-    const { currentViewMode } = uiStore;
+    const { currentViewMode, participantSearchFilters } = uiStore;
     const classes = useStyles();
     const { title, headers, onSearchClicked } = props;
-    const [searchBy, setSearchBy] = useState(headers[0].id);
+    const [searchBy, setSearchBy] = useState(participantSearchFilters[0].queryId);
     const [searchText, setSearchText] = useState('');
-
-    //Updates current search by field when view is changed
-    useEffect(() => {
-      setSearchBy(headers[0].id);
-    }, [headers, currentViewMode]);
 
     const handleChange = (event) => {
       setSearchBy(event.target.value);
@@ -88,7 +83,7 @@ export const RecordSearchBar = inject('uiStore')(
     };
 
     const onSubmit = () => {
-      onSearchClicked(searchBy, searchText);
+      onSearchClicked(searchBy, searchText.toLowerCase());
     };
 
     return (

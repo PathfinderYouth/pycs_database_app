@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { STATUS, eventType } from '../constants';
+import { STATUS, eventType, QUERY_FIELDS } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -54,6 +54,12 @@ export default class DatabaseManager {
 
     const [ orderBy, order ] = Object.entries(sorter)[0];
     return ref.orderBy(orderBy, order ? order : 'asc');
+  }
+
+  _updateCaseInsensitiveFields(data) {
+    for (const [id, queryId] of QUERY_FIELDS) {
+      data[queryId] = data[id] ? data[id].toLowerCase() : '';
+    }
   }
 
   /**
@@ -149,6 +155,7 @@ export default class DatabaseManager {
       createdAt: moment.utc().format(),
       history: newHistory,
     };
+    this._updateCaseInsensitiveFields(document);
 
     let docRef = this.newRef.doc();
     let batch = this.db.batch();
@@ -214,8 +221,15 @@ export default class DatabaseManager {
     // make a copy of the participant object to strip out id
     let document = participant;
     delete document.id;
+    this._updateCaseInsensitiveFields(document);
 
-    ref.doc(docId).update(document).then(onSuccess(participant)).catch(onError);
+    ref.doc(docId).update(document)
+      .then(() => {
+        if (onSuccess) {
+          onSuccess(participant);
+        }
+      })
+      .catch(onError);
   }
 
   /**
@@ -273,6 +287,7 @@ export default class DatabaseManager {
       createdAt: moment.utc().format(),
       history: newHistory,
     };
+    this._updateCaseInsensitiveFields(document);
 
     this.permanentRef
       .add(document)
@@ -398,8 +413,9 @@ export default class DatabaseManager {
         doc.status = STATUS.pending;
         doc.history = updatedHistory;
 
-        transaction.set(newDocRef, document);
+        transaction.set(newDocRef, doc);
         transaction.delete(oldDocRef);
+        transaction.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
       });
     };
 

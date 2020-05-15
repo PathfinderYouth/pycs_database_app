@@ -76,13 +76,13 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
       };
 
-      const handleRequestSort = (event, property) => {
+      const handleRequestSort = (event, property, queryProperty) => {
         setPage(0);
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
         const order = isAsc ? 'desc' : 'asc';
         setCurrentListViewOrder(order);
         setCurrentListViewOrderBy(property);
-        onOrderChanged(property, order);
+        onOrderChanged(queryProperty, order);
       };
 
       const handleSearchClicked = (searchBy, searchText) => {
