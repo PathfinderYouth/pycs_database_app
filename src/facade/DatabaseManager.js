@@ -222,7 +222,7 @@ export default class DatabaseManager {
     let document = { ...participant };
     delete document.id;
     this._updateCaseInsensitiveFields(document);
-    
+
     ref
       .doc(docId)
       .update(document)
@@ -347,16 +347,21 @@ export default class DatabaseManager {
     const updatedHistory = this.getUpdatedHistory(
       userName,
       eventType.DELETED,
-      'Participant record deleted',
+      'Participant record archived',
       oldHistory,
     );
+
     let document = {
       status: STATUS.deleted,
       prevStatus: status,
       history: updatedHistory,
     };
 
-    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
+    this.permanentRef
+      .doc(docId)
+      .update(document)
+      .then(onSuccess({ ...data, ...document }))
+      .catch(onError);
   }
 
   /**

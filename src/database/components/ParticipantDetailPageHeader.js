@@ -90,10 +90,10 @@ export const ParticipantDetailPageHeader = ({
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="Delete participant record" aria-label="delete">
+          <Tooltip title="Archive participant record" aria-label="archive">
             <IconButton
               onClick={() => {
-                if (window.confirm('Delete participant record?')) {
+                if (window.confirm('Archive participant record?')) {
                   handleClickDelete();
                 }
               }}
