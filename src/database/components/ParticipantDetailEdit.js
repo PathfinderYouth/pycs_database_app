@@ -4,7 +4,8 @@ import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import service from '../../facade/service';
 import { AuthContext } from '../../sign-in';
-import { collectionType } from '../../constants';
+import { collectionType, participantDetailViewModes } from '../../constants';
+import './style/ParticipantDetailPage.css';
 
 export const ParticipantDetailEdit = ({
   participant,
@@ -14,11 +15,11 @@ export const ParticipantDetailEdit = ({
   onSuccessfulEdit,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-
   const step = participantDetailSteps[currentStep];
   const {
-    currentUser: { email: userID },
+    currentUser: { email, displayName },
   } = useContext(AuthContext);
+  const userID = !!displayName ? displayName : email;
 
   const handleClickOk = () => {
     return window.confirm('Confirm changes?');
@@ -75,11 +76,11 @@ export const ParticipantDetailEdit = ({
 
   return (
     <ParticipantDetailForm
-    formTitle='Edit participant details'
+      formTitle='Edit participant details'
       initialValues={participant}
+      participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}
-      handleClickOk={handleClickOk}
-      handleClickCancel={handleClickCancel}
+      handleClickChangeMode={handleClickChangeMode}
       step={step}
     />
   );

@@ -204,7 +204,7 @@ export default class DatabaseManager {
     const updatedFields = this.getUpdatedFields(oldData, newData);
     const updatedHistory =
       updatedFields === 'notes'
-        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added')
+        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added', oldHistory)
         : this.getUpdatedHistory(
             userName,
             eventType.UPDATED,
@@ -219,10 +219,10 @@ export default class DatabaseManager {
     };
 
     // make a copy of the participant object to strip out id
-    let document = participant;
+    let document = { ...participant };
     delete document.id;
     this._updateCaseInsensitiveFields(document);
-
+    
     ref
       .doc(docId)
       .update(document)
@@ -399,12 +399,12 @@ export default class DatabaseManager {
     const updatedHistory = this.getUpdatedHistory(
       userName,
       eventType.MOVED,
-      'Participant record moved to permanent collection',
+      'Participant record saved to database',
       oldHistory,
     );
 
     let oldDocRef = this.newRef.doc(docId);
-    let newDocRef = this.permanentRef.doc(); // put docId in to keep same ID
+    let newDocRef = this.permanentRef.doc(docId); // put docId in to keep same ID
     let updateFunction = (transaction) => {
       return transaction.get(oldDocRef).then((docSnap) => {
         let doc = docSnap.data();
