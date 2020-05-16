@@ -36,6 +36,12 @@ export default class UserListManager {
    *  Callback function when fail
    */
   addUser(user, onSuccess, onError) {
+    user = {
+      ...user,
+      nameLower: user.name.toLowerCase(),
+      emailLower: user.email.toLowerCase(),
+    }
+
     this.userRef
       .add(user)
       .then((docRef) => {
@@ -86,6 +92,8 @@ export default class UserListManager {
    *  Callback function when fail
    */
   updateUser(docId, data, onSuccess, onError) {
+    data.nameLower = data.name ? data.name.toLowerCase() : '';
+    data.emailLower = data.email ? data.email.toLowerCase() : '';
     this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
   }
 
@@ -102,7 +110,7 @@ export default class UserListManager {
    */
   updateFirstTimeUser(email, uid, onSuccess, onError) {
     this.userRef
-      .where('email', '==', email)
+      .where('emailLower', '==', email.toLowerCase())
       .get()
       .then((querySnap) => {
         if (querySnap.docs.length === 0) {

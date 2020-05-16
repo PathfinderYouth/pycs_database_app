@@ -16,7 +16,7 @@ class UserStore {
 
   _filter = {};
 
-  _sorter = { name: 'asc' };
+  _sorter = { nameLower: 'asc' };
 
   _users = [];
 

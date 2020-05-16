@@ -12,8 +12,8 @@ class UIStore {
   ];
 
   staffHeaders = [
-    { id: 'name', queryId: 'name', label: 'Name', sortable: true },
-    { id: 'email', queryId: 'email', label: 'Email', sortable: true },
+    { id: 'name', queryId: 'nameLower', label: 'Name', sortable: true },
+    { id: 'email', queryId: 'emailLower', label: 'Email', sortable: true },
     { id: 'role', queryId: 'role', label: 'Role', sortable: true },
     { id: 'action', label: 'Action', sortable: false },
   ];
@@ -30,8 +30,8 @@ class UIStore {
   ];
 
   staffSearchFilters = [
-    { id: 'name', queryId: 'name', label: 'Name' },
-    { id: 'email', queryId: 'email', label: 'Email' },
+    { id: 'name', queryId: 'nameLower', label: 'Name' },
+    { id: 'email', queryId: 'emailLower', label: 'Email' },
     { id: 'role', queryId: 'role', label: 'Role' },
   ];
 
