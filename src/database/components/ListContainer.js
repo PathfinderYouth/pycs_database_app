@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -114,6 +115,17 @@ export const ListContainer = inject(
         // TODO handle Delete functionlity of user management
       };
 
+      const ListRow = ({ data, columnName }) => {
+        const isDate = ['birthDate', 'createdAt'].includes(columnName);
+        return (
+          <div className="list-row">
+            <Typography variant="body2">
+              {isDate ? moment(data).format('MMM D, YYYY') : data}
+            </Typography>
+          </div>
+        );
+      };
+
       return (
         <div className={`${classes.root} maxWidth`}>
           <Paper className={`${classes.paper} maxWidth`}>
@@ -150,9 +162,7 @@ export const ListContainer = inject(
                               </Tooltip>
                             </>
                           ) : (
-                            <div className="list-row">
-                              <Typography>{row[column.id]}</Typography>
-                            </div>
+                            <ListRow data={row[column.id]} columnName={column.id}/>
                           )}
                         </TableCell>
                       ))}
