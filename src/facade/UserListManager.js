@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+import Controller from './Controller';
 
 export default class UserListManager {
   static instance;
@@ -132,36 +133,36 @@ export default class UserListManager {
    *  Object containing fields and values for filtering
    * @param {sorter: Object}
    *  Object containing fields and orders for sorting
+   * @param {limit: number}
+   *  Number of documents for a page
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
-   * @returns {() => void}
-   *  Unsubscribe function
+   * @returns {Controller}
+   *  A controller object
    */
-  getAllList(filter, sorter, onChildNext, onError) {
-    let ref = this.userRef;
+  getAllList(filter, sorter, limit, onChildNext, onError) {
+    let query = this.userRef;
+    let entries = Object.entries(filter);
+    if (entries.length > 0) {
+      const [searchBy, searchText] = entries[0];
 
-    for (const field in filter) {
-      if (filter[field]) {
-        ref = ref.where(field, '==', filter[field]);
+      if (searchText) {
+        let lastIndex = searchText.length - 1;
+        let searchTextEnd = searchText.substring(0, lastIndex);
+        searchTextEnd += String.fromCharCode(searchText.charCodeAt(lastIndex) + 1);
+
+        query = query
+          .where(searchBy, '>=', searchText)
+          .where(searchBy, '<', searchTextEnd)
+          .orderBy(searchBy, sorter[searchBy] ? sorter[searchBy] : 'asc');
       }
     }
 
-    for (const field in sorter) {
-      ref = ref.orderBy(field, sorter[field] ? sorter[field] : undefined);
-    }
-
-    return ref.onSnapshot({
-      next: (querySnap) => {
-        querySnap.docChanges().forEach((docChg) => {
-          let doc = docChg.doc.data();
-          doc.id = docChg.doc.id;
-          onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
-        });
-      },
-      error: onError,
-    });
+    const [orderBy, order] = Object.entries(sorter)[0];
+    query = query.orderBy(orderBy, order ? order : 'asc');
+    return new Controller(query, limit, onChildNext, onError);
   }
 }
