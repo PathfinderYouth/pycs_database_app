@@ -75,13 +75,9 @@ export const Database = inject(
 
     const handleOrderChanged = (orderBy, order) => {
       let sorter = {};
+      let sortFunction = currentViewMode === viewModes.STAFF_LIST ? setUserSorter : setParticipantSorter;
       sorter[orderBy] = order;
-
-      if (currentViewMode === viewModes.STAFF_LIST) {
-        // TODO: update UserStore's sorter
-      } else {
-        setParticipantSorter(sorter);
-      }
+      sortFunction(sorter);
     };
 
     const handleSearchClicked = (searchBy, searchText) => {

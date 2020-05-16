@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
@@ -64,7 +64,7 @@ export const RecordSearchBar = inject('uiStore')(
   observer((props) => {
     const { currentViewMode, participantSearchFilters } = uiStore;
     const classes = useStyles();
-    const { title, headers, onSearchClicked } = props;
+    const { title, onSearchClicked } = props;
     const [searchBy, setSearchBy] = useState(participantSearchFilters[0].queryId);
     const [searchText, setSearchText] = useState('');
 

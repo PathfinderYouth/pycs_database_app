@@ -119,7 +119,6 @@ export const ListContainer = inject(
           <Paper className={`${classes.paper} maxWidth`}>
             <RecordSearchBar
               title={pageTitle}
-              headers={headers}
               onSearchClicked={handleSearchClicked}
             />
             <TableContainer>
