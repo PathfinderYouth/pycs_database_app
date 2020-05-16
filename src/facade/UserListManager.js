@@ -158,6 +158,7 @@ export default class UserListManager {
           .where(searchBy, '>=', searchText)
           .where(searchBy, '<', searchTextEnd)
           .orderBy(searchBy, sorter[searchBy] ? sorter[searchBy] : 'asc');
+        return new Controller(query, limit, onChildNext, onError);
       }
     }
 

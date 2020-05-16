@@ -37,7 +37,7 @@ export const ListViewDrawer = inject(
   'uiStore',
   'participantStore',
 )(
-  observer(({ numNew, onParticipantViewChanged }) => {
+  observer(({ numNew, onParticipantViewChanged, onStaffViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
     const { currentViewMode, setCurrentViewMode } = uiStore;
@@ -128,7 +128,10 @@ export const ListViewDrawer = inject(
           <StyledListItem
             button
             selected={currentViewMode === viewModes.STAFF_LIST}
-            onClick={() => setCurrentViewMode(viewModes.STAFF_LIST)}
+            onClick={() => {
+              setCurrentViewMode(viewModes.STAFF_LIST);
+              onStaffViewChanged();
+            }}
           >
             <ListItemIcon>
               <Work />
