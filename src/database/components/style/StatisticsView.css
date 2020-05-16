@@ -1,3 +1,9 @@
 .statisticsDropdown {
     width: 100%;
 }
+
+.statisticsLoading {
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+}

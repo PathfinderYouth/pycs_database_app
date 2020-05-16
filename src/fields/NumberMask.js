@@ -1,6 +1,6 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
-import { masks }  from '../constants';
+import { masks } from '../constants';
 
 export const NumberMask = (props) => {
   const { inputRef, onChange, name, ...other } = props;

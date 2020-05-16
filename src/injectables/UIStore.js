@@ -115,22 +115,22 @@ class UIStore {
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
   };
-  
+
   setCurrentListViewOrder = (order) => {
     if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrder = order;
     } else {
       this.currentParticipantViewOrder = order;
     }
-  }
-  
+  };
+
   setCurrentListViewOrderBy = (orderBy) => {
     if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrderBy = orderBy;
     } else {
       this.currentParticipantViewOrderBy = orderBy;
     }
-  }
+  };
 }
 
 decorate(UIStore, {

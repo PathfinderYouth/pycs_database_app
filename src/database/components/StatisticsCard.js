@@ -17,13 +17,13 @@ export const StatisticsCard = (props) => {
               xs={6}
               key={index}
               className="statItem"
-              justify="start"
+              justify="flex-start"
               alignItems="flex-end"
             >
-              <Grid item xs={12}>
+              <Grid item xs={12} key={stat.label + index}>
                 <Typography variant="body2">{stat.label}</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} key={stat.label + '_number' + index}>
                 <Typography variant="h2">{stat.number}</Typography>
               </Grid>
             </Grid>

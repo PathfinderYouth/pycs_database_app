@@ -1,4 +1,4 @@
-import { observable, action, computed, autorun, decorate } from 'mobx';
+import { action, autorun, computed, decorate, observable } from 'mobx';
 import service from '../facade/service';
 
 const db = service.getUserList();

@@ -1,9 +1,5 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import Card from '@material-ui/core/Card';
-import Tooltip from '@material-ui/core/Tooltip';
 import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailCreate } from './ParticipantDetailCreate';
 import { ParticipantDetailEdit } from './ParticipantDetailEdit';
@@ -58,18 +54,18 @@ export const ParticipantDetailPage = inject(
         } else {
           return (
             <ParticipantDetailView
-                participant={currentParticipant}
-                collection={collection}
-                currentStep={currentParticipantDetailStep}
-                handleClickChangeMode={() =>
-                  setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
-                }
-                handleClickMove={() => console.log('Move clicked')} // placeholder
-                // swap between deleteNew & deletePermanent depending on current collection
-                handleClickDelete={() => console.log('Delete clicked')} // placeholder
-                handleClickApprove={() => console.log('Approve clicked')} // placeholder
-                handleClickDeny={() => console.log('Deny clicked')} // placeholder
-              /> 
+              participant={currentParticipant}
+              collection={collection}
+              currentStep={currentParticipantDetailStep}
+              handleClickChangeMode={() =>
+                setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
+              }
+              handleClickMove={() => console.log('Move clicked')} // placeholder
+              // swap between deleteNew & deletePermanent depending on current collection
+              handleClickDelete={() => console.log('Delete clicked')} // placeholder
+              handleClickApprove={() => console.log('Approve clicked')} // placeholder
+              handleClickDeny={() => console.log('Deny clicked')} // placeholder
+            />
           );
         }
       }
