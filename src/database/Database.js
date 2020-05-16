@@ -37,6 +37,8 @@ export const Database = inject(
       setNavigationDrawerOpen,
       currentParticipantListOrder,
       currentParticipantListOrderBy,
+      setRecordSearchBoxActive,
+      setCurrentParticipantSearchField,
     } = uiStore;
     const {
       participants,
@@ -88,6 +90,8 @@ export const Database = inject(
       } else {
         let filter = { status: currentStatus };
         filter[searchBy] = searchText;
+        setCurrentParticipantSearchField(searchBy);
+        setRecordSearchBoxActive(searchText !== '');
         setParticipantFilter(filter);
       }
     };
