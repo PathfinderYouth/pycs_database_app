@@ -16,7 +16,7 @@ class UserStore {
 
   _filter = {};
 
-  _sorter = { name: 'asc' };
+  _sorter = { nameLower: 'asc' };
 
   _users = [];
 
@@ -27,8 +27,6 @@ class UserStore {
   _isLastPage = true;
 
   _limit = 20;
-
-  _unsubscribe = null;
 
   _onChildNext = (doc, newIndex, oldIndex, type) => {
     let newList = this._users.slice();
@@ -52,28 +50,32 @@ class UserStore {
     }
 
     this._users = newList;
+
+    this._isLastPage = newList.length > 0
+      ? this._controller.endId === newList[newList.length - 1].id
+      : true;
   };
 
-  _updateList = autorun(() => {
-    if (this._controller) {
-      this._isLastPage = true;
-      this._users = [];
-      this._controller.unsubscribe();
-    }
+  _updateList = autorun(
+    () => {
+      if (this._controller) {
+        this._isLastPage = true;
+        this._users = [];
+        this._controller.unsubscribe();
+      }
 
-    this._unsubscribe = db.getAllList(this._filter, this._sorter, this._onChildNext);
-  });
+      this._controller = db.getAllList(
+        this._filter,
+        this._sorter,
+        this._limit,
+        this._onChildNext,
+      );
+    },
+    { delay: 500 }
+  );
 
   setSelectedUser = (user) => {
     this._selectedUser = user;
-  };
-
-  goToPreviousPage = () => {
-    this._controller.back(() => (this._participants = []));
-  };
-
-  goToNextPage = () => {
-    this._controller.next(() => (this._participants = []));
   };
 
   setFilter = (filter) => {
@@ -109,13 +111,17 @@ class UserStore {
   get isLastPage() {
     return this._isLastPage;
   }
+
+  get limit() {
+    return this._limit;
+  }
 }
 
 decorate(UserStore, {
   _filter: observable,
   _sorter: observable,
+  _limit: observable,
   _users: observable,
-  _controller: observable,
   _isLastPage: observable,
   setSelectedUser: action,
   setFilter: action,
@@ -125,6 +131,7 @@ decorate(UserStore, {
   goToNextPage: action,
   users: computed,
   isLastPage: computed,
+  limit: computed,
 });
 
 let userStore = new UserStore();

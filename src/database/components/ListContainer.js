@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export const ListContainer = inject(
   'uiStore',
   'participantStore',
-  'userStore',
+  'userStore'
 )(
   observer(
     ({
@@ -53,7 +53,8 @@ export const ListContainer = inject(
       const [page, setPage] = useState(0);
       const [rowsPerPage, setRowsPerPage] = useState(20);
       const { collection } = participantStore;
-      const { users } = userStore;
+      const { collection, limit: participantLimit } = participantStore;
+      const { users, limit: userLimit } = userStore;
       const {
         headers,
         setCurrentViewMode,
@@ -104,7 +105,6 @@ export const ListContainer = inject(
 
       const handleChangeRowsPerPage = (event) => {
         setPage(0);
-        setRowsPerPage(event.target.value);
         onChangeRowsPerPage(event.target.value);
       };
 
@@ -124,7 +124,6 @@ export const ListContainer = inject(
           <Paper className={`${classes.paper} maxWidth`}>
             <RecordSearchBar
               title={pageTitle}
-              headers={headers}
               onSearchClicked={handleSearchClicked}
             />
             <TableContainer>
@@ -201,7 +200,7 @@ export const ListContainer = inject(
               rowsPerPageOptions={[20, 50, 100]}
               component="div"
               count={-1}
-              rowsPerPage={rowsPerPage}
+              rowsPerPage={currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit}
               page={page}
               labelDisplayedRows={({ page }) => `Page ${page + 1}`}
               onChangePage={handleChangePage}
