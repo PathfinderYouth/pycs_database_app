@@ -88,6 +88,7 @@ export const ParticipantDetailView = ({
           variant: 'error',
         });
         handleClickChangeView();
+        console.log(error)
       },
     );
   };

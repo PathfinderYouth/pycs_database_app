@@ -13,3 +13,4 @@ export * from './ParticipantDetailCreate'
 export * from './ParticipantDetailHistory'
 export * from './ParticipantDetailNotes'
 export * from './ParticipantDetailPage';
+export * from './StatusIndicator';

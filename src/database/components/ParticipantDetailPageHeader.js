@@ -10,7 +10,8 @@ import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
-import { collectionType, participantDetailViewModes, STATUS } from '../../constants';
+import { StatusIndicator } from './StatusIndicator';
+import { collectionType, participantDetailViewModes, status } from '../../constants';
 import './style/ParticipantDetailView.css';
 
 export const ParticipantDetailPageHeader = ({
@@ -26,13 +27,13 @@ export const ParticipantDetailPageHeader = ({
   handleOpenDialog = undefined,
   handleClickDecline = undefined,
 }) => {
-  const { nameGiven, nameLast } = participant;
+  const { nameGiven, nameLast, status: participantStatus } = participant;
   const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
 
   const getButtons = () => {
     return participantDetailViewMode === participantDetailViewModes.VIEW ? (
       collection === collectionType.NEW ? (
-        <div>
+        <div className="participant-detail-controls">
           <Tooltip title="Edit submission" aria-label="edit">
             <IconButton onClick={handleClickChangeMode}>
               <EditIcon />
@@ -62,22 +63,20 @@ export const ParticipantDetailPageHeader = ({
           </Tooltip>
         </div>
       ) : (
-        <div>
+        <div className="participant-detail-controls">
           <Tooltip title="Edit participant record" aria-label="edit">
             <IconButton onClick={handleClickChangeMode}>
               <EditIcon />
             </IconButton>
           </Tooltip>
-          {!!participant && participant.status !== STATUS.approved && (
+          {!!participant && participant.status !== status.APPROVED && (
             <Tooltip title="Approve participant" aria-label="approve">
-              <IconButton
-                onClick={handleOpenDialog}
-              >
+              <IconButton onClick={handleOpenDialog}>
                 <ThumbUpIcon />
               </IconButton>
             </Tooltip>
           )}
-          {!!participant && participant.status !== STATUS.declined && (
+          {!!participant && participant.status !== status.DECLINED && (
             <Tooltip title="Decline participant" aria-label="decline">
               <IconButton
                 onClick={() => {
@@ -104,7 +103,7 @@ export const ParticipantDetailPageHeader = ({
         </div>
       )
     ) : (
-      <div>
+      <div className="participant-detail-controls">
         <Tooltip title="Save participant record" aria-label="confirm">
           <IconButton
             onClick={() => {
@@ -117,11 +116,13 @@ export const ParticipantDetailPageHeader = ({
           </IconButton>
         </Tooltip>
         <Tooltip title="Discard changes" aria-label="discard">
-          <IconButton onClick={() => {
+          <IconButton
+            onClick={() => {
               if (window.confirm('Discard changes? Record will not be saved.')) {
                 handleClickChangeMode();
               }
-            }}>
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Tooltip>
@@ -136,7 +137,13 @@ export const ParticipantDetailPageHeader = ({
           <Typography variant="h6">{title}</Typography>
           <Typography variant="h5">{participantName}</Typography>
         </div>
-        <div className="participant-detail-controls">{getButtons()}</div>
+        <div className="participant-detail-buttons-indicator">
+          {getButtons()}
+          <div className="participant-detail-status">
+            <StatusIndicator status={participantStatus} />
+          </div>
+          
+        </div>
       </div>
       <div className="participant-detail-form-contents">
         <Grid container spacing={2}>
