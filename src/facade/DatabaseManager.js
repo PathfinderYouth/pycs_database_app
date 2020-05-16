@@ -440,7 +440,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  approvePending(data, userName, onSuccess, onError) {
+  approvePending(data, userName, confirmationNumber, onSuccess, onError) {
     const { id: docId, history: oldHistory } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
@@ -451,6 +451,7 @@ export default class DatabaseManager {
 
     let document = {
       status: STATUS.approved,
+      confirmationNumber: confirmationNumber,
       history: updatedHistory,
     };
 

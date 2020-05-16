@@ -47,8 +47,10 @@ export const FormFieldBuilder = ({ form, field }) => {
       );
   }
   return (
-    <Grid key={name} item md={!!size ? size : true} xs={12}>
-      {newField}
-    </Grid>
+    name !== 'confirmationNumber' && (
+      <Grid key={name} item md={!!size ? size : true} xs={12}>
+        {newField}
+      </Grid>
+    )
   );
 };

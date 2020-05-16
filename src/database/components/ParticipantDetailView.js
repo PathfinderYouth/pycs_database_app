@@ -1,15 +1,16 @@
 import React, { useState, useContext } from 'react';
+import { useSnackbar } from 'notistack';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import NumberFormat from 'react-number-format';
 import { participantDetailSteps } from '../../fields';
-import { masks } from '../../constants';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
-import './style/ParticipantDetailView.css';
-import { participantDetailViewModes, collectionType } from '../../constants';
+import { ParticipantApproveDialog } from './ParticipantApproveDialog';
+import { participantDetailViewModes, collectionType, masks } from '../../constants';
 import service from '../../facade/service';
 import { AuthContext } from '../../sign-in';
-import { useSnackbar } from 'notistack';
+
+import './style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
   participant,
@@ -19,12 +20,12 @@ export const ParticipantDetailView = ({
   handleClickChangeView,
 }) => {
   const step = participantDetailSteps[currentStep];
-  const participantName = `${participant.nameGiven} ${participant.nameLast}`;
   const {
     currentUser: { email, displayName },
   } = useContext(AuthContext);
   const userID = !!displayName ? displayName : email;
   const { enqueueSnackbar } = useSnackbar();
+  const [openDialog, setDialogOpen] = useState(false);
 
   const MaskedSIN = ({ sin }) => {
     const maskedSIN = `XXX XXX ${sin.slice(6)} (click to show)`;
@@ -43,7 +44,7 @@ export const ParticipantDetailView = ({
     const { name, adornment } = field;
     let renderedData = null;
     if (data.length === 0 || data === undefined) {
-      renderedData = <em>None given</em>;
+      renderedData = <em>None</em>;
     } else if (field.name === 'sin') {
       return <MaskedSIN sin={data} />;
     } else {
@@ -121,66 +122,74 @@ export const ParticipantDetailView = ({
         );
   };
 
-  const handleClickApprove = () => {
+  const handleClickApprove = (confirmationNumber) => {
     const db = service.getDatabase();
     db.approvePending(
-          participant,
-          userID,
-          (success) => {
-            enqueueSnackbar('Participant approved.', { variant: 'success' });
-            handleClickChangeView();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem approving the participant.', {
-              variant: 'error',
-            });
-            handleClickChangeView();
-          },
-        )
+      participant,
+      userID,
+      confirmationNumber,
+      (success) => {
+        enqueueSnackbar('Participant approved.', { variant: 'success' });
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem approving the participant.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
   };
 
   const handleClickDecline = () => {
     const db = service.getDatabase();
     db.declinePending(
-          participant,
-          userID,
-          (success) => {
-            enqueueSnackbar('Participant declined.');
-            handleClickChangeView();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem declining the participant.', {
-              variant: 'error',
-            });
-            handleClickChangeView();
-          },
-        )
+      participant,
+      userID,
+      (success) => {
+        enqueueSnackbar('Participant declined.');
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem declining the participant.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
   };
 
   return (
-    <ParticipantDetailPageHeader
-      title={`Viewing participant record - ${step.stepName}`}
-      participant={participant}
-      step={step}
-      collection={collection}
-      participantDetailViewMode={participantDetailViewModes.VIEW}
-      handleClickChangeMode={handleClickChangeMode}
-      handleClickMove={handleClickMove}
-      handleClickDelete={handleClickDelete}
-      handleClickApprove={handleClickApprove}
-      handleClickDecline={handleClickDecline}
-    >
-      {step.fields.map((field) => {
-        const { name, size, detailSize, prettyName } = field;
-        // if both size & detailSize undefined, use true, else use detailSize if defined, size if not
-        const viewSize = !detailSize && !size ? true : !!detailSize ? detailSize : size;
-        return (
-          <Grid key={name} item md={viewSize} xs={12}>
-            <Typography variant="button">{prettyName}</Typography>{' '}
-            {renderFieldData(field, participant[name])}
-          </Grid>
-        );
-      })}
-    </ParticipantDetailPageHeader>
+    <>
+      <ParticipantDetailPageHeader
+        title={`Viewing participant record - ${step.stepName}`}
+        participant={participant}
+        step={step}
+        collection={collection}
+        participantDetailViewMode={participantDetailViewModes.VIEW}
+        handleClickChangeMode={handleClickChangeMode}
+        handleClickMove={handleClickMove}
+        handleClickDelete={handleClickDelete}
+        handleOpenDialog={() => setDialogOpen(true)}
+        handleClickDecline={handleClickDecline}
+      >
+        {step.fields.map((field) => {
+          const { name, size, detailSize, prettyName } = field;
+          // if both size & detailSize undefined, use true, else use detailSize if defined, size if not
+          const viewSize = !detailSize && !size ? true : !!detailSize ? detailSize : size;
+          return (
+            <Grid key={name} item md={viewSize} xs={12}>
+              <Typography variant="button">{prettyName}</Typography>{' '}
+              {renderFieldData(field, participant[name])}
+            </Grid>
+          );
+        })}
+      </ParticipantDetailPageHeader>
+      <ParticipantApproveDialog
+        open={openDialog}
+        handleClickApprove={handleClickApprove}
+        handleClose={() => setDialogOpen(false)}
+      />
+    </>
   );
 };

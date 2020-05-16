@@ -23,7 +23,7 @@ export const ParticipantDetailPageHeader = ({
   handleClickChangeMode = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
-  handleClickApprove = undefined,
+  handleOpenDialog = undefined,
   handleClickDecline = undefined,
 }) => {
   const { nameGiven, nameLast } = participant;
@@ -71,11 +71,7 @@ export const ParticipantDetailPageHeader = ({
           {!!participant && participant.status !== STATUS.approved && (
             <Tooltip title="Approve participant" aria-label="approve">
               <IconButton
-                onClick={() => {
-                  if (window.confirm('Approve participant?')) {
-                    handleClickApprove();
-                  }
-                }}
+                onClick={handleOpenDialog}
               >
                 <ThumbUpIcon />
               </IconButton>
