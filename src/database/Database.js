@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(2),
     width: 'calc(100% - 240px)', // full width - size of nav drawer
-  }
+  },
 }));
 
 export const Database = inject(
@@ -37,6 +37,8 @@ export const Database = inject(
       setNavigationDrawerOpen,
       currentParticipantListOrder,
       currentParticipantListOrderBy,
+      setRecordSearchBoxActive,
+      setCurrentParticipantSearchField,
     } = uiStore;
     const {
       participants,
@@ -88,6 +90,8 @@ export const Database = inject(
       } else {
         let filter = { status: currentStatus };
         filter[searchBy] = searchText;
+        setCurrentParticipantSearchField(searchBy);
+        setRecordSearchBoxActive(searchText !== '');
         setParticipantFilter(filter);
       }
     };
@@ -122,7 +126,6 @@ export const Database = inject(
       const listViewProps =
         currentViewMode === viewModes.STAFF_LIST
           ? {
-
               records: users,
               onRowClicked: setSelectedUser,
               onPrevButtonClicked: goToUserPreviousPage,
