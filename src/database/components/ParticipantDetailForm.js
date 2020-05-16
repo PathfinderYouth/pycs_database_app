@@ -8,8 +8,7 @@ export const ParticipantDetailForm = ({
   initialValues,
   participantDetailViewMode,
   handleSubmit,
-  handleClickOk,
-  handleClickCancel,
+  handleClickChangeMode,
   step,
 }) => {
   return (
@@ -22,11 +21,10 @@ export const ParticipantDetailForm = ({
       {(form) => (
         <ParticipantDetailPageHeader
           title={`${formTitle} - ${step.stepName}`}
-          form={form}
+          handleSubmit={form.submitForm}
           participant={initialValues}
           participantDetailViewMode={participantDetailViewMode}
-          handleClickOk={handleClickOk}
-          handleClickCancel={handleClickCancel}
+          handleClickChangeMode={handleClickChangeMode}
         >
           {step.fields.map((field) => (
             <FormFieldBuilder key={field.name} form={form} field={field} />

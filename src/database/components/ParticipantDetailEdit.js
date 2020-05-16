@@ -80,8 +80,7 @@ export const ParticipantDetailEdit = ({
       initialValues={participant}
       participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}
-      handleClickOk={handleClickOk}
-      handleClickCancel={handleClickCancel}
+      handleClickChangeMode={handleClickChangeMode}
       step={step}
     />
   );

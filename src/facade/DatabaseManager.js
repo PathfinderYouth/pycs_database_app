@@ -219,14 +219,13 @@ export default class DatabaseManager {
     };
 
     // make a copy of the participant object to strip out id
-    let document = { ...participant};
+    let document = { ...participant };
     delete document.id;
-
+    this._updateCaseInsensitiveFields(document);
+    
     ref
       .doc(docId)
       .update(document)
-    this._updateCaseInsensitiveFields(document);
-    ref.doc(docId).update(document)
       .then(() => {
         if (onSuccess) {
           onSuccess(participant);

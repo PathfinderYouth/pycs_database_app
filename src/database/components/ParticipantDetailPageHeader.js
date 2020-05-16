@@ -17,11 +17,9 @@ export const ParticipantDetailPageHeader = ({
   children,
   title,
   participant = undefined,
-  form = undefined,
   collection = undefined,
   participantDetailViewMode = undefined,
-  handleClickOk = undefined,
-  handleClickCancel = undefined,
+  handleSubmit = undefined,
   handleClickChangeMode = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
@@ -114,8 +112,9 @@ export const ParticipantDetailPageHeader = ({
         <Tooltip title="Save participant record" aria-label="confirm">
           <IconButton
             onClick={() => {
-              if (handleClickOk()) {
-                form.submitForm();
+              if (window.confirm('Save changes?')) {
+                handleSubmit();
+                // handleClickChangeMode();
               }
             }}
           >
@@ -123,7 +122,11 @@ export const ParticipantDetailPageHeader = ({
           </IconButton>
         </Tooltip>
         <Tooltip title="Discard changes" aria-label="discard">
-          <IconButton onClick={handleClickCancel}>
+          <IconButton onClick={() => {
+              if (window.confirm('Discard changes? Record will not be saved.')) {
+                handleClickChangeMode();
+              }
+            }}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
