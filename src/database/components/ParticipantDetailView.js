@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useSnackbar } from 'notistack';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import DeleteIcon from '@material-ui/icons/DeleteForever';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import NumberFormat from 'react-number-format';
 import { participantDetailSteps } from '../../fields';
-import { collectionType, masks } from '../../constants';
+import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
+import { ParticipantApproveDialog } from './ParticipantApproveDialog';
+import { participantDetailViewModes, collectionType, masks } from '../../constants';
+import service from '../../facade/service';
+import { AuthContext } from '../../sign-in';
+
 import './style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
@@ -18,13 +17,15 @@ export const ParticipantDetailView = ({
   collection,
   currentStep,
   handleClickChangeMode,
-  handleClickMove,
-  handleClickDelete,
-  handleClickApprove,
-  handleClickDeny,
+  handleClickChangeView,
 }) => {
   const step = participantDetailSteps[currentStep];
-  const participantName = `${participant.nameGiven} ${participant.nameLast}`;
+  const {
+    currentUser: { email, displayName },
+  } = useContext(AuthContext);
+  const userID = !!displayName ? displayName : email;
+  const { enqueueSnackbar } = useSnackbar();
+  const [openDialog, setDialogOpen] = useState(false);
 
   const MaskedSIN = ({ sin }) => {
     const maskedSIN = `XXX XXX ${sin.slice(6)} (click to show)`;
@@ -43,7 +44,7 @@ export const ParticipantDetailView = ({
     const { name, adornment } = field;
     let renderedData = null;
     if (data.length === 0 || data === undefined) {
-      renderedData = <em>None given</em>;
+      renderedData = <em>None</em>;
     } else if (field.name === 'sin') {
       return <MaskedSIN sin={data} />;
     } else {
@@ -68,107 +69,127 @@ export const ParticipantDetailView = ({
     return <Typography color="textSecondary">{renderedData}</Typography>;
   };
 
-  const getButtons = () => {
-    return collection === collectionType.NEW ? (
-      <div>
-        <Tooltip title="Edit submission" aria-label="edit">
-          <IconButton onClick={handleClickChangeMode}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Accept and save" aria-label="accept">
-          <IconButton
-            onClick={() => {
-              if (window.confirm('Accept and save this submission to the database?')) {
-                handleClickMove();
-              }
-            }}
-          >
-            <SaveIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Discard submission" aria-label="delete">
-          <IconButton
-            onClick={() => {
-              if (window.confirm('Discard submission? This cannot be undone.')) {
-                handleClickDelete();
-              }
-            }}
-          >
-            <DeleteIcon 
-            color="error"/>
-          </IconButton>
-        </Tooltip>
-      </div>
-    ) : (
-      <div>
-      <Tooltip title="Edit participant record" aria-label="edit">
-        <IconButton onClick={handleClickChangeMode}>
-          <EditIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Approve participant" aria-label="accept">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Approve participant')) {
-              handleClickApprove();
-            }
-          }}
-        >
-          <ThumbUpIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Deny participant" aria-label="accept">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Approve participant')) {
-              handleClickDeny();
-            }
-          }}
-        >
-          <ThumbDownIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete participant record" aria-label="delete">
-        <IconButton
-          onClick={() => {
-            if (window.confirm('Delete participant record?')) {
-              handleClickDelete();
-            }
-          }}
-        >
-          <DeleteIcon 
-          color="error"/>
-        </IconButton>
-      </Tooltip>
-    </div>
+  const handleClickMove = () => {
+    const db = service.getDatabase();
+    db.moveToPermanent(
+      participant,
+      userID,
+      (updatedParticipant) => {
+        enqueueSnackbar('Participant record saved to database.', {
+          variant: 'success',
+        });
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem saving the participant record.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
+  };
+
+  const handleClickDelete = () => {
+    const db = service.getDatabase();
+    const { id: docID } = participant;
+    collection === collectionType.NEW
+      ? db.deleteNew(
+          docID,
+          (success) => {
+            enqueueSnackbar('Submission deleted.');
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem updating the submission.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        )
+      : db.deletePermanent(
+          participant,
+          userID,
+          (success) => {
+            enqueueSnackbar('Participant record removed. Undo?');
+            handleClickChangeView();
+          },
+          (error) => {
+            enqueueSnackbar('There was a problem removing the participant record.', {
+              variant: 'error',
+            });
+            handleClickChangeView();
+          },
+        );
+  };
+
+  const handleClickApprove = (confirmationNumber) => {
+    const db = service.getDatabase();
+    db.approvePending(
+      participant,
+      userID,
+      confirmationNumber,
+      (success) => {
+        enqueueSnackbar('Participant approved.', { variant: 'success' });
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem approving the participant.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
+  };
+
+  const handleClickDecline = () => {
+    const db = service.getDatabase();
+    db.declinePending(
+      participant,
+      userID,
+      (success) => {
+        enqueueSnackbar('Participant declined.');
+        handleClickChangeView();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem declining the participant.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
     );
   };
 
   return (
     <>
-      <div className="participant-detail-header">
-        <div>
-          <Typography variant="h6">{`Participant Details - ${step.stepName}`}</Typography>
-          <Typography variant="h4">{participantName}</Typography>
-        </div>
-        {getButtons()}
-      </div>
-      <div className="participant-detail-form-contents">
-        <Grid container spacing={2}>
-          {step.fields.map((field) => {
-            const { name, size, detailSize, prettyName } = field;
-            // if both size & detailSize undefined, use true, else use detailSize if defined, size if not
-            const viewSize = !detailSize && !size ? true : !!detailSize ? detailSize : size;
-            return (
-              <Grid key={name} item md={viewSize} xs={12}>
-                <Typography variant="button">{prettyName}</Typography>{' '}
-                {renderFieldData(field, participant[name])}
-              </Grid>
-            );
-          })}
-        </Grid>
-      </div>
+      <ParticipantDetailPageHeader
+        title={`Viewing participant record - ${step.stepName}`}
+        participant={participant}
+        step={step}
+        collection={collection}
+        participantDetailViewMode={participantDetailViewModes.VIEW}
+        handleClickChangeMode={handleClickChangeMode}
+        handleClickMove={handleClickMove}
+        handleClickDelete={handleClickDelete}
+        handleOpenDialog={() => setDialogOpen(true)}
+        handleClickDecline={handleClickDecline}
+      >
+        {step.fields.map((field) => {
+          const { name, size, detailSize, prettyName } = field;
+          // if both size & detailSize undefined, use true, else use detailSize if defined, size if not
+          const viewSize = !detailSize && !size ? true : !!detailSize ? detailSize : size;
+          return (
+            <Grid key={name} item md={viewSize} xs={12}>
+              <Typography variant="button">{prettyName}</Typography>{' '}
+              {renderFieldData(field, participant[name])}
+            </Grid>
+          );
+        })}
+      </ParticipantDetailPageHeader>
+      <ParticipantApproveDialog
+        open={openDialog}
+        handleClickApprove={handleClickApprove}
+        handleClose={() => setDialogOpen(false)}
+      />
     </>
   );
 };

@@ -8,6 +8,7 @@ export const formSteps = [
         label: 'Given name(s)',
         type: 'text',
         size: 6,
+        detailSize: 4,
         required: true,
       },
       {
@@ -16,6 +17,15 @@ export const formSteps = [
         label: 'Last name',
         type: 'text',
         size: 6,
+        detailSize: 4,
+        required: true,
+      },
+      {
+        name: 'confirmationNumber',
+        prettyName: 'Confirmation number',
+        label: 'confirmationNumber',
+        type: 'text',
+        size: 4,
         required: true,
       },
       {

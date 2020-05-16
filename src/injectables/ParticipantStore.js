@@ -9,7 +9,6 @@ const checkEqual = (obj1, obj2) => {
 };
 
 class ParticipantStore {
-
   documentType = {
     ADDED: 'added',
     MODIFIED: 'modified',
@@ -18,7 +17,7 @@ class ParticipantStore {
 
   _filter = { status: null };
 
-  _sorter = { nameLast: 'asc' };
+  _sorter = { nameLastLower: 'asc' };
 
   _limit = 20;
 
@@ -35,7 +34,7 @@ class ParticipantStore {
   _statistics = null;
 
   constructor() {
-    db.getStatistics((doc) => {
+    db.getNumOfNew((doc) => {
       this._statistics = doc;
     });
   }
@@ -165,6 +164,13 @@ class ParticipantStore {
       return this._statistics.numOfNew;
     }
     return 0;
+  }
+
+  get statisticsCounts() {
+    if (this._statisticsGroupCounts) {
+      return this._statisticsGroupCounts;
+    }
+    return null;
   }
 
   get isLastPage() {

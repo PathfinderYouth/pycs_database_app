@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { STATUS, eventType } from '../constants';
+import { STATUS, eventType, QUERY_FIELDS } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -29,7 +29,7 @@ export default class DatabaseManager {
     this.db = firebase.firestore();
     this.permanentRef = this.db.collection('permanent');
     this.newRef = this.db.collection('new');
-    this.statRef = this.db.collection('statistics').doc('participant');
+    this.statRef = this.db.collection('statistics');
   }
 
   /**
@@ -38,7 +38,7 @@ export default class DatabaseManager {
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
     if (entries.length > 0) {
-      const [ searchBy, searchText ] = entries[0];
+      const [searchBy, searchText] = entries[0];
 
       if (searchText) {
         let lastIndex = searchText.length - 1;
@@ -52,8 +52,14 @@ export default class DatabaseManager {
       }
     }
 
-    const [ orderBy, order ] = Object.entries(sorter)[0];
+    const [orderBy, order] = Object.entries(sorter)[0];
     return ref.orderBy(orderBy, order ? order : 'asc');
+  }
+
+  _updateCaseInsensitiveFields(data) {
+    for (const [id, queryId] of QUERY_FIELDS) {
+      data[queryId] = data[id] ? data[id].toLowerCase() : '';
+    }
   }
 
   /**
@@ -149,11 +155,12 @@ export default class DatabaseManager {
       createdAt: moment.utc().format(),
       history: newHistory,
     };
+    this._updateCaseInsensitiveFields(document);
 
     let docRef = this.newRef.doc();
     let batch = this.db.batch();
     batch.set(docRef, document);
-    batch.update(this.statRef, { numOfNew: FieldValue.increment(1) });
+    batch.update(this.statRef.doc('participant'), { numOfNew: FieldValue.increment(1) });
     batch
       .commit()
       .then(() => {
@@ -197,7 +204,7 @@ export default class DatabaseManager {
     const updatedFields = this.getUpdatedFields(oldData, newData);
     const updatedHistory =
       updatedFields === 'notes'
-        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added')
+        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added', oldHistory)
         : this.getUpdatedHistory(
             userName,
             eventType.UPDATED,
@@ -212,10 +219,19 @@ export default class DatabaseManager {
     };
 
     // make a copy of the participant object to strip out id
-    let document = participant;
+    let document = { ...participant };
     delete document.id;
-
-    ref.doc(docId).update(document).then(onSuccess(participant)).catch(onError);
+    this._updateCaseInsensitiveFields(document);
+    
+    ref
+      .doc(docId)
+      .update(document)
+      .then(() => {
+        if (onSuccess) {
+          onSuccess(participant);
+        }
+      })
+      .catch(onError);
   }
 
   /**
@@ -247,7 +263,7 @@ export default class DatabaseManager {
     let batch = this.db.batch();
 
     batch.delete(docRef);
-    batch.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
+    batch.update(this.statRef.doc('participant'), { numOfNew: FieldValue.increment(-1) });
     batch.commit().then(onSuccess).catch(onError);
   }
 
@@ -273,6 +289,7 @@ export default class DatabaseManager {
       createdAt: moment.utc().format(),
       history: newHistory,
     };
+    this._updateCaseInsensitiveFields(document);
 
     this.permanentRef
       .add(document)
@@ -382,12 +399,12 @@ export default class DatabaseManager {
     const updatedHistory = this.getUpdatedHistory(
       userName,
       eventType.MOVED,
-      'Participant record moved to permanent collection',
+      'Participant record saved to database',
       oldHistory,
     );
 
     let oldDocRef = this.newRef.doc(docId);
-    let newDocRef = this.permanentRef.doc(); // put docId in to keep same ID
+    let newDocRef = this.permanentRef.doc(docId); // put docId in to keep same ID
     let updateFunction = (transaction) => {
       return transaction.get(oldDocRef).then((docSnap) => {
         let doc = docSnap.data();
@@ -398,8 +415,9 @@ export default class DatabaseManager {
         doc.status = STATUS.pending;
         doc.history = updatedHistory;
 
-        transaction.set(newDocRef, document);
+        transaction.set(newDocRef, doc);
         transaction.delete(oldDocRef);
+        transaction.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
       });
     };
 
@@ -422,7 +440,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  approvePending(data, userName, onSuccess, onError) {
+  approvePending(data, userName, confirmationNumber, onSuccess, onError) {
     const { id: docId, history: oldHistory } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
@@ -433,6 +451,7 @@ export default class DatabaseManager {
 
     let document = {
       status: STATUS.approved,
+      confirmationNumber: confirmationNumber,
       history: updatedHistory,
     };
 
@@ -487,7 +506,7 @@ export default class DatabaseManager {
   }
 
   /**
-   * Get all participant documents from permanent collection.
+   * Get participant documents from permanent collection.
    * @param {filter: Object}
    *  Object containing fields and values for filtering
    * @param {sorter: Object}
@@ -515,6 +534,23 @@ export default class DatabaseManager {
   }
 
   /**
+   * Get entire permanent participants collection. Use only for statistics.
+   * @param callback
+   */
+  getAllPermanentParticipants(callback) {
+    this.permanentRef
+      .where('status', 'in', ['Pending', 'Approved', 'Declined'])
+      .get()
+      .then(function (querySnapshot) {
+        let participantsList = [];
+        querySnapshot.forEach(function (doc) {
+          participantsList.push(doc.data());
+        });
+        callback(participantsList);
+      });
+  }
+
+  /**
    * Get participant statistical info stored in a firestore document.
    * @param {onNext: (doc: Object) => void}
    *  Callback function when document changes
@@ -523,12 +559,51 @@ export default class DatabaseManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getStatistics(onNext, onError) {
-    return this.statRef.onSnapshot({
+  getNumOfNew(onNext, onError) {
+    return this.statRef.doc('participant').onSnapshot({
       next: (docSnap) => {
         onNext(docSnap.data());
       },
       error: onError,
     });
+  }
+
+  getStatisticsGroups(onNext, onError) {
+    return this.statRef.doc('statsCount').onSnapshot({
+      next: (docSnap) => {
+        onNext(docSnap.data());
+      },
+      error: onError,
+    });
+  }
+
+  getTotalCounts(onNext, onError) {
+    return this.statRef.doc('totalCounts').onSnapshot({
+      next: (docSnap) => {
+        onNext(docSnap.data());
+      },
+      error: onError,
+    });
+  }
+
+  getAllStatistics(callback) {
+    return this.statRef.get().then(function (querySnapshot) {
+      let statistics = {};
+      querySnapshot.forEach(function (doc) {
+        statistics[doc.id] = doc.data();
+      });
+      callback(statistics);
+    });
+  }
+
+  addStatsCounts(totalCounts, statisticsGroups, onSuccess, onError) {
+    const batch = this.db.batch();
+    batch.set(this.statRef.doc('totalCounts'), { ...totalCounts });
+    batch.set(this.statRef.doc('statisticsGroups'), {
+      ...statisticsGroups,
+      createdAt: moment.utc().format(),
+    });
+
+    batch.commit().then(onSuccess(statisticsGroups)).catch(onError);
   }
 }

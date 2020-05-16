@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -27,7 +27,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { uiStore, participantStore } from '../../injectables';
+import { uiStore, participantStore, userStore } from '../../injectables';
 import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
 import './style/ListContainer.css';
 import service from '../../facade/service';
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 export const ListContainer = inject(
   'uiStore',
   'participantStore',
+  'userStore',
 )(
   observer(
     ({
@@ -62,6 +63,7 @@ export const ListContainer = inject(
       const [page, setPage] = useState(0);
       const [rowsPerPage, setRowsPerPage] = useState(20);
       const { collection } = participantStore;
+      const { users } = userStore;
       const {
         headers,
         setCurrentViewMode,
@@ -87,13 +89,13 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
       };
 
-      const handleRequestSort = (event, property) => {
+      const handleRequestSort = (event, property, queryProperty) => {
         setPage(0);
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
         const order = isAsc ? 'desc' : 'asc';
         setCurrentListViewOrder(order);
         setCurrentListViewOrderBy(property);
-        onOrderChanged(property, order);
+        onOrderChanged(queryProperty, order);
       };
 
       const handleSearchClicked = (searchBy, searchText) => {
@@ -127,7 +129,10 @@ export const ListContainer = inject(
 
       const [addStaffOpen, setAddStaffOpen] = useState(false);
       let db = service.getUserList();
-
+      let existingUserEmails = [];
+      useEffect(() => {
+        users.map((user) => (existingUserEmails = [...existingUserEmails, user['email']]));
+      });
       const [email, setEmail] = useState(null);
       const [name, setName] = useState(null);
       const [role, setRole] = useState(null);
@@ -153,8 +158,12 @@ export const ListContainer = inject(
       };
 
       const handleAddNewUser = () => {
-        if (!email && !name && !role) {
+        if (!email || !name || !role) {
           alert("New user's email, name, and role must be provided");
+          return;
+        }
+        if (existingUserEmails.indexOf(email) > -1) {
+          alert(`User email ${email} already exists`);
           return;
         }
         let newUser = { email: email, name: name, role: role };

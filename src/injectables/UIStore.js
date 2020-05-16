@@ -3,36 +3,36 @@ import { viewModes, participantDetailViewModes } from '../constants';
 
 class UIStore {
   participantHeaders = [
-    { id: 'nameLast', label: 'Last Name' },
-    { id: 'nameGiven', label: 'Given Name(s)' },
-    { id: 'status', label: 'Status' },
-    { id: 'birthDate', label: 'Date of Birth' },
-    { id: 'addressStreet', label: 'Street Address' },
-    { id: 'addressCity', label: 'City' },
+    { id: 'nameLast', queryId: 'nameLastLower', label: 'Last Name', sortable: true },
+    { id: 'nameGiven', queryId: 'nameGivenLower', label: 'Given Name(s)', sortable: true },
+    { id: 'status', label: 'Status', sortable: false },
+    { id: 'birthDate', queryId: 'birthDate', label: 'Date of Birth', sortable: true },
+    { id: 'addressStreet', queryId: 'addressStreetLower', label: 'Street Address', sortable: true },
+    { id: 'addressCity', queryId: 'addressCityLower', label: 'City', sortable: true },
   ];
 
   staffHeaders = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
-    { id: 'role', label: 'Role' },
-    { id: 'action', label: 'Action'},
+    { id: 'name', queryId: 'name', label: 'Name', sortable: true },
+    { id: 'email', queryId: 'email', label: 'Email', sortable: true },
+    { id: 'role', queryId: 'role', label: 'Role', sortable: true },
+    { id: 'action', label: 'Action', sortable: false },
   ];
 
   participantSearchFilters = [
-    { id: 'nameLast', label: 'Last Name' },
-    { id: 'nameGiven', label: 'Given Name(s)' },
-    { id: 'addressStreet', label: 'Street Address' },
-    { id: 'addressCity', label: 'City' },
-    { id: 'email', label: 'Email' },
-    { id: 'phoneHome', label: 'Home Phone' },
-    { id: 'phoneCell', label: 'Cell Phone' },
-    { id: 'sin', label: 'SIN' },
+    { id: 'nameLast', queryId: 'nameLastLower', label: 'Last Name' },
+    { id: 'nameGiven', queryId: 'nameGivenLower', label: 'Given Name(s)' },
+    { id: 'addressStreet', queryId: 'addressStreetLower', label: 'Street Address' },
+    { id: 'addressCity', queryId: 'addressCityLower', label: 'City' },
+    { id: 'email', queryId: 'emailLower', label: 'Email' },
+    { id: 'phoneHome', queryId: 'phoneHome', label: 'Home Phone' },
+    { id: 'phoneCell', queryId: 'phoneCell', label: 'Cell Phone' },
+    { id: 'sin', queryId: 'sin', label: 'SIN' },
   ];
 
   staffSearchFilters = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
-    { id: 'role', label: 'Role' },
+    { id: 'name', queryId: 'name', label: 'Name' },
+    { id: 'email', queryId: 'email', label: 'Email' },
+    { id: 'role', queryId: 'role', label: 'Role' },
   ];
 
   currentViewMode = viewModes.PARTICIPANT_LIST;
@@ -48,6 +48,12 @@ class UIStore {
   currentStaffViewOrder = 'asc';
 
   currentStaffViewOrderBy = this.staffHeaders[0].id;
+
+  currentParticipantSearchField = this.participantSearchFilters[0].id;
+
+  currentStaffSearchField = this.staffSearchFilters[0].id;
+
+  recordSearchBoxActive = false;
 
   navigationDrawerOpen = false;
 
@@ -92,7 +98,18 @@ class UIStore {
   }
 
   get currentParticipantListOrderBy() {
-    return this.currentParticipantViewOrderBy;
+    for (const header of this.participantHeaders) {
+      if (header.id === this.currentParticipantViewOrderBy) {
+        return header.queryId;
+      }
+    }
+    return null;
+  }
+
+  get currentSearchField() {
+    return this.currentViewMode === viewModes.STAFF_LIST
+      ? this.currentStaffSearchField
+      : this.currentParticipantSearchField;
   }
 
   setCurrentViewMode = (viewMode) => {
@@ -107,25 +124,37 @@ class UIStore {
     this.currentParticipantDetailViewMode = viewMode;
   };
 
+  setCurrentParticipantSearchField = (field) => {
+    this.currentParticipantSearchField = field;
+  };
+
+  setCurrentStaffSearchField = (field) => {
+    this.currentStaffSearchField = field;
+  };
+
+  setRecordSearchBoxActive = (isActive) => {
+    this.recordSearchBoxActive = isActive;
+  };
+
   setNavigationDrawerOpen = (isOpen) => {
     this.navigationDrawerOpen = isOpen;
   };
-  
+
   setCurrentListViewOrder = (order) => {
     if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrder = order;
     } else {
       this.currentParticipantViewOrder = order;
     }
-  }
-  
+  };
+
   setCurrentListViewOrderBy = (orderBy) => {
     if (this.currentViewMode === viewModes.STAFF_LIST) {
       this.currentStaffViewOrderBy = orderBy;
     } else {
       this.currentParticipantViewOrderBy = orderBy;
     }
-  }
+  };
 }
 
 decorate(UIStore, {
@@ -137,6 +166,9 @@ decorate(UIStore, {
   currentParticipantViewOrderBy: observable,
   currentStaffViewOrder: observable,
   currentStaffViewOrderBy: observable,
+  currentStaffSearchField: observable,
+  currentParticipantSearchField: observable,
+  recordSearchBoxActive: observable,
   headers: computed,
   currentDetailViewMode: computed,
   currentListViewMode: computed,
@@ -145,6 +177,9 @@ decorate(UIStore, {
   setCurrentViewMode: action,
   setCurrentParticipantDetailStep: action,
   setCurrentParticipantDetailViewMode: action,
+  setCurrentStaffSearchField: action,
+  setCurrentParticipantSearchField: action,
+  setRecordSearchBoxActive: action,
   setNavigationDrawerOpen: action,
   setCurrentListViewOrder: action,
   setCurrentListViewOrderBy: action,
