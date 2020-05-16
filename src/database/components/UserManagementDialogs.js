@@ -77,7 +77,8 @@ export const CreateUserDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         <TextField
           autoFocus
           required
-          margin="dense"
+          variant="outlined"
+          margin="normal"
           id="email"
           label="Email"
           type="email"
@@ -92,17 +93,17 @@ export const CreateUserDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         />
         <TextField
           required
-          margin="dense"
+          variant="outlined"
+          margin="normal"
           id="name"
           label="Name"
-          type="name"
           size="medium"
           error={errorNameStatus}
           helperText={errorNameStatus && 'Field cannot be empty'}
           onChange={handleNameChange}
           fullWidth
         />
-        <FormControl required fullWidth>
+        <FormControl required fullWidth variant="outlined" margin="normal">
           <InputLabel id="demo-simple-select-required-label">Role</InputLabel>
           <Select
             labelId="demo-simple-select-required-label"
