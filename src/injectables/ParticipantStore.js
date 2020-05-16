@@ -17,7 +17,7 @@ class ParticipantStore {
 
   _filter = { status: null };
 
-  _sorter = { nameLast: 'asc' };
+  _sorter = { nameLastLower: 'asc' };
 
   _limit = 20;
 

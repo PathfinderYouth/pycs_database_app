@@ -3,36 +3,36 @@ import { viewModes, participantDetailViewModes } from '../constants';
 
 class UIStore {
   participantHeaders = [
-    { id: 'nameLast', label: 'Last Name' },
-    { id: 'nameGiven', label: 'Given Name(s)' },
+    { id: 'nameLast', queryId: 'nameLastLower', label: 'Last Name' },
+    { id: 'nameGiven', queryId: 'nameGivenLower', label: 'Given Name(s)' },
     { id: 'status', label: 'Status' },
-    { id: 'birthDate', label: 'Date of Birth' },
-    { id: 'addressStreet', label: 'Street Address' },
-    { id: 'addressCity', label: 'City' },
+    { id: 'birthDate', queryId: 'birthDate', label: 'Date of Birth' },
+    { id: 'addressStreet', queryId: 'addressStreetLower', label: 'Street Address' },
+    { id: 'addressCity', queryId: 'addressCityLower', label: 'City' },
   ];
 
   staffHeaders = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
-    { id: 'role', label: 'Role' },
+    { id: 'name', queryId: 'name', label: 'Name' },
+    { id: 'email', queryId: 'email', label: 'Email' },
+    { id: 'role', queryId: 'role', label: 'Role' },
     { id: 'action', label: 'Action'},
   ];
 
   participantSearchFilters = [
-    { id: 'nameLast', label: 'Last Name' },
-    { id: 'nameGiven', label: 'Given Name(s)' },
-    { id: 'addressStreet', label: 'Street Address' },
-    { id: 'addressCity', label: 'City' },
-    { id: 'email', label: 'Email' },
-    { id: 'phoneHome', label: 'Home Phone' },
-    { id: 'phoneCell', label: 'Cell Phone' },
-    { id: 'sin', label: 'SIN' },
+    { id: 'nameLast', queryId: 'nameLastLower', label: 'Last Name' },
+    { id: 'nameGiven', queryId: 'nameGivenLower', label: 'Given Name(s)' },
+    { id: 'addressStreet', queryId: 'addressStreetLower', label: 'Street Address' },
+    { id: 'addressCity', queryId: 'addressCityLower', label: 'City' },
+    { id: 'email', queryId: 'emailLower', label: 'Email' },
+    { id: 'phoneHome', queryId: 'phoneHome', label: 'Home Phone' },
+    { id: 'phoneCell', queryId: 'phoneCell', label: 'Cell Phone' },
+    { id: 'sin', queryId: 'sin', label: 'SIN' },
   ];
 
   staffSearchFilters = [
-    { id: 'name', label: 'Name' },
-    { id: 'email', label: 'Email' },
-    { id: 'role', label: 'Role' },
+    { id: 'name', queryId: 'name', label: 'Name' },
+    { id: 'email', queryId: 'email', label: 'Email' },
+    { id: 'role', queryId: 'role', label: 'Role' },
   ];
 
   currentViewMode = viewModes.PARTICIPANT_LIST;
@@ -92,7 +92,12 @@ class UIStore {
   }
 
   get currentParticipantListOrderBy() {
-    return this.currentParticipantViewOrderBy;
+    for (const header of this.participantHeaders) {
+      if (header.id === this.currentParticipantViewOrderBy) {
+        return header.queryId;
+      }
+    }
+    return null;
   }
 
   setCurrentViewMode = (viewMode) => {
