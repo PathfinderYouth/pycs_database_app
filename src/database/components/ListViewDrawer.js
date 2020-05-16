@@ -14,6 +14,7 @@ import {
   Person,
   PieChart,
   Work,
+  Delete,
 } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
@@ -44,9 +45,10 @@ export const ListViewDrawer = inject(
     const { collection } = participantStore;
 
     const statuses = [
-      { name: 'Pending', icon: <HourglassEmptyOutlined /> },
-      { name: 'Approved', icon: <Check /> },
-      { name: 'Declined', icon: <Clear /> },
+      { id: 'pending', name: 'Pending', icon: <HourglassEmptyOutlined /> },
+      { id: 'approved', name: 'Approved', icon: <Check /> },
+      { id: 'declined', name: 'Declined', icon: <Clear /> },
+      { id: 'deleted', name: 'Archived', icon: <Delete /> },
     ];
 
     const expandClick = (event) => {
@@ -81,11 +83,11 @@ export const ListViewDrawer = inject(
               {statuses.map((status) => (
                 <StyledListItem
                   button
-                  key={status.name.toLowerCase()}
+                  key={status.id}
                   className={classes.nested}
                   onClick={() => {
                     setCurrentViewMode(viewModes.PARTICIPANT_LIST);
-                    onParticipantViewChanged(collectionType.PERMANENT, status.name);
+                    onParticipantViewChanged(collectionType.PERMANENT, status.id);
                   }}
                 >
                   <ListItemIcon>{status.icon}</ListItemIcon>

@@ -386,6 +386,19 @@ export default class DatabaseManager {
   }
 
   /**
+   * Delete a participant document from new collection.
+   * @param {docId: string}
+   *  Document id
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   */
+  deleteForeverPermanent(docId, onSuccess, onError) {
+    this.permanentRef.doc(docId).delete().then(onSuccess).catch(onError);
+  }
+
+  /**
    * Move a document in new collection to permanent collection.
    * @param {docId: string}
    *  Document id
@@ -528,7 +541,7 @@ export default class DatabaseManager {
     if (status) {
       query = query.where('status', '==', status);
     } else {
-      query = query.where('status', 'in', ['Pending', 'Approved', 'Declined']);
+      query = query.where('status', 'in', ['pending', 'approved', 'declined']);
     }
     return new Controller(query, limit, onChildNext, onError);
   }
