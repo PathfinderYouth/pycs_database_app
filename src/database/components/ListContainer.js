@@ -14,23 +14,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
 import { uiStore, participantStore, userStore } from '../../injectables';
-import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
+import { viewModes, participantDetailViewModes, collectionType, userRole } from '../../constants';
 import './style/ListContainer.css';
-import service from '../../facade/service';
+import { CreateUserDialog } from './UserManagementDialogs';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -128,48 +118,6 @@ export const ListContainer = inject(
       };
 
       const [addStaffOpen, setAddStaffOpen] = useState(false);
-      let db = service.getUserList();
-      let existingUserEmails = [];
-      useEffect(() => {
-        users.map((user) => (existingUserEmails = [...existingUserEmails, user['email']]));
-      });
-      const [email, setEmail] = useState(null);
-      const [name, setName] = useState(null);
-      const [role, setRole] = useState(null);
-
-      const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-      };
-
-      const handleNameChange = (event) => {
-        setName(event.target.value);
-      };
-
-      const handleRoleChange = (event) => {
-        setRole(event.target.value);
-      };
-
-      const handleAddIconClickOpen = () => {
-        setAddStaffOpen(true);
-      };
-
-      const handleAddDialogClose = () => {
-        setAddStaffOpen(false);
-      };
-
-      const handleAddNewUser = () => {
-        if (!email || !name || !role) {
-          alert("New user's email, name, and role must be provided");
-          return;
-        }
-        if (existingUserEmails.indexOf(email) > -1) {
-          alert(`User email ${email} already exists`);
-          return;
-        }
-        let newUser = { email: email, name: name, role: role };
-        db.addUser(newUser);
-        setAddStaffOpen(false);
-      };
 
       return (
         <div className={`${classes.root} maxWidth`}>
@@ -205,14 +153,22 @@ export const ListContainer = inject(
                                     <EditIcon />
                                   </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Delete user" aria-label="delete" placement="bottom">
-                                  <IconButton
-                                    color="inherit"
-                                    onClick={() => handleDeleteIconClicked(row)}
-                                  >
-                                    <DeleteIcon />
-                                  </IconButton>
-                                </Tooltip>
+                                {row['role'] === userRole.STAFF && (
+                                  <>
+                                    <Tooltip
+                                      title="Delete user"
+                                      aria-label="delete"
+                                      placement="bottom"
+                                    >
+                                      <IconButton
+                                        color="inherit"
+                                        onClick={() => handleDeleteIconClicked(row)}
+                                      >
+                                        <DeleteIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </>
+                                )}
                               </>
                             ) : (
                               <div className="list-row">
@@ -271,64 +227,18 @@ export const ListContainer = inject(
                 onClick={() => {
                   currentViewMode === viewModes.PARTICIPANT_LIST
                     ? handleClickNew()
-                    : handleAddIconClickOpen();
+                    : setAddStaffOpen(true);
                 }}
               >
                 <AddIcon />
               </Fab>
             </Tooltip>
           )}
-
-          <Dialog open={addStaffOpen} onClose={setAddStaffOpen} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
-            <DialogContent>
-              <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="email"
-                label="Email"
-                type="email"
-                size="medium"
-                onChange={handleEmailChange}
-                fullWidth
-              />
-              <TextField
-                required
-                margin="dense"
-                id="name"
-                label="Name"
-                type="name"
-                size="medium"
-                onChange={handleNameChange}
-                fullWidth
-              />
-              <FormControl required fullWidth>
-                <InputLabel id="demo-simple-select-required-label">Role</InputLabel>
-                <Select
-                  labelId="demo-simple-select-required-label"
-                  id="demo-simple-select-required"
-                  value={role}
-                  onChange={handleRoleChange}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={'staff'}>Staff</MenuItem>
-                  <MenuItem value={'admin'}>Admin</MenuItem>
-                </Select>
-                {/* <FormHelperText>Required</FormHelperText> */}
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleAddNewUser} color="primary">
-                Create
-              </Button>
-              <Button onClick={handleAddDialogClose} color="primary">
-                Cancel
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <CreateUserDialog
+            users={users}
+            addStaffOpen={addStaffOpen}
+            setAddStaffOpen={setAddStaffOpen}
+          />
         </div>
       );
     },
