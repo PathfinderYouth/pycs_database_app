@@ -1,7 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { eventType, STATUS } from '../constants';
 import { STATUS, eventType, QUERY_FIELDS } from '../constants';
 import moment from 'moment';
 
@@ -224,7 +223,9 @@ export default class DatabaseManager {
     delete document.id;
     this._updateCaseInsensitiveFields(document);
 
-    ref.doc(docId).update(document)
+    ref
+      .doc(docId)
+      .update(document)
       .then(() => {
         if (onSuccess) {
           onSuccess(participant);
