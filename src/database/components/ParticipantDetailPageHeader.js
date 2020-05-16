@@ -85,7 +85,7 @@ export const ParticipantDetailPageHeader = ({
             <Tooltip title="Decline participant" aria-label="decline">
               <IconButton
                 onClick={() => {
-                  if (window.confirm('Declcine participant?')) {
+                  if (window.confirm('Decline participant?')) {
                     handleClickDecline();
                   }
                 }}
@@ -114,7 +114,6 @@ export const ParticipantDetailPageHeader = ({
             onClick={() => {
               if (window.confirm('Save changes?')) {
                 handleSubmit();
-                // handleClickChangeMode();
               }
             }}
           >
