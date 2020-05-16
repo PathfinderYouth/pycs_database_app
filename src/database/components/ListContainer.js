@@ -17,7 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { uiStore, participantStore } from '../../injectables';
+import { uiStore, participantStore, userStore } from '../../injectables';
 import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
 import './style/ListContainer.css';
 
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 export const ListContainer = inject(
   'uiStore',
   'participantStore',
+  'userStore'
 )(
   observer(
     ({
@@ -49,8 +50,8 @@ export const ListContainer = inject(
     }) => {
       const classes = useStyles();
       const [page, setPage] = useState(0);
-      const [rowsPerPage, setRowsPerPage] = useState(20);
-      const { collection } = participantStore;
+      const { collection, limit: participantLimit } = participantStore;
+      const { limit: userLimit } = userStore;
       const {
         headers,
         setCurrentViewMode,
@@ -101,7 +102,6 @@ export const ListContainer = inject(
 
       const handleChangeRowsPerPage = (event) => {
         setPage(0);
-        setRowsPerPage(event.target.value);
         onChangeRowsPerPage(event.target.value);
       };
 
@@ -119,7 +119,6 @@ export const ListContainer = inject(
           <Paper className={`${classes.paper} maxWidth`}>
             <RecordSearchBar
               title={pageTitle}
-              headers={headers}
               onSearchClicked={handleSearchClicked}
             />
             <TableContainer>
@@ -166,7 +165,7 @@ export const ListContainer = inject(
               rowsPerPageOptions={[20, 50, 100]}
               component="div"
               count={-1}
-              rowsPerPage={rowsPerPage}
+              rowsPerPage={currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit}
               page={page}
               labelDisplayedRows={({ page }) => `Page ${page + 1}`}
               onChangePage={handleChangePage}

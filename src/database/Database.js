@@ -35,10 +35,8 @@ export const Database = inject(
       currentViewMode,
       navigationDrawerOpen,
       setNavigationDrawerOpen,
-      currentParticipantListOrder,
-      currentParticipantListOrderBy,
       setRecordSearchBoxActive,
-      setCurrentParticipantSearchField,
+      setCurrentSearchText,
     } = uiStore;
     const {
       participants,
@@ -67,33 +65,33 @@ export const Database = inject(
       setCurrentStatus(status);
       setCollection(collection);
       setParticipantFilter({ status: status });
-
-      let sorter = {};
-      sorter[currentParticipantListOrderBy] = currentParticipantListOrder;
-      setParticipantSorter(sorter);
+      setCurrentSearchText('');
+      setRecordSearchBoxActive(false);
     };
+
+    const handleStaffViewChanged = () => {
+      setUserFilter({});
+      setCurrentSearchText('');
+      setRecordSearchBoxActive(false);
+    }
 
     const handleOrderChanged = (orderBy, order) => {
       let sorter = {};
+      let sortFunction = currentViewMode === viewModes.STAFF_LIST
+        ? setUserSorter
+        : setParticipantSorter;
       sorter[orderBy] = order;
-
-      if (currentViewMode === viewModes.STAFF_LIST) {
-        // TODO: update UserStore's sorter
-      } else {
-        setParticipantSorter(sorter);
-      }
+      sortFunction(sorter);
     };
 
     const handleSearchClicked = (searchBy, searchText) => {
-      if (currentViewMode === viewModes.STAFF_LIST) {
-        // TODO: update UserStore's filter
-      } else {
-        let filter = { status: currentStatus };
-        filter[searchBy] = searchText;
-        setCurrentParticipantSearchField(searchBy);
-        setRecordSearchBoxActive(searchText !== '');
-        setParticipantFilter(filter);
-      }
+      let filter = currentViewMode === viewModes.STAFF_LIST ? {}: { status: currentStatus };
+      let filterFunction = currentViewMode === viewModes.STAFF_LIST
+        ? setUserFilter
+        : setParticipantFilter;
+      filter[searchBy] = searchText;
+      setRecordSearchBoxActive(searchText !== '');
+      filterFunction(filter);
     };
 
     /**
@@ -114,6 +112,7 @@ export const Database = inject(
               numNew={numOfNewParticipants}
               classes={classes}
               onParticipantViewChanged={handleParticipantViewChanged}
+              onStaffViewChanged={handleStaffViewChanged}
             />
           );
       }

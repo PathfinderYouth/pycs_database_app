@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import './style/RecordSearchBar.css';
 import Button from '@material-ui/core/Button';
 import { inject, observer } from 'mobx-react';
-import { viewModes } from '../../constants';
 import { uiStore } from '../../injectables';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,34 +17,12 @@ const useStyles = makeStyles((theme) => ({
   button: { marginLeft: theme.spacing(1) },
 }));
 
-const StaffSearchSelect = ({ handleChange }) => {
-  const options = uiStore.staffSearchFilters;
+const SearchSelect = ({ handleChange, searchField, options }) => {
   return (
     <Select
       className="formControl"
-      defaultValue={options[0].queryId}
       onChange={handleChange}
-      disableUnderline
-    >
-      {options.map((option) => {
-        const { id, queryId, label } = option;
-        return (
-          <MenuItem value={queryId} key={id}>
-            {label}
-          </MenuItem>
-        );
-      })}
-    </Select>
-  );
-};
-
-const ParticipantSearchSelect = ({ handleChange }) => {
-  const options = uiStore.participantSearchFilters;
-  return (
-    <Select
-      className="formControl"
-      defaultValue={options[0].queryId}
-      onChange={handleChange}
+      value={searchField}
       disableUnderline
     >
       {options.map((option) => {
@@ -62,18 +39,22 @@ const ParticipantSearchSelect = ({ handleChange }) => {
 
 export const RecordSearchBar = inject('uiStore')(
   observer((props) => {
-    const { currentViewMode, participantSearchFilters } = uiStore;
+    const {
+      filters,
+      currentSearchField,
+      setCurrentSearchField,
+      currentSearchText,
+      setCurrentSearchText,
+    } = uiStore;
     const classes = useStyles();
-    const { title, headers, onSearchClicked } = props;
-    const [searchBy, setSearchBy] = useState(participantSearchFilters[0].queryId);
-    const [searchText, setSearchText] = useState('');
+    const { title, onSearchClicked } = props;
 
     const handleChange = (event) => {
-      setSearchBy(event.target.value);
+      setCurrentSearchField(event.target.value);
     };
 
     const getSearchText = (event) => {
-      setSearchText(event.target.value);
+      setCurrentSearchText(event.target.value);
     };
 
     const onKeyPressed = (event) => {
@@ -83,7 +64,7 @@ export const RecordSearchBar = inject('uiStore')(
     };
 
     const onSubmit = () => {
-      onSearchClicked(searchBy, searchText.toLowerCase());
+      onSearchClicked(currentSearchField, currentSearchText.toLowerCase());
     };
 
     return (
@@ -97,6 +78,7 @@ export const RecordSearchBar = inject('uiStore')(
           size="small"
           onChange={getSearchText}
           onKeyPress={onKeyPressed}
+          value={currentSearchText}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -107,11 +89,11 @@ export const RecordSearchBar = inject('uiStore')(
               <InputAdornment position="end">
                 <div className="endAdorn">
                   <FormControl className="formControl">
-                    {currentViewMode === viewModes.STAFF_LIST ? (
-                      <StaffSearchSelect handleChange={handleChange} />
-                    ) : (
-                      <ParticipantSearchSelect handleChange={handleChange} />
-                    )}
+                    <SearchSelect
+                      handleChange={handleChange}
+                      searchField={currentSearchField}
+                      options={filters}
+                    />
                   </FormControl>
                 </div>
               </InputAdornment>

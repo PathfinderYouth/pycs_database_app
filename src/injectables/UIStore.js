@@ -12,8 +12,8 @@ class UIStore {
   ];
 
   staffHeaders = [
-    { id: 'name', queryId: 'name', label: 'Name', sortable: true },
-    { id: 'email', queryId: 'email', label: 'Email', sortable: true },
+    { id: 'name', queryId: 'nameLower', label: 'Name', sortable: true },
+    { id: 'email', queryId: 'emailLower', label: 'Email', sortable: true },
     { id: 'role', queryId: 'role', label: 'Role', sortable: true },
     { id: 'action', label: 'Action', sortable: false },
   ];
@@ -30,8 +30,8 @@ class UIStore {
   ];
 
   staffSearchFilters = [
-    { id: 'name', queryId: 'name', label: 'Name' },
-    { id: 'email', queryId: 'email', label: 'Email' },
+    { id: 'name', queryId: 'nameLower', label: 'Name' },
+    { id: 'email', queryId: 'emailLower', label: 'Email' },
     { id: 'role', queryId: 'role', label: 'Role' },
   ];
 
@@ -49,9 +49,11 @@ class UIStore {
 
   currentStaffViewOrderBy = this.staffHeaders[0].id;
 
-  currentParticipantSearchField = this.participantSearchFilters[0].id;
+  currentParticipantSearchField = this.participantSearchFilters[0].queryId;
 
-  currentStaffSearchField = this.staffSearchFilters[0].id;
+  currentStaffSearchField = this.staffSearchFilters[0].queryId;
+
+  currentSearchValue = '';
 
   recordSearchBoxActive = false;
 
@@ -61,6 +63,12 @@ class UIStore {
     return this.currentViewMode === viewModes.STAFF_LIST
       ? this.staffHeaders
       : this.participantHeaders;
+  }
+
+  get filters() {
+    return this.currentViewMode === viewModes.STAFF_LIST
+      ? this.staffSearchFilters
+      : this.participantSearchFilters;
   }
 
   get searchFilters() {
@@ -93,23 +101,14 @@ class UIStore {
       : this.currentParticipantViewOrderBy;
   }
 
-  get currentParticipantListOrder() {
-    return this.currentParticipantViewOrder;
-  }
-
-  get currentParticipantListOrderBy() {
-    for (const header of this.participantHeaders) {
-      if (header.id === this.currentParticipantViewOrderBy) {
-        return header.queryId;
-      }
-    }
-    return null;
-  }
-
   get currentSearchField() {
     return this.currentViewMode === viewModes.STAFF_LIST
       ? this.currentStaffSearchField
       : this.currentParticipantSearchField;
+  }
+
+  get currentSearchText() {
+    return this.currentSearchValue;
   }
 
   setCurrentViewMode = (viewMode) => {
@@ -124,13 +123,17 @@ class UIStore {
     this.currentParticipantDetailViewMode = viewMode;
   };
 
-  setCurrentParticipantSearchField = (field) => {
-    this.currentParticipantSearchField = field;
-  };
+  setCurrentSearchField = (field) => {
+    if (this.currentViewMode === viewModes.STAFF_LIST) {
+      this.currentStaffSearchField = field;
+    } else {
+      this.currentParticipantSearchField = field;
+    }
+  }
 
-  setCurrentStaffSearchField = (field) => {
-    this.currentStaffSearchField = field;
-  };
+  setCurrentSearchText = (text) => {
+    this.currentSearchValue = text;
+  }
 
   setRecordSearchBoxActive = (isActive) => {
     this.recordSearchBoxActive = isActive;
@@ -168,17 +171,21 @@ decorate(UIStore, {
   currentStaffViewOrderBy: observable,
   currentStaffSearchField: observable,
   currentParticipantSearchField: observable,
+  currentSearchValue: observable,
   recordSearchBoxActive: observable,
   headers: computed,
+  filters: computed,
   currentDetailViewMode: computed,
   currentListViewMode: computed,
   currentListViewOrder: computed,
   currentListViewOrderBy: computed,
+  currentSearchField: computed,
+  currentSearchText: computed,
   setCurrentViewMode: action,
   setCurrentParticipantDetailStep: action,
   setCurrentParticipantDetailViewMode: action,
-  setCurrentStaffSearchField: action,
-  setCurrentParticipantSearchField: action,
+  setCurrentSearchField: action,
+  setCurrentSearchText: action,
   setRecordSearchBoxActive: action,
   setNavigationDrawerOpen: action,
   setCurrentListViewOrder: action,

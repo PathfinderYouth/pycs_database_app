@@ -65,12 +65,9 @@ class ParticipantStore {
 
     this._participants = newList;
 
-    if (newList.length > 0) {
-      let currentEndId = newList[newList.length - 1].id;
-      this._isLastPage = this._controller.endId === currentEndId;
-    } else {
-      this._isLastPage = true;
-    }
+    this._isLastPage = newList.length > 0
+      ? this._controller.endId === newList[newList.length - 1].id
+      : true;
   };
 
   _updateList = autorun(
@@ -176,6 +173,10 @@ class ParticipantStore {
   get isLastPage() {
     return this._isLastPage;
   }
+
+  get limit() {
+    return this._limit;
+  }
 }
 
 decorate(ParticipantStore, {
@@ -197,6 +198,7 @@ decorate(ParticipantStore, {
   participants: computed,
   numOfNewParticipants: computed,
   isLastPage: computed,
+  limit: computed,
 });
 
 let participantStore = new ParticipantStore();
