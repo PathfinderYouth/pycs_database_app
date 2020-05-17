@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { STATUS, eventType, QUERY_FIELDS } from '../constants';
+import { status, eventType, QUERY_FIELDS } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -151,7 +151,7 @@ export default class DatabaseManager {
     );
     let document = {
       ...data,
-      status: STATUS.pending,
+      status: status.NEW,
       createdAt: moment.utc().format(),
       history: newHistory,
     };
@@ -222,7 +222,7 @@ export default class DatabaseManager {
     let document = { ...participant };
     delete document.id;
     this._updateCaseInsensitiveFields(document);
-    
+
     ref
       .doc(docId)
       .update(document)
@@ -285,7 +285,7 @@ export default class DatabaseManager {
     );
     let document = {
       ...data,
-      status: STATUS.pending,
+      status: status.PENDING,
       createdAt: moment.utc().format(),
       history: newHistory,
     };
@@ -347,16 +347,21 @@ export default class DatabaseManager {
     const updatedHistory = this.getUpdatedHistory(
       userName,
       eventType.DELETED,
-      'Participant record deleted',
+      'Participant record archived',
       oldHistory,
     );
+
     let document = {
-      status: STATUS.deleted,
+      status: status.DELETED,
       prevStatus: status,
       history: updatedHistory,
     };
 
-    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
+    this.permanentRef
+      .doc(docId)
+      .update(document)
+      .then(onSuccess({ ...data, ...document }))
+      .catch(onError);
   }
 
   /**
@@ -412,12 +417,11 @@ export default class DatabaseManager {
           throw new Error('Document does not exist');
         }
 
-        doc.status = STATUS.pending;
+        doc.status = status.PENDING;
         doc.history = updatedHistory;
 
         transaction.set(newDocRef, doc);
         transaction.delete(oldDocRef);
-        transaction.update(this.statRef, { numOfNew: FieldValue.increment(-1) });
       });
     };
 
@@ -426,6 +430,7 @@ export default class DatabaseManager {
       .then(() => {
         if (onSuccess) {
           onSuccess(newDocRef.id);
+          this.statRef.doc('participant').update({ numOfNew: FieldValue.increment(-1) })
         }
       })
       .catch(onError);
@@ -450,7 +455,7 @@ export default class DatabaseManager {
     );
 
     let document = {
-      status: STATUS.approved,
+      status: status.APPROVED,
       confirmationNumber: confirmationNumber,
       history: updatedHistory,
     };
@@ -476,7 +481,7 @@ export default class DatabaseManager {
       oldHistory,
     );
     let document = {
-      status: STATUS.declined,
+      status: status.DECLINED,
       history: updatedHistory,
     };
 
@@ -522,13 +527,13 @@ export default class DatabaseManager {
    *  A controller object
    */
   getPermanentList(filter, sorter, limit, onChildNext, onError) {
-    let { status, ...newFilter } = filter;
+    let { status: participantStatus, ...newFilter } = filter;
     let query = this._buildQuery(this.permanentRef, newFilter, sorter);
 
-    if (status) {
-      query = query.where('status', '==', status);
+    if (participantStatus) {
+      query = query.where('status', '==', participantStatus);
     } else {
-      query = query.where('status', 'in', ['Pending', 'Approved', 'Declined']);
+      query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED]);
     }
     return new Controller(query, limit, onChildNext, onError);
   }
@@ -539,7 +544,7 @@ export default class DatabaseManager {
    */
   getAllPermanentParticipants(callback) {
     this.permanentRef
-      .where('status', 'in', ['Pending', 'Approved', 'Declined'])
+      .where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED])
       .get()
       .then(function (querySnapshot) {
         let participantsList = [];

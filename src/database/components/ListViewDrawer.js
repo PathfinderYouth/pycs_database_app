@@ -20,7 +20,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import { participantStore, uiStore } from '../../injectables';
 import { collectionType, viewModes } from '../../constants';
-import './style/NavDrawer.css';
 import { StyledListItem } from './StyledListItem';
 import './style/NavDrawer.css';
 
@@ -81,7 +80,7 @@ export const ListViewDrawer = inject(
               {statuses.map((status) => (
                 <StyledListItem
                   button
-                  key={status.name.toLowerCase()}
+                  key={status.name}
                   className={classes.nested}
                   onClick={() => {
                     setCurrentViewMode(viewModes.PARTICIPANT_LIST);

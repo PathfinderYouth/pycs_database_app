@@ -13,4 +13,5 @@ export * from './ParticipantDetailCreate';
 export * from './ParticipantDetailHistory';
 export * from './ParticipantDetailNotes';
 export * from './ParticipantDetailPage';
-export * from './UserManagementDialogs';
+export * from './UserCreateDialog';
+export * from './StatusIndicator';

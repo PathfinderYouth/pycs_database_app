@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,10 +18,13 @@ import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
+import { StatusIndicator } from './StatusIndicator';
 import { uiStore, participantStore, userStore } from '../../injectables';
 import { viewModes, participantDetailViewModes, collectionType, userRole } from '../../constants';
+import { AuthContext } from '../../sign-in';
+import { UserCreateDialog } from './UserCreateDialog';
 import './style/ListContainer.css';
-import { CreateUserDialog } from './UserManagementDialogs';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(4),
   },
 }));
+
+
 
 export const ListContainer = inject(
   'uiStore',
@@ -65,6 +71,8 @@ export const ListContainer = inject(
         setCurrentListViewOrderBy,
         setCurrentParticipantDetailViewMode,
       } = uiStore;
+
+      const { currentUser } = useContext(AuthContext);
 
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
@@ -117,6 +125,21 @@ export const ListContainer = inject(
       };
 
       const [addStaffOpen, setAddStaffOpen] = useState(false);
+      const ListCell = ({ data, column }) => {
+        const isDate = ['birthDate', 'createdAt'].includes(column);
+        const cellData = data[column];
+        return (
+          <div className="list-row">
+            {column === 'status' ? (
+              <StatusIndicator status={cellData} />
+            ) : (
+              <Typography variant="body2">
+                {isDate ? moment(cellData).format('MMM D, YYYY') : cellData}
+              </Typography>
+            )}
+          </div>
+        );
+      };
 
       return (
         <div className={`${classes.root} maxWidth`}>
@@ -148,7 +171,7 @@ export const ListContainer = inject(
                                     <EditIcon />
                                   </IconButton>
                                 </Tooltip>
-                                {row['role'] === userRole.STAFF && (
+                                {row['email'] !== currentUser.email && (
                                   <>
                                     <Tooltip
                                       title="Delete user"
@@ -231,7 +254,7 @@ export const ListContainer = inject(
               </Fab>
             </Tooltip>
           )}
-          <CreateUserDialog
+          <UserCreateDialog
             users={users}
             addStaffOpen={addStaffOpen}
             setAddStaffOpen={setAddStaffOpen}
