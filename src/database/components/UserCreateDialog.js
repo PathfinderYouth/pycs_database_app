@@ -5,10 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import { useSnackbar } from 'notistack';
 import { userRole } from '../../constants';
 import service from '../../facade/service';
@@ -101,18 +97,18 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           onChange={handleNameChange}
           fullWidth
         />
-        <FormControl required fullWidth variant="outlined" margin="normal">
-          <TextField
-            label="Role"
-            variant="outlined"
-            value={role}
-            onChange={handleRoleChange}
-            select
-          >
-            <MenuItem value={userRole.STAFF}>Staff</MenuItem>
-            <MenuItem value={userRole.ADMIN}>Admin</MenuItem>
-          </Select>
-        </FormControl>
+
+        <TextField
+          label="Role"
+          variant="outlined"
+          value={role}
+          onChange={handleRoleChange}
+          fullWidth
+          select
+        >
+          <option value={userRole.STAFF}>Staff</option>
+          <option value={userRole.ADMIN}>Admin</option>
+        </TextField>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleAddDialogClose} color="primary">
