@@ -7,8 +7,8 @@ class UIStore {
     { id: 'nameGiven', queryId: 'nameGivenLower', label: 'Given Name(s)', sortable: true },
     { id: 'status', label: 'Status', sortable: false },
     { id: 'birthDate', queryId: 'birthDate', label: 'Date of Birth', sortable: true },
-    { id: 'addressStreet', queryId: 'addressStreetLower', label: 'Street Address', sortable: true },
     { id: 'addressCity', queryId: 'addressCityLower', label: 'City', sortable: true },
+    { id: 'createdAt', queryId: 'createdAt', label: 'Enrolled', sortable: true },
   ];
 
   staffHeaders = [
@@ -41,9 +41,9 @@ class UIStore {
 
   currentParticipantDetailViewMode = participantDetailViewModes.VIEW;
 
-  currentParticipantViewOrder = 'asc';
+  currentParticipantViewOrder = 'desc';
 
-  currentParticipantViewOrderBy = this.participantHeaders[0].id;
+  currentParticipantViewOrderBy = 'createdAt';
 
   currentStaffViewOrder = 'asc';
 
@@ -129,11 +129,11 @@ class UIStore {
     } else {
       this.currentParticipantSearchField = field;
     }
-  }
+  };
 
   setCurrentSearchText = (text) => {
     this.currentSearchValue = text;
-  }
+  };
 
   setRecordSearchBoxActive = (isActive) => {
     this.recordSearchBoxActive = isActive;
