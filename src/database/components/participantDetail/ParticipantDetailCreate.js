@@ -1,15 +1,12 @@
 import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { participantDetailSteps, initialValues } from '../../fields';
+import { initialValues, participantDetailSteps } from '../../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
-import service from '../../facade/service';
-import { participantDetailViewModes } from '../../constants';
-import { AuthContext } from '../../sign-in';
+import { participantDetailViewModes } from '../../../constants';
+import { AuthContext } from '../../../sign-in';
+import service from '../../../facade/service';
 
-export const ParticipantDetailCreate = ({
-  currentStep,
-  handleClickChangeMode,
-}) => {
+export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) => {
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
   const {
@@ -29,27 +26,27 @@ export const ParticipantDetailCreate = ({
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     db.addPermanent(
-          values,
-          userID,
-          (newParticipant) => {
-            setSubmitting(false);
-            enqueueSnackbar('Participant record created.', {
-              variant: 'success',
-            });
-            handleClickChangeMode();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem creating the participant record.', {
-              variant: 'error',
-            });
-            handleClickChangeMode();
-          },
-        );
+      values,
+      userID,
+      (newParticipant) => {
+        setSubmitting(false);
+        enqueueSnackbar('Participant record created.', {
+          variant: 'success',
+        });
+        handleClickChangeMode();
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem creating the participant record.', {
+          variant: 'error',
+        });
+        handleClickChangeMode();
+      },
+    );
   };
 
   return (
     <ParticipantDetailForm
-      formTitle='Create participant record'
+      formTitle="Create participant record"
       initialValues={initialValues}
       participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}

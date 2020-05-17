@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
@@ -7,9 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import moment from 'moment';
-import { fieldNames } from '../../fields';
-import './style/ParticipantDetailHistory.css';
+import { fieldNames } from '../../../fields';
+import '../style/ParticipantDetailHistory.css';
 
 export const ParticipantDetailHistory = ({ participant }) => {
   const events = !!participant.history ? participant.history : [];
@@ -17,12 +17,12 @@ export const ParticipantDetailHistory = ({ participant }) => {
   // Gets display values for the changed fields table cells
   const getCellValue = (header, data) => {
     if (header === 'name') {
-      return fieldNames[data]
+      return fieldNames[data];
     } else {
-      const value = Array.isArray(data) ? data.join(', ') : data
-      return value === [] || value === '' ? <em>None</em> : value
+      const value = Array.isArray(data) ? data.join(', ') : data;
+      return value === [] || value === '' ? <em>None</em> : value;
     }
-  }
+  };
 
   const renderChangedFields = (fields) => {
     const headers = [

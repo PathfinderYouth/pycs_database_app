@@ -1,11 +1,11 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import './style/SortingTableHead.css';
-import { inject, observer } from 'mobx-react';
-import { uiStore } from '../../injectables';
+import { uiStore } from '../../../injectables';
+import '../style/SortingTableHead.css';
 
 export const SortingTableHead = inject('uiStore')(
   observer(({ order, orderBy, onRequestSort, headerCells }) => {

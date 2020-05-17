@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import Table from '@material-ui/core/Table';
@@ -10,20 +10,16 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { StatusIndicator } from './StatusIndicator';
-import { uiStore, participantStore, userStore } from '../../injectables';
-import { viewModes, participantDetailViewModes, collectionType, userRole } from '../../constants';
-import { AuthContext } from '../../sign-in';
-import { UserCreateDialog } from './UserCreateDialog';
-import './style/ListContainer.css';
+import { StatusIndicator } from '../StatusIndicator';
+import { uiStore, participantStore, userStore } from '../../../injectables';
+import { viewModes, participantDetailViewModes, collectionType } from '../../../constants';
+import { UserCreateDialog, UserManagementAction } from '../userManagement';
+import '../style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,8 +65,6 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode,
       } = uiStore;
 
-      const { currentUser } = useContext(AuthContext);
-
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
       const handleClickNew = () => {
@@ -78,7 +72,7 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
       };
 
-      const handleRowClicked = (clickedRow) => {
+      const handleParticipantRowClicked = (clickedRow) => {
         onRowClicked(clickedRow);
         setCurrentViewMode(currentDetailViewMode);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
@@ -112,26 +106,21 @@ export const ListContainer = inject(
         onChangeRowsPerPage(event.target.value);
       };
 
-      const handleEditIconClicked = (event, row) => {
-        // TODO onClick covert Typography into TextField
-        // TODO handle Edit functionality of user management
-      };
-
-      const handleDeleteIconClicked = (event, row) => {
-        // TODO handle Delete functionlity of user management
-      };
-
       const [addStaffOpen, setAddStaffOpen] = useState(false);
       const ListCell = ({ data, column }) => {
         const isDate = ['birthDate', 'createdAt'].includes(column);
-        const cellData = data[column];
+        let cellData = data[column];
+        const isEmpty = cellData === '' || data === [];
+        if (isEmpty) {
+          cellData = <em>None</em>;
+        }
         return (
           <div className="list-row">
             {column === 'status' ? (
               <StatusIndicator status={cellData} />
             ) : (
               <Typography variant="body2">
-                {isDate ? moment(cellData).format('MMM D, YYYY') : cellData}
+                {isDate && !isEmpty ? moment(cellData).format('MMM D, YYYY') : cellData}
               </Typography>
             )}
           </div>
@@ -152,66 +141,22 @@ export const ListContainer = inject(
                   rowCount={records.length}
                   headerCells={headers}
                 />
-                {currentViewMode === viewModes.STAFF_LIST ? (
-                  <TableBody>
-                    {records.map((row) => (
-                      <TableRow hover key={row.id}>
-                        {headers.map((column) => (
-                          <TableCell key={`${row.id}-${column.id}`}>
-                            {column.id === 'action' ? (
-                              <>
-                                <Tooltip title="Edit user" aria-label="edit" placement="bottom">
-                                  <IconButton
-                                    color="inherit"
-                                    size="small"
-                                    onClick={() => handleEditIconClicked(row)}
-                                  >
-                                    <EditIcon />
-                                  </IconButton>
-                                </Tooltip>
-                                {row['email'] !== currentUser.email && (
-                                  <>
-                                    <Tooltip
-                                      title="Delete user"
-                                      aria-label="delete"
-                                      placement="bottom"
-                                    >
-                                      <IconButton
-                                        color="inherit"
-                                        size="small"
-                                        onClick={() => handleDeleteIconClicked(row)}
-                                      >
-                                        <DeleteIcon />
-                                      </IconButton>
-                                    </Tooltip>
-                                  </>
-                                )}
-                              </>
-                            ) : (
-                              <div className="list-row">
-                                <Typography>{row[column.id]}</Typography>
-                              </div>
+                <TableBody>
+                  {records.map((row) => (
+                    <TableRow hover key={row.id} onClick={() => handleParticipantRowClicked(row)}>
+                      {headers.map((column) => (
+                        <TableCell key={`${row.id}-${column.id}`}>
+                          <div className="list-row">
+                            <Typography>{row[column.id]}</Typography>
+                            {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' && (
+                              <UserManagementAction row={row} />
                             )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                ) : (
-                  <TableBody>
-                    {records.map((row) => (
-                      <TableRow hover key={row.id} onClick={() => handleRowClicked(row)}>
-                        {headers.map((column) => (
-                          <TableCell key={`${row.id}-${column.id}`}>
-                            <div className="list-row">
-                              <Typography>{row[column.id]}</Typography>
-                            </div>
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                )}
+                          </div>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </TableContainer>
             <TablePagination

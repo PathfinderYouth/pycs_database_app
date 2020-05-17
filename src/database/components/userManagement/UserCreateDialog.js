@@ -6,21 +6,17 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSnackbar } from 'notistack';
-import { userRole } from '../../constants';
-import service from '../../facade/service';
+import { userRole } from '../../../constants';
+import service from '../../../facade/service';
+import { MenuItem } from '@material-ui/core';
 
 export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
   let db = service.getUserList();
-  let existingUserEmails = [];
-  useEffect(() => {
-    users.map((user) => (existingUserEmails = [...existingUserEmails, user['email']]));
-  });
   const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState(userRole.STAFF);
   const [errorEmailEmpty, setErrorEmailEmpty] = useState(false);
-  const [errorEmailUsed, setErrorEmailUsed] = useState(false);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
 
   const handleEmailChange = (event) => {
@@ -40,10 +36,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
   };
 
   const handleAddNewUser = () => {
-    let isEmailUsed = existingUserEmails.indexOf(email) > -1;
-    if (email === '' || isEmailUsed || name === '') {
+    if (email === '' || name === '') {
       setErrorEmailEmpty(email === '');
-      setErrorEmailUsed(isEmailUsed);
       setErrorNameStatus(name === '');
       return;
     }
@@ -77,11 +71,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           label="Email"
           type="email"
           size="medium"
-          error={errorEmailEmpty || errorEmailUsed}
-          helperText={
-            (errorEmailEmpty && 'Field cannot be empty') ||
-            (errorEmailUsed && 'Email already exists')
-          }
+          error={errorEmailEmpty}
+          helperText={errorEmailEmpty && 'Field cannot be empty'}
           onChange={handleEmailChange}
           fullWidth
         />
@@ -99,6 +90,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         />
 
         <TextField
+          required
+          id="role"
           label="Role"
           variant="outlined"
           value={role}
@@ -106,8 +99,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           fullWidth
           select
         >
-          <option value={userRole.STAFF}>Staff</option>
-          <option value={userRole.ADMIN}>Admin</option>
+          <MenuItem value={userRole.STAFF}>Staff</MenuItem>
+          <MenuItem value={userRole.ADMIN}>Admin</MenuItem>
         </TextField>
       </DialogContent>
       <DialogActions>

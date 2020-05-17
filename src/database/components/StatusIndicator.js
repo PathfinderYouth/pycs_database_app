@@ -1,6 +1,5 @@
 import React from 'react';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
-import { status } from '../../constants';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import './style/StatusIndicator.css';
 

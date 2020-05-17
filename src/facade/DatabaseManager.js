@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { status, eventType, QUERY_FIELDS } from '../constants';
+import { eventType, QUERY_FIELDS, status } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -343,17 +343,17 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   deletePermanent(data, userName, onSuccess, onError) {
-    const { id: docId, history: oldHistory, status } = data;
+    const { id: docId, history: oldHistory, status: participantStatus } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
-      eventType.DELETED,
+      eventType.ARCHIVED,
       'Participant record archived',
       oldHistory,
     );
 
     let document = {
-      status: status.DELETED,
-      prevStatus: status,
+      status: status.ARCHIVED,
+      prevStatus: participantStatus,
       history: updatedHistory,
     };
 
@@ -388,6 +388,19 @@ export default class DatabaseManager {
     };
 
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
+  }
+
+  /**
+   * Delete a participant document forever from permanent collection.
+   * @param {docId: string}
+   *  Document id
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   */
+  deleteForeverPermanent(docId, onSuccess, onError) {
+    this.permanentRef.doc(docId).delete().then(onSuccess).catch(onError);
   }
 
   /**

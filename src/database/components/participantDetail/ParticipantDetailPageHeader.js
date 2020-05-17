@@ -1,6 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -8,11 +10,9 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
-import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import { StatusIndicator } from './StatusIndicator';
-import { collectionType, participantDetailViewModes, status } from '../../constants';
-import './style/ParticipantDetailView.css';
+import { StatusIndicator } from '../StatusIndicator';
+import { collectionType, participantDetailViewModes, status } from '../../../constants';
+import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailPageHeader = ({
   children,
@@ -142,7 +142,6 @@ export const ParticipantDetailPageHeader = ({
           <div className="participant-detail-status">
             <StatusIndicator status={participantStatus} />
           </div>
-          
         </div>
       </div>
       <div className="participant-detail-form-contents">
