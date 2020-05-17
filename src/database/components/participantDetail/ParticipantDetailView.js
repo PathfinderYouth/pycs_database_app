@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailSteps } from '../../../fields';
-import { collectionType, masks, participantDetailViewModes, errorType } from '../../../constants';
+import { collectionType, masks, participantDetailViewModes } from '../../../constants';
 import service from '../../../facade/service';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailView.css';
@@ -86,8 +86,8 @@ export const ParticipantDetailView = ({
         handleClickChangeView();
       },
       (error) => {
-        let message = error.name === errorType.DUPLICATE
-          ? error.message
+        let message = error.name === 'DuplicateError'
+          ? 'Unable to save participant record, record with that SIN already exists'
           : 'There was a problem saving the participant record.';
 
         enqueueSnackbar(message, {

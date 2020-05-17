@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
 import { participantDetailSteps } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
-import { collectionType, participantDetailViewModes, errorType } from '../../../constants';
+import { collectionType, participantDetailViewModes } from '../../../constants';
 import service from '../../../facade/service';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import '../style/ParticipantDetailPage.css';
@@ -56,8 +56,8 @@ export const ParticipantDetailEdit = ({
             handleClickChangeMode();
           },
           (error) => {
-            let message = error.name === errorType.DUPLICATE
-              ? error.message
+            let message = error.name === 'DuplicateError'
+              ? 'Unable to save participant record, record with that SIN already exists'
               : 'There was a problem saving the participant record.';
 
             enqueueSnackbar(message, {

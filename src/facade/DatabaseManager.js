@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { eventType, QUERY_FIELDS, status, errorType } from '../constants';
+import { eventType, QUERY_FIELDS, status } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
@@ -69,7 +69,7 @@ export default class DatabaseManager {
           querySnap.docs.forEach(queryDocSnap => {
             if (queryDocSnap.id !== docId && onError) {
               let error = new Error('SIN already exists');
-              error.name = errorType.DUPLICATE;
+              error.name = 'DuplicateError';
               throw error;
             }
           });

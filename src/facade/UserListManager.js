@@ -1,7 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { errorType } from '../constants';
 
 export default class UserListManager {
   static instance;
@@ -34,7 +33,7 @@ export default class UserListManager {
           querySnap.docs.forEach(queryDocSnap => {
             if (queryDocSnap.id !== docId && onError) {
               let error = new Error('SIN already exists');
-              error.name = errorType.DUPLICATE;
+              error.name = 'DuplicateError';
               throw error;
             }
           });
