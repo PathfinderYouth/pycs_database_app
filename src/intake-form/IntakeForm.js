@@ -3,18 +3,19 @@ import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import service from '../facade/service';
-import { IntakeForm, validationSchema } from './components';
-import { initialValues } from '../fields';
+import { IntakeFormPage, validationSchema } from './components';
+import { initialValues, formSteps } from '../fields';
+import { uiStore } from '../injectables';
 
-export const IntakeFormPage = () => {
+export const IntakeForm = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const { setCurrentIntakeFormStep } = uiStore;
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, form, onSuccessfulWrite) => {
-        const { setSubmitting } = form;
+      onSubmit={(values, { setSubmitting }) => {
         service.getDatabase().addNew(
           // formats the birth date field into UTC
           { ...values, birthDate: moment(values.birthDate).utc().format() },
@@ -23,7 +24,7 @@ export const IntakeFormPage = () => {
             enqueueSnackbar('Application successfully submitted.', {
               variant: 'success',
             });
-            onSuccessfulWrite(form);
+            setCurrentIntakeFormStep(formSteps.length);
           },
           (error) => {
             setSubmitting(false);
@@ -32,9 +33,10 @@ export const IntakeFormPage = () => {
             });
           },
         );
+        
       }}
     >
-      {(form) => <IntakeForm form={form} />}
+      {(form) => <IntakeFormPage form={form} />}
     </Formik>
   );
 };
