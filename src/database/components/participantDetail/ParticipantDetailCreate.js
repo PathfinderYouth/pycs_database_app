@@ -13,16 +13,6 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
     currentUser: { email: userID },
   } = useContext(AuthContext);
 
-  const handleClickOk = () => {
-    return window.confirm('Create new participant record?');
-  };
-
-  const handleClickCancel = () => {
-    if (window.confirm('Discard changes? Record will not be saved.')) {
-      handleClickChangeMode();
-    }
-  };
-
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     db.addPermanent(
@@ -50,8 +40,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
       initialValues={initialValues}
       participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}
-      handleClickOk={handleClickOk}
-      handleClickCancel={handleClickCancel}
+      handleClickChangeMode={handleClickChangeMode}
       step={step}
     />
   );
