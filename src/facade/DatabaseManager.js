@@ -62,19 +62,20 @@ export default class DatabaseManager {
     }
   }
 
-  _checkSin(sin, onSuccess, onError) {
+  _checkSin(docId, sin, onSuccess, onError) {
     if (sin) {
       this.permanentRef.where('sin', '==', sin).get().then((querySnap) => {
-        if (querySnap.docs.length === 0) {
-          onSuccess();
-          return;
+        if (querySnap.docs.length > 0) {
+          querySnap.docs.forEach(queryDocSnap => {
+            if (queryDocSnap.id !== docId && onError) {
+              let error = new Error('SIN already exists');
+              error.name = errorType.DUPLICATE;
+              throw error;
+            }
+          });
         }
 
-        if (onError) {
-          let error = new Error('SIN already exists');
-          error.name = errorType.DUPLICATE;
-          throw error;
-        }
+        onSuccess();
       }).catch(onError);
       return;
     }
@@ -299,8 +300,7 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   addPermanent(data, userName, onSuccess, onError) {
-    console.log(data);
-    this._checkSin(data.sin, () => {
+    this._checkSin(null, data.sin, () => {
       const newHistory = this.getUpdatedHistory(
         userName,
         eventType.CREATED,
@@ -354,7 +354,7 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   updatePermanent(oldData, newData, userName, onSuccess, onError) {
-    this._checkSin(newData.sin, () => {
+    this._checkSin(oldData.id, newData.sin, () => {
       this._updateDocument(this.permanentRef, oldData, newData, userName, onSuccess, onError);
     }, onError);
   }
@@ -439,8 +439,8 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   moveToPermanent(data, userName, onSuccess, onError) {
-    this._checkSin(data.sin, () => {
-      const { id: docId, history: oldHistory } = data;
+    const { id: docId, history: oldHistory, sin } = data;
+    this._checkSin(null, sin, () => {
       const updatedHistory = this.getUpdatedHistory(
         userName,
         eventType.MOVED,
