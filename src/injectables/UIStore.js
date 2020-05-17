@@ -1,5 +1,5 @@
 import { action, computed, decorate, observable } from 'mobx';
-import { viewModes, participantDetailViewModes } from '../constants';
+import { participantDetailViewModes, viewModes } from '../constants';
 
 class UIStore {
   participantHeaders = [

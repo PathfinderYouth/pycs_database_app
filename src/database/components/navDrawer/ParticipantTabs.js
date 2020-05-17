@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import ListItemText from '@material-ui/core/ListItemText';
 import { uiStore } from '../../../injectables';
 import { participantDetailViewModes } from '../../../constants';
-import { stepNames, participantDetailStepNames } from '../../../fields';
+import { participantDetailStepNames, stepNames } from '../../../fields';
 import { StyledListItem } from '../StyledListItem';
 
 export const ParticipantTabs = inject('uiStore')(

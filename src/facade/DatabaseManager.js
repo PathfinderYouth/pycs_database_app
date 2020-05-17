@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
-import { status, eventType, QUERY_FIELDS } from '../constants';
+import { eventType, QUERY_FIELDS, status } from '../constants';
 import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;

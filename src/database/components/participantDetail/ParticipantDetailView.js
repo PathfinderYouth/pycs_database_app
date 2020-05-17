@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
 import { useSnackbar } from 'notistack';
@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailSteps } from '../../../fields';
-import { participantDetailViewModes, collectionType, masks } from '../../../constants';
+import { collectionType, masks, participantDetailViewModes } from '../../../constants';
 import service from '../../../facade/service';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailView.css';
