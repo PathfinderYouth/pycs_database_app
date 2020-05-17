@@ -118,14 +118,18 @@ export const ListContainer = inject(
 
       const ListCell = ({ data, column }) => {
         const isDate = ['birthDate', 'createdAt'].includes(column);
-        const cellData = data[column];
+        let cellData = data[column];
+        const isEmpty = cellData === '' || data === []
+        if (isEmpty) {
+          cellData = <em>None</em>
+        }
         return (
           <div className="list-row">
             {column === 'status' ? (
               <StatusIndicator status={cellData} />
             ) : (
               <Typography variant="body2">
-                {isDate ? moment(cellData).format('MMM D, YYYY') : cellData}
+                {isDate && !isEmpty ? moment(cellData).format('MMM D, YYYY') : cellData}
               </Typography>
             )}
           </div>
