@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
@@ -14,24 +14,22 @@ import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
 import './style/IntakeForm.css';
 
-export const IntakeForm = (props) => {
-  const { form } = props;
+export const IntakeFormPage = ({form}) => {
   const { values, handleSubmit, isSubmitting } = form;
   const [currentStep, setCurrentStep] = useState(-1);
-  const recaptchaRef = React.createRef();
+  const [visitedSteps, setVisitedSteps] = useState([])
+  const recaptchaRef = createRef();
   const { enqueueSnackbar } = useSnackbar();
   const lastStepNumber = formSteps.length;
   const theme = useTheme();
   const isFullSize = useMediaQuery(theme.breakpoints.up('md'));
-  let visitedSteps = [];
   let formContainerDiv; // reference to form container div
 
   /**
    * Validates form on initial load, generating errors that must be cleared in order to proceed
    */
-
   useEffect(() => {
-    props.form.validateForm();
+    form.validateForm();
     visitStep(currentStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,7 +43,8 @@ export const IntakeForm = (props) => {
   }, [currentStep]);
 
   /**
-   * Called when a user is verified via ReCaptcha
+   * Verifies captcha has been successfully passed, then submits the form
+   * @param {*} response 
    */
   const onCaptchaChanged = (response) => {
     if (response !== null) {
@@ -90,7 +89,7 @@ export const IntakeForm = (props) => {
    */
   const visitStep = (stepNumber) => {
     if (!visitedSteps.includes(stepNumber)) {
-      visitedSteps.push(stepNumber);
+      setVisitedSteps([ ...visitedSteps, stepNumber ])
     }
   };
 
@@ -102,6 +101,7 @@ export const IntakeForm = (props) => {
     if (!stepHasErrors()) {
       if (currentStep < lastStepNumber) {
         setCurrentStep(currentStep + 1);
+        visitStep(currentStep + 1);
       }
     }
   };

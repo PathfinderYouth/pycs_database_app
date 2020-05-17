@@ -3,11 +3,12 @@ import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import service from '../facade/service';
-import { IntakeForm, validationSchema } from './components';
+import { IntakeFormPage, validationSchema } from './components';
 import { initialValues } from '../fields';
 
-export const IntakeFormPage = () => {
+export const IntakeForm = () => {
   const { enqueueSnackbar } = useSnackbar();
+
 
   return (
     <Formik
@@ -34,7 +35,7 @@ export const IntakeFormPage = () => {
         );
       }}
     >
-      {(form) => <IntakeForm form={form} />}
+      {(form) => <IntakeFormPage form={form} />}
     </Formik>
   );
 };

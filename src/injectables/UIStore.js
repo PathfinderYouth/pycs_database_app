@@ -55,6 +55,10 @@ class UIStore {
 
   currentSearchValue = '';
 
+  currentIntakeFormStep = 0;
+
+  visitedIntakeFormSteps = [0];
+
   recordSearchBoxActive = false;
 
   navigationDrawerOpen = false;
@@ -171,6 +175,8 @@ decorate(UIStore, {
   currentStaffViewOrderBy: observable,
   currentStaffSearchField: observable,
   currentParticipantSearchField: observable,
+  currentIntakeFormStep: observable,
+  visitedIntakeFormSteps: observable,
   currentSearchValue: observable,
   recordSearchBoxActive: observable,
   headers: computed,
@@ -187,6 +193,8 @@ decorate(UIStore, {
   setCurrentSearchField: action,
   setCurrentSearchText: action,
   setRecordSearchBoxActive: action,
+  setCurrentIntakeFormStep: action,
+  visitIntakeFormStep: action,
   setNavigationDrawerOpen: action,
   setCurrentListViewOrder: action,
   setCurrentListViewOrderBy: action,
