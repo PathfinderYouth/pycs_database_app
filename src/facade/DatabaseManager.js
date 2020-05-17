@@ -386,7 +386,7 @@ export default class DatabaseManager {
   }
 
   /**
-   * Delete a participant document from new collection.
+   * Delete a participant document forever from permanent collection.
    * @param {docId: string}
    *  Document id
    * @param {onSuccess?: () => void}
