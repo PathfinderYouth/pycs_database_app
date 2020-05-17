@@ -12,7 +12,7 @@ export const IntakeFormPage = () => {
   return (
     <Formik
       initialValues={initialValues}
-      // validationSchema={validationSchema}
+      validationSchema={validationSchema}
       onSubmit={(values, form, onSuccessfulWrite) => {
         const { setSubmitting } = form;
         service.getDatabase().addNew(
