@@ -1,15 +1,15 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
 import Card from '@material-ui/core/Card';
-import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailCreate } from './ParticipantDetailCreate';
 import { ParticipantDetailEdit } from './ParticipantDetailEdit';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
 import { ParticipantDetailView } from './ParticipantDetailView';
-import { inject, observer } from 'mobx-react';
-import { participantStore, uiStore } from '../../injectables';
-import { participantDetailViewModes, viewModes } from '../../constants';
-import './style/ParticipantDetailPage.css';
+import { participantStore, uiStore } from '../../../injectables';
+import { participantDetailViewModes, viewModes } from '../../../constants';
+import { participantDetailSteps } from '../../../fields';
+import '../style/ParticipantDetailPage.css';
 
 export const ParticipantDetailPage = inject(
   'participantStore',
@@ -54,16 +54,16 @@ export const ParticipantDetailPage = inject(
         } else {
           return (
             <ParticipantDetailView
-                participant={currentParticipant}
-                collection={collection}
-                currentStep={currentParticipantDetailStep}
-                handleClickChangeMode={() =>
-                  setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
-                }
-                handleClickChangeView={() => {
-                  setCurrentViewMode(viewModes.PARTICIPANT_LIST)
-                }}
-              /> 
+              participant={currentParticipant}
+              collection={collection}
+              currentStep={currentParticipantDetailStep}
+              handleClickChangeMode={() =>
+                setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
+              }
+              handleClickChangeView={() => {
+                setCurrentViewMode(viewModes.PARTICIPANT_LIST);
+              }}
+            />
           );
         }
       }
