@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { participantDetailSteps, initialValues } from '../../../fields';
+import { initialValues, participantDetailSteps } from '../../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import { participantDetailViewModes } from '../../../constants';
 import { AuthContext } from '../../../sign-in';
