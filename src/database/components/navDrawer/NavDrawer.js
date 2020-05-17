@@ -3,13 +3,13 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import './style/NavDrawer.css';
-import service from '../../facade/service';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import service from '../../../facade/service';
+import '../style/NavDrawer.css';
 
 // get firebase authentication service
 const authService = service.getAuthentication();

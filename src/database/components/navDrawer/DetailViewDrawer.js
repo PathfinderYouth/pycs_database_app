@@ -1,15 +1,15 @@
 import React from 'react';
+import { inject, observer } from 'mobx-react';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
-import { ParticipantTabs } from './ParticipantTabs';
 import { ArrowBack } from '@material-ui/icons';
-import { inject, observer } from 'mobx-react';
-import { uiStore } from '../../injectables';
-import { participantDetailViewModes, viewModes } from '../../constants';
-import './style/NavDrawer.css';
-import { StyledListItem } from './StyledListItem';
+import { uiStore } from '../../../injectables';
+import { participantDetailViewModes, viewModes } from '../../../constants';
+import { StyledListItem } from '../StyledListItem';
+import { ParticipantTabs } from './ParticipantTabs';
+import '../style/NavDrawer.css';
 
 export const DetailViewDrawer = inject('uiStore')(
   observer(() => {
