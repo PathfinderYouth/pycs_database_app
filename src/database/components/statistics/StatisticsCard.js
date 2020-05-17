@@ -1,8 +1,8 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import './style/StatisticsCard.css';
-import Grid from '@material-ui/core/Grid';
+import '../style/StatisticsCard.css';
 
 export const StatisticsCard = (props) => {
   const { statsList } = props;

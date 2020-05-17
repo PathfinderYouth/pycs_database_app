@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
-import { StatisticsCard } from './StatisticsCard';
-import './style/StatisticsView.css';
+import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-import { statisticsGroups, updateStatistics } from './statisticsHelpers';
-import { participantStore } from '../../injectables';
-import { Refresh } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
-import moment from 'moment';
 import Fab from '@material-ui/core/Fab';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import service from '../../facade/service';
+import Refresh from '@material-ui/icons/Refresh';
+import { StatisticsCard } from './StatisticsCard';
+import { statisticsGroups, updateStatistics } from './statisticsHelpers';
+import service from '../../../facade/service';
+import '../style/StatisticsView.css';
 
 const percent = (amount, total) => {
   return total === 0 ? '' : Math.round((amount / total) * 100) + '%';
