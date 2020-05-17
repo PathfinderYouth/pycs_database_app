@@ -55,7 +55,7 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
     db.addUser(
       newUser,
       () => {
-        enqueueSnackbar('New User Created.', {
+        enqueueSnackbar('New user successfully created.', {
           variant: 'success',
         });
         setAddStaffOpen(false);
@@ -102,12 +102,12 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           fullWidth
         />
         <FormControl required fullWidth variant="outlined" margin="normal">
-          <InputLabel id="demo-simple-select-required-label">Role</InputLabel>
-          <Select
-            labelId="demo-simple-select-required-label"
-            id="demo-simple-select-required"
+          <TextField
+            label="Role"
+            variant="outlined"
             value={role}
             onChange={handleRoleChange}
+            select
           >
             <MenuItem value={userRole.STAFF}>Staff</MenuItem>
             <MenuItem value={userRole.ADMIN}>Admin</MenuItem>
