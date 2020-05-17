@@ -44,6 +44,7 @@ export const ParticipantDetailView = ({
   const renderFieldData = (field, data) => {
     const { name, type, mask, adornment } = field;
     let renderedData = null;
+
     if (data === undefined || data.length === 0) {
       renderedData = <em>None</em>;
     } else if (name === 'sin') {
