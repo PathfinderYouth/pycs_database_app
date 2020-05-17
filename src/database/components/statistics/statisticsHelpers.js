@@ -1,5 +1,5 @@
-import service from '../../facade/service';
 import moment from 'moment';
+import service from '../../../facade/service';
 
 const db = service.getDatabase();
 
