@@ -1,19 +1,19 @@
 import React, { useContext, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import moment from 'moment';
+import { inject, observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
-import { useSnackbar } from 'notistack';
-import { noteField } from '../../fields';
-import service from '../../facade/service';
-import moment from 'moment';
-import { inject, observer } from 'mobx-react';
-import { participantStore } from '../../injectables';
-import { AuthContext } from '../../sign-in';
-import { collectionType } from '../../constants';
-import './style/ParticipantDetailNotes.css';
-import './style/ParticipantDetailPage.css';
+import { noteField } from '../../../fields';
+import { participantStore } from '../../../injectables';
+import { AuthContext } from '../../../sign-in';
+import { collectionType } from '../../../constants';
+import service from '../../../facade/service';
+import '../style/ParticipantDetailNotes.css';
+import '../style/ParticipantDetailPage.css';
 
 export const ParticipantDetailNotes = inject('participantStore')(
   observer(() => {
