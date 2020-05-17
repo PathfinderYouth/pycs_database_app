@@ -48,7 +48,7 @@ export const ListViewDrawer = inject(
       { id: 'pending', name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: 'approved', name: 'Approved', icon: <Check /> },
       { id: 'declined', name: 'Declined', icon: <Clear /> },
-      { id: 'deleted', name: 'Archived', icon: <Archive /> },
+      { id: 'deleted', name: 'Archived', icon: <ArchiveOutlinedIcon /> },
     ];
 
     const expandClick = (event) => {
