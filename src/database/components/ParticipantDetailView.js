@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useSnackbar } from 'notistack';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import NumberFormat from 'react-number-format';
 import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
@@ -9,7 +10,6 @@ import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailViewModes, collectionType, masks } from '../../constants';
 import service from '../../facade/service';
 import { AuthContext } from '../../sign-in';
-
 import './style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
@@ -43,7 +43,7 @@ export const ParticipantDetailView = ({
   const renderFieldData = (field, data) => {
     const { name, adornment } = field;
     let renderedData = null;
-    if (data.length === 0 || data === undefined) {
+    if (data === undefined || data.length === 0) {
       renderedData = <em>None</em>;
     } else if (field.name === 'sin') {
       return <MaskedSIN sin={data} />;
@@ -109,17 +109,40 @@ export const ParticipantDetailView = ({
       : db.deletePermanent(
           participant,
           userID,
-          (success) => {
-            enqueueSnackbar('Participant record removed. Undo?');
+          (updatedParticpant) => {
+            enqueueSnackbar('Participant record archived.', {
+              action: (
+                <Button color="secondary" onClick={() => handleClickUndoDelete(updatedParticpant, userID)}>
+                  Undo
+                </Button>
+              ),
+              autoHideDuration: 3000,
+            });
             handleClickChangeView();
           },
           (error) => {
-            enqueueSnackbar('There was a problem removing the participant record.', {
+            enqueueSnackbar('There was a problem archiving the participant record.', {
               variant: 'error',
             });
             handleClickChangeView();
           },
         );
+  };
+
+  const handleClickUndoDelete = (participant, userID) => {
+    const db = service.getDatabase();
+    db.undoDeletePermanent(
+      participant,
+      userID,
+      (success) => {
+        enqueueSnackbar('Participant record restored.', { variant: 'success' });
+      },
+      (error) => {
+        enqueueSnackbar('There was a problem restoring the participant record.', {
+          variant: 'error',
+        });
+      },
+    );
   };
 
   const handleClickApprove = (confirmationNumber) => {

@@ -21,16 +21,6 @@ export const ParticipantDetailEdit = ({
   } = useContext(AuthContext);
   const userID = !!displayName ? displayName : email;
 
-  const handleClickOk = () => {
-    return window.confirm('Confirm changes?');
-  };
-
-  const handleClickCancel = () => {
-    if (window.confirm('Discard changes? Record will not be saved.')) {
-      handleClickChangeMode();
-    }
-  };
-
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     collection === collectionType.NEW
