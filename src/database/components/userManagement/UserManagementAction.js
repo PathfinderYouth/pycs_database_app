@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { UserDeleteDialog } from './UserDeleteDialog';
+import { UserCreateDialog } from './UserCreateDialog';
 
 export const UserManagementAction = ({ row }) => {
   const { currentUser } = useContext(AuthContext);
@@ -27,6 +28,12 @@ export const UserManagementAction = ({ row }) => {
           </Tooltip>
         </>
       )}
+      <UserDeleteDialog
+        // user={selectedUser}
+        deleteDialogOpen={deleteDialogOpen}
+        setDeleteDialogOpen={setDeleteDialogOpen}
+      />
+      {/* <UserEditDialog/> */}
     </>
   );
 };
