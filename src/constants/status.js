@@ -1,6 +1,7 @@
-export const STATUS = {
-  pending: 'Pending',
-  approved: 'Approved',
-  declined: 'Declined',
-  deleted: 'Deleted',
+export const status = {
+  APPROVED: 'approved',
+  ARCHIVED: 'archived',
+  DECLINED: 'declined',
+  PENDING: 'pending',
+  NEW: 'new'
 };
