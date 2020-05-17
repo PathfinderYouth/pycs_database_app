@@ -5,3 +5,4 @@ export * from './statistics';
 export * from './StatusIndicator';
 export * from './StyledListItem';
 export * from './TopNavBar';
+export * from './userManagement';

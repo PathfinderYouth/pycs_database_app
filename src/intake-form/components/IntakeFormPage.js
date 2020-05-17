@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
+import { inject, observer } from 'mobx-react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
@@ -9,30 +10,29 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useSnackbar } from 'notistack';
 import { useTheme } from '@material-ui/core/styles';
 import { FormStepStart } from './FormStepStart';
-import { formSteps, requiredFields } from '../../fields';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
+import { uiStore } from '../../injectables';
+import { formSteps, requiredFields } from '../../fields';
 import './style/IntakeForm.css';
 
-export const IntakeForm = (props) => {
-  const { form } = props;
+export const IntakeFormPage = inject('uiStore')(observer(({form}) => {
   const { values, handleSubmit, isSubmitting } = form;
-  const [currentStep, setCurrentStep] = useState(-1);
-  const recaptchaRef = React.createRef();
+  const { currentIntakeFormStep, setCurrentIntakeFormStep } = uiStore;
+  const [visitedSteps, setVisitedSteps] = useState([])
+  const recaptchaRef = createRef();
   const { enqueueSnackbar } = useSnackbar();
   const lastStepNumber = formSteps.length;
   const theme = useTheme();
   const isFullSize = useMediaQuery(theme.breakpoints.up('md'));
-  let visitedSteps = [];
   let formContainerDiv; // reference to form container div
 
   /**
    * Validates form on initial load, generating errors that must be cleared in order to proceed
    */
-
   useEffect(() => {
-    props.form.validateForm();
-    visitStep(currentStep);
+    form.validateForm();
+    visitStep(currentIntakeFormStep);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,17 +42,15 @@ export const IntakeForm = (props) => {
   useEffect(() => {
     formContainerDiv.scrollTop = 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep]);
+  }, [currentIntakeFormStep]);
 
   /**
-   * Called when a user is verified via ReCaptcha
+   * Verifies captcha has been successfully passed, then submits the form
+   * @param {*} response 
    */
   const onCaptchaChanged = (response) => {
     if (response !== null) {
-      handleSubmit(values, form);
-      // TODO: only proceed to next step if pushing to database was successful,
-      // otherwise, show an error message somehow
-      handleClickNext(form);
+      handleSubmit(values, form)
     }
   };
 
@@ -62,8 +60,8 @@ export const IntakeForm = (props) => {
   const stepHasErrors = () => {
     const { errors, setFieldTouched } = form;
     let hasErrors = false;
-    if (currentStep > -1) {
-      requiredFields[currentStep].forEach((field) => {
+    if (currentIntakeFormStep > -1) {
+      requiredFields[currentIntakeFormStep].forEach((field) => {
         setFieldTouched(field);
         if (!!errors[field]) {
           hasErrors = true;
@@ -84,7 +82,7 @@ export const IntakeForm = (props) => {
    */
   const visitStep = (stepNumber) => {
     if (!visitedSteps.includes(stepNumber)) {
-      visitedSteps.push(stepNumber);
+      setVisitedSteps([ ...visitedSteps, stepNumber ])
     }
   };
 
@@ -94,8 +92,9 @@ export const IntakeForm = (props) => {
    */
   const handleClickNext = () => {
     if (!stepHasErrors()) {
-      if (currentStep < lastStepNumber) {
-        setCurrentStep(currentStep + 1);
+      if (currentIntakeFormStep < lastStepNumber) {
+        setCurrentIntakeFormStep(currentIntakeFormStep + 1);
+        visitStep(currentIntakeFormStep + 1);
       }
     }
   };
@@ -104,8 +103,8 @@ export const IntakeForm = (props) => {
    * Steps backward a step in the form
    */
   const handleClickBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+    if (currentIntakeFormStep > 0) {
+      setCurrentIntakeFormStep(currentIntakeFormStep - 1);
     }
   };
 
@@ -119,16 +118,16 @@ export const IntakeForm = (props) => {
    */
   const handleClickStep = (event, stepNumber) => {
     event.preventDefault();
-    if (stepNumber < currentStep) {
-      setCurrentStep(stepNumber);
-    } else if (stepNumber === currentStep + 1) {
+    if (stepNumber < currentIntakeFormStep) {
+      setCurrentIntakeFormStep(stepNumber);
+    } else if (stepNumber === currentIntakeFormStep + 1) {
       handleClickNext();
     } else if (!visitedSteps.includes(stepNumber)) {
       enqueueSnackbar('Must complete steps before proceeding.', {
         variant: 'error',
       });
     } else if (visitedSteps.includes(stepNumber)) {
-      setCurrentStep(stepNumber);
+      setCurrentIntakeFormStep(stepNumber);
     }
   };
 
@@ -164,7 +163,7 @@ export const IntakeForm = (props) => {
         </Typography>
       </div>
 
-      {currentStep > -1 && currentStep < lastStepNumber && (
+      {currentIntakeFormStep > -1 && currentIntakeFormStep < lastStepNumber && (
         <div className="intake-form-breadcrumbs">
           <Breadcrumbs
             maxItems={isFullSize ? undefined : 2}
@@ -174,7 +173,7 @@ export const IntakeForm = (props) => {
             {formSteps.map(
               (step, index) =>
                 index > -1 &&
-                (currentStep === index ? (
+                (currentIntakeFormStep === index ? (
                   <Typography key={step.stepName} variant="caption" color="textSecondary">
                     {step.stepName}
                   </Typography>
@@ -197,11 +196,11 @@ export const IntakeForm = (props) => {
       )}
 
       <div className="intake-form-container" ref={(ref) => (formContainerDiv = ref)}>
-        <div className="intake-form-step">{getFormStep(form, currentStep)}</div>
+        <div className="intake-form-step">{getFormStep(form, currentIntakeFormStep)}</div>
       </div>
       <div className="intake-form-bottomBar">
         <div className="form-buttonBack">
-          {currentStep > 0 && currentStep < lastStepNumber && (
+          {currentIntakeFormStep > 0 && currentIntakeFormStep < lastStepNumber && (
             <Button color="primary" variant="contained" onClick={handleClickBack}>
               Back
             </Button>
@@ -215,17 +214,21 @@ export const IntakeForm = (props) => {
           </Typography>
         </div>
         <div className="buttonNext">
-          {currentStep < lastStepNumber - 1 && (
+          {currentIntakeFormStep < lastStepNumber - 1 && (
             <Button color="primary" variant="contained" onClick={handleClickNext}>
               Next
             </Button>
           )}
-          {currentStep === lastStepNumber - 1 && (
+          {currentIntakeFormStep === lastStepNumber - 1 && (
             <Button
               color="primary"
               variant="contained"
               onClick={() => {
-                recaptchaRef.current.execute();
+                if (recaptchaRef.current.getValue() === null || !recaptchaRef.current.getValue()) {
+                  recaptchaRef.current.execute();
+                } else {
+                  handleSubmit(values, form)
+                }
               }}
               disabled={isSubmitting}
             >
@@ -236,4 +239,4 @@ export const IntakeForm = (props) => {
       </div>
     </div>
   );
-};
+}));
