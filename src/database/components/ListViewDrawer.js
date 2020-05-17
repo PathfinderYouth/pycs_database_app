@@ -14,7 +14,7 @@ import {
   Person,
   PieChart,
   Work,
-  ArchiveOutlinedIcon,
+  ArchiveOutlined,
 } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
@@ -48,7 +48,7 @@ export const ListViewDrawer = inject(
       { id: 'pending', name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: 'approved', name: 'Approved', icon: <Check /> },
       { id: 'declined', name: 'Declined', icon: <Clear /> },
-      { id: 'deleted', name: 'Archived', icon: <ArchiveOutlinedIcon /> },
+      { id: 'archived', name: 'Archived', icon: <ArchiveOutlined /> },
     ];
 
     const expandClick = (event) => {
