@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
 import { initialValues, participantDetailSteps } from '../../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
-import { participantDetailViewModes } from '../../../constants';
+import { participantDetailViewModes, errorType } from '../../../constants';
 import { AuthContext } from '../../../sign-in';
 import service from '../../../facade/service';
 
@@ -36,7 +36,11 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
         handleClickChangeMode();
       },
       (error) => {
-        enqueueSnackbar('There was a problem creating the participant record.', {
+        let message = error.name === errorType.DUPLICATE
+          ? error.message
+          : 'There was a problem saving the participant record.';
+
+        enqueueSnackbar(message, {
           variant: 'error',
         });
         handleClickChangeMode();

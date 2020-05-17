@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
+import { errorType } from '../constants';
 
 export default class UserListManager {
   static instance;
@@ -26,6 +27,28 @@ export default class UserListManager {
     this.userRef = this.db.collection('user');
   }
 
+  _checkEmail(emailLower, onSuccess, onError) {
+    if (emailLower) {
+      this.userRef.where('emailLower', '==', emailLower).get().then((querySnap) => {
+        if (querySnap.docs.length === 0) {
+          onSuccess();
+          return;
+        }
+
+        if (onError) {
+          let error = new Error('Email already exists');
+          error.name = errorType.DUPLICATE;
+          throw error;
+        }
+      }).catch(onError);
+      return;
+    }
+
+    if (onError) {
+      onError(new Error('Email cannot be empty'));
+    }
+  }
+
   /**
    * Add a new document into user collection.
    * @param {user: Object}
@@ -40,16 +63,18 @@ export default class UserListManager {
       ...user,
       nameLower: user.name.toLowerCase(),
       emailLower: user.email.toLowerCase(),
-    }
+    };
 
-    this.userRef
-      .add(user)
-      .then((docRef) => {
-        if (onSuccess) {
-          onSuccess(docRef.id);
-        }
-      })
-      .catch(onError);
+    this._checkEmail(user.emailLower, () => {
+      this.userRef
+        .add(user)
+        .then((docRef) => {
+          if (onSuccess) {
+            onSuccess(docRef.id);
+          }
+        })
+        .catch(onError);
+    }, onError);
   }
 
   /**
@@ -94,7 +119,9 @@ export default class UserListManager {
   updateUser(docId, data, onSuccess, onError) {
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-    this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
+    this._checkEmail(data.emailLower, () => {
+      this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
+    }, onError);
   }
 
   /**
