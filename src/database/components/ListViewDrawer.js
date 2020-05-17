@@ -14,7 +14,7 @@ import {
   Person,
   PieChart,
   Work,
-  Archive,
+  ArchiveOutlinedIcon,
 } from '@material-ui/icons';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
