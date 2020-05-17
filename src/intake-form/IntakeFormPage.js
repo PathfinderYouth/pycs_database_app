@@ -13,17 +13,20 @@ export const IntakeFormPage = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, form, onSuccessfulWrite) => {
+        const { setSubmitting } = form;
         service.getDatabase().addNew(
-           // formats the birthdate field into UTC
+          // formats the birth date field into UTC
           { ...values, birthDate: moment(values.birthDate).utc().format() },
           (docId) => {
             setSubmitting(false);
             enqueueSnackbar('Application successfully submitted.', {
               variant: 'success',
             });
+            onSuccessfulWrite(form);
           },
           (error) => {
+            setSubmitting(false);
             enqueueSnackbar('There was a problem submitting your application.', {
               variant: 'error',
             });

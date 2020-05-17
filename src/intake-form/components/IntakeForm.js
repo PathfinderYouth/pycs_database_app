@@ -49,11 +49,17 @@ export const IntakeForm = (props) => {
    */
   const onCaptchaChanged = (response) => {
     if (response !== null) {
-      handleSubmit(values, form);
-      // TODO: only proceed to next step if pushing to database was successful,
-      // otherwise, show an error message somehow
-      handleClickNext(form);
+      submit();
     }
+  };
+
+  /**
+   * Submits form
+   */
+  const submit = () => {
+    handleSubmit(values, form, () => {
+      handleClickNext(form);
+    });
   };
 
   /**
@@ -225,7 +231,11 @@ export const IntakeForm = (props) => {
               color="primary"
               variant="contained"
               onClick={() => {
-                recaptchaRef.current.execute();
+                if (recaptchaRef.current.getValue() === null || !recaptchaRef.current.getValue()) {
+                  recaptchaRef.current.execute();
+                } else {
+                  submit();
+                }
               }}
               disabled={isSubmitting}
             >
