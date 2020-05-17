@@ -27,19 +27,20 @@ export default class UserListManager {
     this.userRef = this.db.collection('user');
   }
 
-  _checkEmail(emailLower, onSuccess, onError) {
+  _checkEmail(docId, emailLower, onSuccess, onError) {
     if (emailLower) {
       this.userRef.where('emailLower', '==', emailLower).get().then((querySnap) => {
-        if (querySnap.docs.length === 0) {
-          onSuccess();
-          return;
+        if (querySnap.docs.length > 0) {
+          querySnap.docs.forEach(queryDocSnap => {
+            if (queryDocSnap.id !== docId && onError) {
+              let error = new Error('SIN already exists');
+              error.name = errorType.DUPLICATE;
+              throw error;
+            }
+          });
         }
 
-        if (onError) {
-          let error = new Error('Email already exists');
-          error.name = errorType.DUPLICATE;
-          throw error;
-        }
+        onSuccess();
       }).catch(onError);
       return;
     }
@@ -65,7 +66,7 @@ export default class UserListManager {
       emailLower: user.email.toLowerCase(),
     };
 
-    this._checkEmail(user.emailLower, () => {
+    this._checkEmail(null, user.emailLower, () => {
       this.userRef
         .add(user)
         .then((docRef) => {
@@ -119,7 +120,7 @@ export default class UserListManager {
   updateUser(docId, data, onSuccess, onError) {
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-    this._checkEmail(data.emailLower, () => {
+    this._checkEmail(docId, data.emailLower, () => {
       this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
     }, onError);
   }
