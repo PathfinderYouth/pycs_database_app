@@ -35,6 +35,8 @@ class UIStore {
     { id: 'role', queryId: 'role', label: 'Role' },
   ];
 
+  currentIntakeFormStep = -1;
+
   currentViewMode = viewModes.PARTICIPANT_LIST;
 
   currentParticipantDetailStep = 0; // index of current details step (corresponding to intake form steps)
@@ -54,8 +56,6 @@ class UIStore {
   currentStaffSearchField = this.staffSearchFilters[0].queryId;
 
   currentSearchValue = '';
-
-  currentIntakeFormStep = 0;
 
   visitedIntakeFormSteps = [0];
 
@@ -115,6 +115,10 @@ class UIStore {
     return this.currentSearchValue;
   }
 
+  setCurrentIntakeFormStep = (stepIndex) => {
+    this.currentIntakeFormStep = stepIndex;
+  }
+
   setCurrentViewMode = (viewMode) => {
     this.currentViewMode = viewMode;
   };
@@ -165,6 +169,7 @@ class UIStore {
 }
 
 decorate(UIStore, {
+  currentIntakeFormStep: observable,
   currentViewMode: observable,
   navigationDrawerOpen: observable,
   currentParticipantDetailStep: observable,
@@ -175,7 +180,6 @@ decorate(UIStore, {
   currentStaffViewOrderBy: observable,
   currentStaffSearchField: observable,
   currentParticipantSearchField: observable,
-  currentIntakeFormStep: observable,
   visitedIntakeFormSteps: observable,
   currentSearchValue: observable,
   recordSearchBoxActive: observable,
@@ -187,13 +191,13 @@ decorate(UIStore, {
   currentListViewOrderBy: computed,
   currentSearchField: computed,
   currentSearchText: computed,
+  setCurrentIntakeFormStep: action,
   setCurrentViewMode: action,
   setCurrentParticipantDetailStep: action,
   setCurrentParticipantDetailViewMode: action,
   setCurrentSearchField: action,
   setCurrentSearchText: action,
   setRecordSearchBoxActive: action,
-  setCurrentIntakeFormStep: action,
   visitIntakeFormStep: action,
   setNavigationDrawerOpen: action,
   setCurrentListViewOrder: action,
