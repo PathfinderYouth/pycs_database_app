@@ -7,11 +7,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import service from '../../../facade/service';
 
-export const UserDeleteDialog = ({ userId, deleteDialogOpen, setDeleteDialogOpen }) => {
-
+export const UserDeleteDialog = ({ user, deleteDialogOpen, setDeleteDialogOpen }) => {
   let db = service.getUserList();
+  let userName = user.name;
   const handleDeleteUser = () => {
-    db.deleteUser(userId);
+    //TODO
     setDeleteDialogOpen(false);
   };
 
@@ -20,12 +20,16 @@ export const UserDeleteDialog = ({ userId, deleteDialogOpen, setDeleteDialogOpen
       <Dialog
         open={deleteDialogOpen}
         onClose={setDeleteDialogOpen}
+        maxWidth={'sm'}
+        fullWidth
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">Delete User</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">Delete this user?</DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            Delete user <b>{userName}</b>?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
