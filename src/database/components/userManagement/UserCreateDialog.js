@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,22 +18,6 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
   const [role, setRole] = useState(userRole.STAFF);
   const [errorEmailEmpty, setErrorEmailEmpty] = useState(false);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  const handleAddDialogClose = () => {
-    setAddStaffOpen(false);
-  };
 
   const handleAddNewUser = () => {
     if (email === '' || name === '') {
@@ -73,7 +57,9 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           size="medium"
           error={errorEmailEmpty}
           helperText={errorEmailEmpty && 'Field cannot be empty'}
-          onChange={handleEmailChange}
+          onChange={(event) => {
+            setEmail(event.target.value);
+          }}
           fullWidth
         />
         <TextField
@@ -85,7 +71,9 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           size="medium"
           error={errorNameStatus}
           helperText={errorNameStatus && 'Field cannot be empty'}
-          onChange={handleNameChange}
+          onChange={(event) => {
+            setName(event.target.value);
+          }}
           fullWidth
         />
 
@@ -95,7 +83,9 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
           label="Role"
           variant="outlined"
           value={role}
-          onChange={handleRoleChange}
+          onChange={(event) => {
+            setRole(event.target.value);
+          }}
           fullWidth
           select
         >
@@ -104,7 +94,12 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         </TextField>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAddDialogClose} color="primary">
+        <Button
+          onClick={() => {
+            setAddStaffOpen(false);
+          }}
+          color="primary"
+        >
           Cancel
         </Button>
         <Button onClick={handleAddNewUser} color="primary">

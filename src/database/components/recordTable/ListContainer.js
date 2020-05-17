@@ -146,12 +146,11 @@ export const ListContainer = inject(
                     <TableRow hover key={row.id} onClick={() => handleParticipantRowClicked(row)}>
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
-                          <div className="list-row">
-                            <Typography>{row[column.id]}</Typography>
-                            {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' && (
-                              <UserManagementAction row={row} />
-                            )}
-                          </div>
+                          {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
+                            <UserManagementAction row={row} />
+                          ) : (
+                            <ListCell data={row} column={column.id} />
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
