@@ -1,9 +1,9 @@
 export const eventType = {
-  CREATED: 'create',
-  UPDATED: 'updated',
-  DELETED: 'deleted',
+  APPROVED: 'approved',
+  ARCHIVED: 'archived',
+  CREATED: 'created',
+  DECLINED: 'declined',
   MOVED: 'moved',
   RESTORED: 'restored',
-  APPROVED: 'approved',
-  DECLINED: 'declined',
+  UPDATED: 'updated',
 };

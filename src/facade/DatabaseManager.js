@@ -343,17 +343,17 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   deletePermanent(data, userName, onSuccess, onError) {
-    const { id: docId, history: oldHistory, status } = data;
+    const { id: docId, history: oldHistory, status: participantStatus } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
-      eventType.DELETED,
+      eventType.ARCHIVED,
       'Participant record archived',
       oldHistory,
     );
 
     let document = {
-      status: status.DELETED,
-      prevStatus: status,
+      status: status.ARCHIVED,
+      prevStatus: participantStatus,
       history: updatedHistory,
     };
 
