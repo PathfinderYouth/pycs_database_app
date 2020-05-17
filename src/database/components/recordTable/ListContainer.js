@@ -10,17 +10,15 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import { makeStyles } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import { participantStore, uiStore, userStore } from '../../../injectables';
-import { collectionType, participantDetailViewModes, viewModes } from '../../../constants';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
 import { StatusIndicator } from '../StatusIndicator';
+import { uiStore, participantStore, userStore } from '../../../injectables';
+import { viewModes, participantDetailViewModes, collectionType } from '../../../constants';
+import { UserCreateDialog, UserManagementAction } from '../userManagement';
 import '../style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,8 +50,9 @@ export const ListContainer = inject(
     }) => {
       const classes = useStyles();
       const [page, setPage] = useState(0);
+      const [rowsPerPage, setRowsPerPage] = useState(20);
       const { collection, limit: participantLimit } = participantStore;
-      const { limit: userLimit } = userStore;
+      const { users, limit: userLimit } = userStore;
       const {
         headers,
         setCurrentViewMode,
@@ -73,7 +72,7 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
       };
 
-      const handleRowClicked = (clickedRow) => {
+      const handleParticipantRowClicked = (clickedRow) => {
         onRowClicked(clickedRow);
         setCurrentViewMode(currentDetailViewMode);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
@@ -107,21 +106,13 @@ export const ListContainer = inject(
         onChangeRowsPerPage(event.target.value);
       };
 
-      const handleEditIconClicked = (event, row) => {
-        // TODO onClick covert Typography into TextField
-        // TODO handle Edit functionality of user management
-      };
-
-      const handleDeleteIconClicked = (event, row) => {
-        // TODO handle Delete functionlity of user management
-      };
-
+      const [addStaffOpen, setAddStaffOpen] = useState(false);
       const ListCell = ({ data, column }) => {
         const isDate = ['birthDate', 'createdAt'].includes(column);
         let cellData = data[column];
-        const isEmpty = cellData === '' || data === []
+        const isEmpty = cellData === '' || data === [];
         if (isEmpty) {
-          cellData = <em>None</em>
+          cellData = <em>None</em>;
         }
         return (
           <div className="list-row">
@@ -152,22 +143,11 @@ export const ListContainer = inject(
                 />
                 <TableBody>
                   {records.map((row) => (
-                    <TableRow hover key={row.id} onClick={() => handleRowClicked(row)}>
+                    <TableRow hover key={row.id} onClick={() => handleParticipantRowClicked(row)}>
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
                           {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
-                            <>
-                              <Tooltip title="Edit user" aria-label="edit" placement="bottom">
-                                <IconButton color="inherit">
-                                  <EditIcon onClick={() => handleEditIconClicked(row)} />
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Delete user" aria-label="delete" placement="bottom">
-                                <IconButton color="inherit">
-                                  <DeleteIcon onClick={() => handleDeleteIconClicked(row)} />
-                                </IconButton>
-                              </Tooltip>
-                            </>
+                            <UserManagementAction row={row} />
                           ) : (
                             <ListCell data={row} column={column.id} />
                           )}
@@ -210,14 +190,18 @@ export const ListContainer = inject(
                 onClick={() => {
                   currentViewMode === viewModes.PARTICIPANT_LIST
                     ? handleClickNew()
-                    : // TODO: Add add staff method
-                      console.log('Add new staff account');
+                    : setAddStaffOpen(true);
                 }}
               >
                 <AddIcon />
               </Fab>
             </Tooltip>
           )}
+          <UserCreateDialog
+            users={users}
+            addStaffOpen={addStaffOpen}
+            setAddStaffOpen={setAddStaffOpen}
+          />
         </div>
       );
     },
