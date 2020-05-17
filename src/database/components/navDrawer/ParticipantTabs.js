@@ -1,10 +1,10 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { stepNames, participantDetailStepNames } from '../../fields';
-import { StyledListItem } from './StyledListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { uiStore } from '../../injectables';
-import { participantDetailViewModes } from '../../constants';
+import { uiStore } from '../../../injectables';
+import { participantDetailViewModes } from '../../../constants';
+import { participantDetailStepNames, stepNames } from '../../../fields';
+import { StyledListItem } from '../StyledListItem';
 
 export const ParticipantTabs = inject('uiStore')(
   observer(({ handleClick }) => {

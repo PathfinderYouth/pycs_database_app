@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { participantDetailSteps } from '../../fields';
+import { participantDetailSteps } from '../../../fields';
+import { AuthContext } from '../../../sign-in';
+import { collectionType, participantDetailViewModes } from '../../../constants';
+import service from '../../../facade/service';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
-import service from '../../facade/service';
-import { AuthContext } from '../../sign-in';
-import { collectionType, participantDetailViewModes } from '../../constants';
-import './style/ParticipantDetailPage.css';
+import '../style/ParticipantDetailPage.css';
 
 export const ParticipantDetailEdit = ({
   participant,
@@ -66,7 +66,7 @@ export const ParticipantDetailEdit = ({
 
   return (
     <ParticipantDetailForm
-      formTitle='Edit participant details'
+      formTitle="Edit participant details"
       initialValues={participant}
       participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}

@@ -1,17 +1,17 @@
-import React, { useState, useContext } from 'react';
-import { useSnackbar } from 'notistack';
+import React, { useContext, useState } from 'react';
 import moment from 'moment';
+import NumberFormat from 'react-number-format';
+import { useSnackbar } from 'notistack';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import NumberFormat from 'react-number-format';
-import { participantDetailSteps } from '../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import { ParticipantApproveDialog } from './ParticipantApproveDialog';
-import { participantDetailViewModes, collectionType, masks } from '../../constants';
-import service from '../../facade/service';
-import { AuthContext } from '../../sign-in';
-import './style/ParticipantDetailView.css';
+import { participantDetailSteps } from '../../../fields';
+import { collectionType, masks, participantDetailViewModes } from '../../../constants';
+import service from '../../../facade/service';
+import { AuthContext } from '../../../sign-in';
+import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
   participant,
@@ -56,7 +56,9 @@ export const ParticipantDetailView = ({
         <NumberFormat
           name={name}
           value={data}
-          format={['phoneHome', 'phoneCell', 'phoneWork'].includes(name) ? masks.phone : masks[name]}
+          format={
+            ['phoneHome', 'phoneCell', 'phoneWork'].includes(name) ? masks.phone : masks[name]
+          }
           displayType="text"
           prefix={adornment}
           thousandSeparator={!!adornment}
@@ -115,7 +117,10 @@ export const ParticipantDetailView = ({
           (updatedParticpant) => {
             enqueueSnackbar('Participant record archived.', {
               action: (
-                <Button color="secondary" onClick={() => handleClickUndoDelete(updatedParticpant, userID)}>
+                <Button
+                  color="secondary"
+                  onClick={() => handleClickUndoDelete(updatedParticpant, userID)}
+                >
                   Undo
                 </Button>
               ),

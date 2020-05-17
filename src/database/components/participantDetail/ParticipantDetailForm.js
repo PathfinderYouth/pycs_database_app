@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { FormFieldBuilder } from '../../fields';
+import { FormFieldBuilder } from '../../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 
 export const ParticipantDetailForm = ({

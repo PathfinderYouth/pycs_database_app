@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { inject, observer } from 'mobx-react';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -6,7 +7,10 @@ import Badge from '@material-ui/core/Badge';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { makeStyles } from '@material-ui/core/styles';
 import {
+  ArchiveOutlined,
   Check,
   Clear,
   HourglassEmptyOutlined,
@@ -14,15 +18,11 @@ import {
   Person,
   PieChart,
   Work,
-  ArchiveOutlined,
 } from '@material-ui/icons';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { makeStyles } from '@material-ui/core/styles';
-import { inject, observer } from 'mobx-react';
-import { participantStore, uiStore } from '../../injectables';
-import { collectionType, viewModes, status } from '../../constants';
-import { StyledListItem } from './StyledListItem';
-import './style/NavDrawer.css';
+import { participantStore, uiStore } from '../../../injectables';
+import { collectionType, status, viewModes } from '../../../constants';
+import { StyledListItem } from '../StyledListItem';
+import '../style/NavDrawer.css';
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -9,11 +9,11 @@ import {
   NavDrawer,
   ParticipantDetailPage,
   StatisticsView,
-  TopNavBar
+  TopNavBar,
 } from './components';
 import { AuthContext } from '../sign-in';
 import { viewModes } from '../constants';
-import { participantStore, userStore, uiStore } from '../injectables';
+import { participantStore, uiStore, userStore } from '../injectables';
 import './Database.css';
 
 const useStyles = makeStyles((theme) => ({

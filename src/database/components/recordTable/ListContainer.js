@@ -11,17 +11,17 @@ import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import Fab from '@material-ui/core/Fab';
+import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import { makeStyles } from '@material-ui/core/styles';
+import { participantStore, uiStore, userStore } from '../../../injectables';
+import { collectionType, participantDetailViewModes, viewModes } from '../../../constants';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
-import { StatusIndicator } from './StatusIndicator';
-import { uiStore, participantStore, userStore } from '../../injectables';
-import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
-import './style/ListContainer.css';
+import { StatusIndicator } from '../StatusIndicator';
+import '../style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
