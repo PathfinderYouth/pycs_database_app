@@ -9,7 +9,7 @@ import {
   NavDrawer,
   ParticipantDetailPage,
   StatisticsView,
-  TopNavBar,
+  TopNavBar
 } from './components';
 import { AuthContext } from '../sign-in';
 import { viewModes } from '../constants';
@@ -73,22 +73,20 @@ export const Database = inject(
       setUserFilter({});
       setCurrentSearchText('');
       setRecordSearchBoxActive(false);
-    }
+    };
 
     const handleOrderChanged = (orderBy, order) => {
       let sorter = {};
-      let sortFunction = currentViewMode === viewModes.STAFF_LIST
-        ? setUserSorter
-        : setParticipantSorter;
+      let sortFunction =
+        currentViewMode === viewModes.STAFF_LIST ? setUserSorter : setParticipantSorter;
       sorter[orderBy] = order;
       sortFunction(sorter);
     };
 
     const handleSearchClicked = (searchBy, searchText) => {
-      let filter = currentViewMode === viewModes.STAFF_LIST ? {}: { status: currentStatus };
-      let filterFunction = currentViewMode === viewModes.STAFF_LIST
-        ? setUserFilter
-        : setParticipantFilter;
+      let filter = currentViewMode === viewModes.STAFF_LIST ? {} : { status: currentStatus };
+      let filterFunction =
+        currentViewMode === viewModes.STAFF_LIST ? setUserFilter : setParticipantFilter;
       filter[searchBy] = searchText;
       setRecordSearchBoxActive(searchText !== '');
       filterFunction(filter);

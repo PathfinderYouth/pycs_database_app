@@ -17,7 +17,7 @@ class ParticipantStore {
 
   _filter = { status: null };
 
-  _sorter = { nameLastLower: 'asc' };
+  _sorter = { createdAt: 'desc' };
 
   _limit = 20;
 
@@ -65,9 +65,8 @@ class ParticipantStore {
 
     this._participants = newList;
 
-    this._isLastPage = newList.length > 0
-      ? this._controller.endId === newList[newList.length - 1].id
-      : true;
+    this._isLastPage =
+      newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
   };
 
   _updateList = autorun(

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,6 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
+import { StatusIndicator } from './StatusIndicator';
 import { uiStore, participantStore, userStore } from '../../injectables';
 import { viewModes, participantDetailViewModes, collectionType } from '../../constants';
 import './style/ListContainer.css';
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 export const ListContainer = inject(
   'uiStore',
   'participantStore',
-  'userStore'
+  'userStore',
 )(
   observer(
     ({
@@ -114,13 +116,26 @@ export const ListContainer = inject(
         // TODO handle Delete functionlity of user management
       };
 
+      const ListCell = ({ data, column }) => {
+        const isDate = ['birthDate', 'createdAt'].includes(column);
+        const cellData = data[column];
+        return (
+          <div className="list-row">
+            {column === 'status' ? (
+              <StatusIndicator status={cellData} />
+            ) : (
+              <Typography variant="body2">
+                {isDate ? moment(cellData).format('MMM D, YYYY') : cellData}
+              </Typography>
+            )}
+          </div>
+        );
+      };
+
       return (
         <div className={`${classes.root} maxWidth`}>
           <Paper className={`${classes.paper} maxWidth`}>
-            <RecordSearchBar
-              title={pageTitle}
-              onSearchClicked={handleSearchClicked}
-            />
+            <RecordSearchBar title={pageTitle} onSearchClicked={handleSearchClicked} />
             <TableContainer>
               <Table className={classes.table} size="medium">
                 <SortingTableHead
@@ -150,9 +165,7 @@ export const ListContainer = inject(
                               </Tooltip>
                             </>
                           ) : (
-                            <div className="list-row">
-                              <Typography>{row[column.id]}</Typography>
-                            </div>
+                            <ListCell data={row} column={column.id} />
                           )}
                         </TableCell>
                       ))}
@@ -165,7 +178,9 @@ export const ListContainer = inject(
               rowsPerPageOptions={[20, 50, 100]}
               component="div"
               count={-1}
-              rowsPerPage={currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit}
+              rowsPerPage={
+                currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit
+              }
               page={page}
               labelDisplayedRows={({ page }) => `Page ${page + 1}`}
               onChangePage={handleChangePage}

@@ -121,7 +121,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact1Name',
-        prettyName: 'Emergency contact #1 - name',
+        prettyName: 'Emergency contact 1 - name',
         description: 'Emergency contact 1',
         label: 'Emergency contact name',
         type: 'text',
@@ -130,7 +130,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact1Relationship',
-        prettyName: 'Emergency contact #1 - relationship',
+        prettyName: 'Emergency contact 1 - relationship',
         label: 'Relationship to you',
         type: 'text',
         size: 12,
@@ -138,7 +138,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact1PhoneHome',
-        prettyName: 'Emergency contact #1 - home phone',
+        prettyName: 'Emergency contact 1 - home phone',
         label: 'Home phone',
         type: 'text',
         size: 4,
@@ -146,7 +146,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact1PhoneWork',
-        prettyName: 'Emergency contact #1 - work phone',
+        prettyName: 'Emergency contact 1 - work phone',
         label: 'Work phone',
         type: 'text',
         size: 4,
@@ -154,7 +154,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact1PhoneCell',
-        prettyName: 'Emergency contact #1 - cell phone',
+        prettyName: 'Emergency contact 1 - cell phone',
         label: 'Cell phone',
         type: 'text',
         size: 4,
@@ -163,7 +163,7 @@ export const formSteps = [
       {
         name: 'emergencyContact2Name',
         description: 'Emergency contact 2',
-        prettyName: 'Emergency contact #2 - name',
+        prettyName: 'Emergency contact 2 - name',
         label: 'Emergency contact name',
         type: 'text',
         size: 12,
@@ -171,7 +171,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact2Relationship',
-        prettyName: 'Emergency contact #2 - relationship',
+        prettyName: 'Emergency contact 2 - relationship',
         label: 'Relationship to you',
         type: 'text',
         size: 12,
@@ -179,7 +179,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact2PhoneHome',
-        prettyName: 'Emergency contact #2 - home phone',
+        prettyName: 'Emergency contact 2 - home phone',
         label: 'Home phone',
         type: 'text',
         size: 4,
@@ -187,7 +187,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact2PhoneWork',
-        prettyName: 'Emergency contact #2 - work phone',
+        prettyName: 'Emergency contact 2 - work phone',
         label: 'Work phone',
         type: 'text',
         size: 4,
@@ -195,7 +195,7 @@ export const formSteps = [
       },
       {
         name: 'emergencyContact2PhoneCell',
-        prettyName: 'Emergency contact #2 - cell phone',
+        prettyName: 'Emergency contact 2 - cell phone',
         label: 'Cell phone',
         type: 'text',
         size: 4,
