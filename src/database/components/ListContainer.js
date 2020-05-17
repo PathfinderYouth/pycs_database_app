@@ -25,7 +25,6 @@ import { AuthContext } from '../../sign-in';
 import { UserCreateDialog } from './UserCreateDialog';
 import './style/ListContainer.css';
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginBottom: theme.spacing(2),
@@ -36,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(4),
   },
 }));
-
-
 
 export const ListContainer = inject(
   'uiStore',
@@ -166,6 +163,7 @@ export const ListContainer = inject(
                                 <Tooltip title="Edit user" aria-label="edit" placement="bottom">
                                   <IconButton
                                     color="inherit"
+                                    size="small"
                                     onClick={() => handleEditIconClicked(row)}
                                   >
                                     <EditIcon />
@@ -180,6 +178,7 @@ export const ListContainer = inject(
                                     >
                                       <IconButton
                                         color="inherit"
+                                        size="small"
                                         onClick={() => handleDeleteIconClicked(row)}
                                       >
                                         <DeleteIcon />
