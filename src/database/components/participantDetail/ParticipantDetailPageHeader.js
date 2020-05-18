@@ -20,13 +20,12 @@ export const ParticipantDetailPageHeader = ({
   children,
   title,
   participant = undefined,
-  collection = undefined,
   participantDetailViewMode = undefined,
-  handleSubmit = undefined,
-  handleClickChangeMode = undefined,
+  handleClickSave = undefined,
+  handleClickToggleEdit = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
-  handleOpenDialog = undefined,
+  handleClickApprove = undefined,
   handleClickDecline = undefined,
   handleClickRestore = undefined,
 }) => {
@@ -37,11 +36,11 @@ export const ParticipantDetailPageHeader = ({
     approve: {
       ariaLabel: 'approve',
       tooltip: 'Approve participant',
-      onClick: handleOpenDialog,
+      onClick: handleClickApprove,
       icon: ThumbUpIcon,
     },
     archive: {
-      ariaLabel: 'edit',
+      ariaLabel: 'archive',
       tooltip: 'Archive participant record',
       onClick: handleClickDelete,
       confirm: 'Archive participant record?',
@@ -50,7 +49,7 @@ export const ParticipantDetailPageHeader = ({
     cancel: {
       ariaLabel: 'cancel',
       tooltip: 'Discard changes',
-      onClick: handleClickChangeMode,
+      onClick: handleClickToggleEdit,
       confirm: 'Discard changes? Changes will not be saved.',
       icon: CloseIcon,
       color: 'error',
@@ -61,14 +60,6 @@ export const ParticipantDetailPageHeader = ({
       onClick: handleClickDecline,
       confirm: 'Decline participant?',
       icon: ThumbDownIcon,
-    },
-    deleteNew: {
-      ariaLabel: 'delete',
-      tooltip: 'Discard submission',
-      onClick: handleClickDelete,
-      confirm: 'Discard submission? This cannot be undone.',
-      icon: DeleteIcon,
-      color: 'error',
     },
     delete: {
       ariaLabel: 'delete',
@@ -81,7 +72,7 @@ export const ParticipantDetailPageHeader = ({
     edit: {
       ariaLabel: 'edit',
       tooltip: 'Edit participant record',
-      onClick: handleClickChangeMode,
+      onClick: handleClickToggleEdit,
       icon: EditIcon,
     },
     move: {
@@ -101,7 +92,7 @@ export const ParticipantDetailPageHeader = ({
     save: {
       ariaLabel: 'confirm',
       tooltip: 'Save changes',
-      onClick: handleSubmit,
+      onClick: handleClickSave,
       confirm: 'Save changes?',
       icon: DoneIcon,
     },
@@ -123,7 +114,10 @@ export const ParticipantDetailPageHeader = ({
     pending: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.archive],
     approved: [buttonsMap.edit, buttonsMap.decline, buttonsMap.archive],
     declined: [buttonsMap.edit, buttonsMap.approve, buttonsMap.archive],
+    archived: [buttonsMap.restore, buttonsMap.delete]
   };
+
+  const editButtons = [buttonsMap.save, buttonsMap.cancel];
 
   const createButtons = [
     {
@@ -134,10 +128,8 @@ export const ParticipantDetailPageHeader = ({
     buttonsMap.cancel,
   ];
 
-  const editButtons = [buttonsMap.save, buttonsMap.cancel];
-
   const DetailButton = ({ ariaLabel, tooltip, onClick, confirm, icon: Icon, color }) => (
-    <Tooltip key={ariaLabel} title={tooltip} aria-label={ariaLabel}>
+    <Tooltip title={tooltip} aria-label={ariaLabel}>
       <IconButton
         onClick={() => {
           if (!!confirm) {
@@ -167,7 +159,7 @@ export const ParticipantDetailPageHeader = ({
     return (
       <div className="participant-detail-controls">
         {buttons.map((button) => (
-          <DetailButton {...button} />
+          <DetailButton key={button.ariaLabel} {...button} />
         ))}
       </div>
     );
@@ -182,9 +174,11 @@ export const ParticipantDetailPageHeader = ({
         </div>
         <div className="participant-detail-buttons-indicator">
           {getButtons()}
-          <div className="participant-detail-status">
-            <StatusIndicator status={participantStatus} />
-          </div>
+          {!!participantStatus && (
+            <div className="participant-detail-status">
+              <StatusIndicator status={participantStatus} />
+            </div>
+          )}
         </div>
       </div>
       <div className="participant-detail-form-contents">

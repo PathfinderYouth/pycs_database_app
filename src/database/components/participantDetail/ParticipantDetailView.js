@@ -8,14 +8,13 @@ import Button from '@material-ui/core/Button';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailSteps } from '../../../fields';
-import { collectionType, masks, participantDetailViewModes } from '../../../constants';
+import { masks, participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
   participant,
-  collection,
   currentStep,
   handleClickChangeMode,
   handleClickChangeView,
@@ -75,6 +74,7 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickMove = () => {
+    console.log('move')
     const db = service.getDatabase();
     db.moveToPermanent(
       participant,
@@ -100,36 +100,29 @@ export const ParticipantDetailView = ({
 
   const handleClickDelete = () => {
     const db = service.getDatabase();
-    const { id: docID } = participant;
-    collection === collectionType.NEW
-      ? db.deleteNew(
+    const { id: docID, status: participantStatus } = participant;
+    if (participantStatus === status.NEW) {
+      console.log('delete new')
+      db.deleteNew(
+        docID,
+        (success) => {
+          enqueueSnackbar('Submission deleted.');
+          handleClickChangeView();
+        },
+        (error) => {
+          console.log(error)
+          enqueueSnackbar('There was a problem deleting the submission.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        },
+      )
+    } else if (participantStatus === status.ARCHIVED) {
+      console.log('delete permanent')
+      db.deletePermanent(
           docID,
           (success) => {
-            enqueueSnackbar('Submission deleted.');
-            handleClickChangeView();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem updating the submission.', {
-              variant: 'error',
-            });
-            handleClickChangeView();
-          },
-        )
-      : db.deletePermanent(
-          participant,
-          userID,
-          (updatedParticpant) => {
-            enqueueSnackbar('Participant record archived.', {
-              action: (
-                <Button
-                  color="secondary"
-                  onClick={() => handleClickUndoDelete(updatedParticpant, userID)}
-                >
-                  Undo
-                </Button>
-              ),
-              autoHideDuration: 3000,
-            });
+            enqueueSnackbar('Participant record deleted.');
             handleClickChangeView();
           },
           (error) => {
@@ -138,26 +131,57 @@ export const ParticipantDetailView = ({
             });
             handleClickChangeView();
           },
-        );
+        )
+    } else {
+      console.log('archive')
+      db.archivePermanent(
+        participant,
+        userID,
+        (updatedParticpant) => {
+          enqueueSnackbar('Participant record archived.', {
+            action: (
+              <Button
+                color="secondary"
+                onClick={() => handleClickRestore(updatedParticpant, userID)}
+              >
+                Undo
+              </Button>
+            ),
+            autoHideDuration: 3000,
+          });
+          handleClickChangeView();
+        },
+        (error) => {
+          enqueueSnackbar('There was a problem archiving the participant record.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        },
+      );
+    }   
   };
 
-  const handleClickUndoDelete = (participant, userID) => {
+  const handleClickRestore = (participant, userID) => {
+    console.log('restore')
     const db = service.getDatabase();
-    db.undoDeletePermanent(
+    db.restorePermanent(
       participant,
       userID,
       (success) => {
         enqueueSnackbar('Participant record restored.', { variant: 'success' });
+        handleClickChangeView();
       },
       (error) => {
         enqueueSnackbar('There was a problem restoring the participant record.', {
           variant: 'error',
         });
+        handleClickChangeView();
       },
     );
   };
 
   const handleClickApprove = (confirmationNumber) => {
+    console.log('approve')
     const db = service.getDatabase();
     db.approvePending(
       participant,
@@ -177,6 +201,7 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickDecline = () => {
+    console.log('decline')
     const db = service.getDatabase();
     db.declinePending(
       participant,
@@ -194,19 +219,37 @@ export const ParticipantDetailView = ({
     );
   };
 
+  // const handleClickRestore = () => {
+  //   const db = service.getDatabase();
+  //   db.restorePermanent(
+  //     participant,
+  //     userID,
+  //     (success) => {
+  //       enqueueSnackbar('Participant record restored.', { variant: 'success' });
+  //       handleClickChangeView();
+  //     },
+  //     (error) => {
+  //       enqueueSnackbar('There was a problem restoring the participant record.', {
+  //         variant: 'error',
+  //       });
+  //       handleClickChangeView();
+  //     },
+  //   );
+  // };
+
   return (
     <>
       <ParticipantDetailPageHeader
         title={`Viewing participant record - ${step.stepName}`}
         participant={participant}
         step={step}
-        collection={collection}
         participantDetailViewMode={participantDetailViewModes.VIEW}
-        handleClickChangeMode={handleClickChangeMode}
+        handleClickToggleEdit={handleClickChangeMode}
         handleClickMove={handleClickMove}
         handleClickDelete={handleClickDelete}
-        handleOpenDialog={() => setDialogOpen(true)}
+        handleClickApprove={() => setDialogOpen(true)}
         handleClickDecline={handleClickDecline}
+        handleClickRestore={() => handleClickRestore(participant, userID)}
       >
         {step.fields.map((field) => {
           const { name, size, detailSize, prettyName } = field;

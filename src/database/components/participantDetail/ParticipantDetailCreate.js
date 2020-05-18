@@ -14,6 +14,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
   } = useContext(AuthContext);
 
   const handleSubmit = (values, setSubmitting) => {
+    console.log('add permanent')
     const db = service.getDatabase();
     db.addPermanent(
       values,
@@ -44,7 +45,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
       initialValues={initialValues}
       participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}
-      handleClickChangeMode={handleClickChangeMode}
+      handleClickToggleEdit={handleClickChangeMode}
       step={step}
     />
   );

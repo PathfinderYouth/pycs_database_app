@@ -30,6 +30,10 @@ export const DetailViewDrawer = inject('uiStore')(
         setCurrentViewMode(currentListViewMode);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
         setCurrentParticipantDetailStep(0);
+      } else {
+        setCurrentViewMode(currentListViewMode);
+        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
+        setCurrentParticipantDetailStep(0);
       }
     };
 

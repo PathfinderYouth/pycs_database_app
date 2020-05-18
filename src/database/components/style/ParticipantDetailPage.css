@@ -32,5 +32,6 @@
 }
 
 .participant-detail-status {
+  margin-top: 0.5em;
   align-self: flex-end;
 }
