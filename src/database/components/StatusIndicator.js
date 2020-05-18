@@ -3,15 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import './style/StatusIndicator.css';
 
-const statusColourMap = {
-  approved: 'success',
-  archived: 'text',
-  declined: 'error',
-  deleted: 'text',
-  new: 'info',
-  pending: 'warning',
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText

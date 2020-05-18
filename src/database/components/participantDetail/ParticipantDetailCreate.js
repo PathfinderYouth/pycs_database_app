@@ -44,7 +44,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
       initialValues={initialValues}
       participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}
-      handleClickChangeMode={handleClickChangeMode}
+      handleClickToggleEdit={handleClickChangeMode}
       step={step}
     />
   );
