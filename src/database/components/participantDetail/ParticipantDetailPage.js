@@ -1,11 +1,15 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Card from '@material-ui/core/Card';
+import Hidden from '@material-ui/core/Hidden';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { ParticipantDetailCreate } from './ParticipantDetailCreate';
 import { ParticipantDetailEdit } from './ParticipantDetailEdit';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
 import { ParticipantDetailView } from './ParticipantDetailView';
+import { DetailButton } from './DetailButton';
 import { participantStore, uiStore } from '../../../injectables';
 import { participantDetailViewModes, viewModes } from '../../../constants';
 import { participantDetailSteps } from '../../../fields';
@@ -22,9 +26,23 @@ export const ParticipantDetailPage = inject(
       currentParticipantDetailViewMode,
       setCurrentViewMode,
       setCurrentParticipantDetailViewMode,
+      setCurrentParticipantDetailStep,
     } = uiStore;
-    const notesStep = participantDetailSteps.length - 2;
-    const historyStep = participantDetailSteps.length - 1;
+    const stepsLength = participantDetailSteps.length;
+    const notesStep = stepsLength - 2;
+    const historyStep = stepsLength - 1;
+
+    const handleClickBack = () => {
+      if (currentParticipantDetailStep > 0) {
+        setCurrentParticipantDetailStep(currentParticipantDetailStep - 1);
+      }
+    };
+
+    const handleClickForward = () => {
+      if (currentParticipantDetailStep < stepsLength - 1) {
+        setCurrentParticipantDetailStep(currentParticipantDetailStep + 1);
+      }
+    };
 
     const getParticipantDetailContents = () => {
       if (currentParticipantDetailStep === notesStep) {
@@ -40,6 +58,8 @@ export const ParticipantDetailPage = inject(
               handleClickChangeMode={() =>
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW)
               }
+              handleClickBack={handleClickBack}
+              handleClickForward={handleClickForward}
               onSuccessfulEdit={setCurrentParticipant}
             />
           );
@@ -69,6 +89,28 @@ export const ParticipantDetailPage = inject(
 
     return (
       <div className="participant-detail-container">
+        <Hidden mdUp>
+          <div className="participant-detail-nav-buttons">
+            {currentParticipantDetailStep > 0 && (
+              <DetailButton
+                ariaLabel="back"
+                tooltip="Go back a step"
+                onClick={handleClickBack}
+                icon={ArrowBackIosIcon}
+                size="small"
+              />
+            )}
+            {currentParticipantDetailStep < stepsLength - 1 && (
+              <DetailButton
+                ariaLabel="forward"
+                tooltip="Go forward a step"
+                onClick={handleClickForward}
+                icon={ArrowForwardIosIcon}
+                size="small"
+              />
+            )}
+          </div>
+        </Hidden>
         <Card>
           <div className="participant-detail-contents">{getParticipantDetailContents()}</div>
         </Card>

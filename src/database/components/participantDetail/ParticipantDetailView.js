@@ -73,6 +73,8 @@ export const ParticipantDetailView = ({
     return <Typography color="textSecondary">{renderedData}</Typography>;
   };
 
+  
+
   const handleClickMove = () => {
     const db = service.getDatabase();
     db.moveToPermanent(

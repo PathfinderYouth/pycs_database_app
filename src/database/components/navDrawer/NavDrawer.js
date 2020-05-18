@@ -48,8 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NavDrawer = (props) => {
-  const { window, children } = props;
+export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) => {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
@@ -73,7 +72,7 @@ export const NavDrawer = (props) => {
             aria-label="more options"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={props.handleDrawerClose}
+            onClick={handleDrawerClose}
             color="inherit"
           >
             <ArrowBackIcon />
@@ -94,8 +93,8 @@ export const NavDrawer = (props) => {
             container={container}
             variant="temporary"
             anchor="left"
-            open={props.drawerState}
-            onClose={props.handleDrawerClose}
+            open={drawerState}
+            onClose={handleDrawerClose}
             classes={{
               paper: classes.drawerPaper,
             }}
@@ -112,7 +111,7 @@ export const NavDrawer = (props) => {
               paper: classes.drawerPaper,
             }}
             variant="permanent"
-            open={props.drawerState}
+            open={drawerState}
           >
             {drawer}
           </Drawer>
