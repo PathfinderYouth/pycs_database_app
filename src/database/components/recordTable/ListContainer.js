@@ -143,7 +143,14 @@ export const ListContainer = inject(
                 />
                 <TableBody>
                   {records.map((row) => (
-                    <TableRow hover key={row.id} onClick={() => handleParticipantRowClicked(row)}>
+                    <TableRow
+                      hover
+                      key={row.id}
+                      onClick={() =>
+                        currentViewMode === viewModes.PARTICIPANT_LIST &&
+                        handleParticipantRowClicked(row)
+                      }
+                    >
                       {headers.map((column) => (
                         <TableCell key={`${row.id}-${column.id}`}>
                           {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
