@@ -5,75 +5,78 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import { useSnackbar } from 'notistack';
 import { userRole } from '../../../constants';
 import service from '../../../facade/service';
 import { MenuItem } from '@material-ui/core';
 
-export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
+export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) => {
   let db = service.getUserList();
   const { enqueueSnackbar } = useSnackbar();
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState(userRole.STAFF);
-  const [errorEmailEmpty, setErrorEmailEmpty] = useState(false);
+  let userEmail = record.email;
+  const [name, setName] = useState(record.name);
+  const [role, setRole] = useState(record.role);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
 
-  const handleAddNewUser = () => {
-    if (email === '' || name === '') {
-      setErrorEmailEmpty(email === '');
+  const handleEditUser = () => {
+    if (name === '') {
       setErrorNameStatus(name === '');
       return;
     }
-    let newUser = { email: email, name: name, role: role };
-    db.addUser(
-      newUser,
+    let data = { email: userEmail, name: name, role: role };
+    db.updateUser(
+      record.id,
+      data,
       () => {
-        enqueueSnackbar('New user successfully created.', {
+        enqueueSnackbar('User information successfully updated.', {
           variant: 'success',
         });
-        setAddStaffOpen(false);
+        setEditDialogOpen(false);
       },
       () => {
-        enqueueSnackbar('Failed to create new user.', {
+        enqueueSnackbar('Failed to update user information.', {
           variant: 'error',
         });
-        setAddStaffOpen(false);
+        setEditDialogOpen(false);
       },
     );
   };
+
+  const handleCancelClick = () => {
+    // reset edit form fields
+    setName(record.name);
+    setRole(record.role);
+    setErrorNameStatus(false);
+    setEditDialogOpen(false);
+  };
   return (
-    <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
+    <Dialog open={editDialogOpen} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Update a user</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          In order to finish account creation, the new user must log in using the email address just provided. The 
-          password they enter the first time they log in will be the password associated with their account.
-        </DialogContentText>
         <TextField
-          autoFocus
           required
+          InputProps={{
+            readOnly: true,
+          }}
+          disabled
           variant="outlined"
           margin="normal"
           id="email"
           label="Email"
           type="email"
           size="medium"
-          error={errorEmailEmpty}
-          helperText={errorEmailEmpty && 'Field cannot be empty'}
-          onChange={(event) => {
-            setEmail(event.target.value);
-          }}
+          value={userEmail}
           fullWidth
         />
         <TextField
+          autoFocus
           required
           variant="outlined"
           margin="normal"
           id="name"
           label="Name"
           size="medium"
+          value={name}
           error={errorNameStatus}
           helperText={errorNameStatus && 'Field cannot be empty'}
           onChange={(event) => {
@@ -99,16 +102,11 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         </TextField>
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => {
-            setAddStaffOpen(false);
-          }}
-          color="primary"
-        >
+        <Button onClick={handleCancelClick} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleAddNewUser} color="primary">
-          Create
+        <Button onClick={handleEditUser} color="primary">
+          Update
         </Button>
       </DialogActions>
     </Dialog>
