@@ -37,7 +37,7 @@ export const ListViewDrawer = inject(
   'uiStore',
   'participantStore',
 )(
-  observer(({ numNew, onParticipantViewChanged, onStaffViewChanged }) => {
+  observer(({ numNew, onParticipantViewChanged, onStaffViewChanged, handleDrawerClose }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
     const { currentViewMode, setCurrentViewMode } = uiStore;
@@ -55,6 +55,11 @@ export const ListViewDrawer = inject(
       setParticipantsListExpanded(!participantsListExpanded);
     };
 
+    const handleListItemClick = () => {
+      setCurrentViewMode(viewModes.PARTICIPANT_LIST);
+      handleDrawerClose()
+    }
+
     return (
       <div>
         <List disablePadding>
@@ -65,8 +70,8 @@ export const ListViewDrawer = inject(
               collection === collectionType.PERMANENT
             }
             onClick={() => {
-              setCurrentViewMode(viewModes.PARTICIPANT_LIST);
               onParticipantViewChanged(collectionType.PERMANENT, null);
+              handleListItemClick()
             }}
           >
             <ListItemIcon>
@@ -85,8 +90,8 @@ export const ListViewDrawer = inject(
                   key={status.id}
                   className={classes.nested}
                   onClick={() => {
-                    setCurrentViewMode(viewModes.PARTICIPANT_LIST);
                     onParticipantViewChanged(collectionType.PERMANENT, status.id);
+                    handleListItemClick()
                   }}
                 >
                   <ListItemIcon>{status.icon}</ListItemIcon>
@@ -102,8 +107,8 @@ export const ListViewDrawer = inject(
               currentViewMode === viewModes.PARTICIPANT_LIST && collection === collectionType.NEW
             }
             onClick={() => {
-              setCurrentViewMode(viewModes.PARTICIPANT_LIST);
               onParticipantViewChanged(collectionType.NEW, null);
+              handleListItemClick()
             }}
           >
             <ListItemIcon>
@@ -117,7 +122,10 @@ export const ListViewDrawer = inject(
           <StyledListItem
             button
             selected={currentViewMode === viewModes.STATISTICS}
-            onClick={() => setCurrentViewMode(viewModes.STATISTICS)}
+            onClick={() => {
+              setCurrentViewMode(viewModes.STATISTICS)
+              handleDrawerClose()
+            }}
           >
             <ListItemIcon>
               <PieChart />
@@ -132,6 +140,7 @@ export const ListViewDrawer = inject(
             onClick={() => {
               setCurrentViewMode(viewModes.STAFF_LIST);
               onStaffViewChanged();
+              handleDrawerClose()
             }}
           >
             <ListItemIcon>

@@ -12,7 +12,7 @@ import { ParticipantTabs } from './ParticipantTabs';
 import '../style/NavDrawer.css';
 
 export const DetailViewDrawer = inject('uiStore')(
-  observer(() => {
+  observer(({handleDrawerClose}) => {
     const {
       setCurrentViewMode,
       currentListViewMode,
@@ -22,23 +22,27 @@ export const DetailViewDrawer = inject('uiStore')(
       setCurrentParticipantDetailViewMode,
     } = uiStore;
 
+    const handleResetPage = () => {
+        setCurrentViewMode(currentListViewMode);
+        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
+        setCurrentParticipantDetailStep(0);
+        handleDrawerClose()
+    }
+
     const handleClickBack = () => {
       if (
         currentParticipantDetailViewMode === participantDetailViewModes.EDIT &&
         window.confirm('Leave this page? Any unsaved changes will be lost.')
       ) {
-        setCurrentViewMode(currentListViewMode);
-        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
-        setCurrentParticipantDetailStep(0);
+        handleResetPage()
       } else {
-        setCurrentViewMode(currentListViewMode);
-        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
-        setCurrentParticipantDetailStep(0);
+        handleResetPage()
       }
     };
 
     const handleChangeParticipantTab = (tabIndex) => {
       setCurrentParticipantDetailStep(tabIndex);
+      handleDrawerClose()
     };
 
     return (

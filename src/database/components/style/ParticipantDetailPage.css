@@ -36,3 +36,9 @@
   margin-top: 0.5em;
   align-self: flex-end;
 }
+
+.participant-detail-nav-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1em 1em 0;
+}

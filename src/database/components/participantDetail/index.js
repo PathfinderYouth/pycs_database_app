@@ -7,3 +7,4 @@ export * from './ParticipantDetailNotes';
 export * from './ParticipantDetailPage';
 export * from './ParticipantDetailPageHeader';
 export * from './ParticipantDetailView';
+export * from './DetailButton';
