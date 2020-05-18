@@ -36,7 +36,6 @@ export const ParticipantDetailPage = inject(
           return (
             <ParticipantDetailEdit
               participant={currentParticipant}
-              collection={collection}
               currentStep={currentParticipantDetailStep}
               handleClickChangeMode={() =>
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW)
