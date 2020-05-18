@@ -63,7 +63,7 @@ export default class DatabaseManager {
   }
 
   _checkSin(docId, sin, onSuccess, onError) {
-    if (sin) {
+    if (!!sin) {
       this.permanentRef.where('sin', '==', sin).get().then((querySnap) => {
         if (querySnap.docs.length > 0) {
           querySnap.docs.forEach(queryDocSnap => {
