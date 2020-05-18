@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { navigate } from '@reach/router';
 import service from '../../facade/service';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +12,7 @@ export class LogIn extends Component {
   constructor(props) {
     super(props);
     this.authService = service.getAuthentication();
+    this.userService = service.getUserList();
     this.handleLogin = this.handleLogin.bind(this);
     this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
     this.state = {
@@ -30,17 +28,33 @@ export class LogIn extends Component {
    */
   handleLogin(event) {
     event.preventDefault();
-    this.authService.logIn(
-      this.state.email,
-      this.state.password,
-      (auth) => {
-        console.log(auth.type);
-        console.log(auth.additional);
-        console.log(auth.email);
-        navigate('/database');
+
+    this.userService.checkEmailNotExist(
+      null,
+      this.state.email.toLocaleLowerCase(),
+      // if email doesn't exist in user collection
+      () => {
+        alert('The email has not been authorized.');
       },
-      (error) => {
-        alert(error.message);
+      // if email exists in user collection
+      () => {
+        this.authService.logIn(
+          this.state.email,
+          this.state.password,
+          () => {
+            window.location.href = './database';
+          },
+          // perform sign-up if login fails
+          () => {
+            this.authService.signUp(this.state.email, this.state.password, (user) => {
+              alert(JSON.stringify(user));
+              this.authService.logIn(this.state.email, this.state.password, () => {
+                // TODO handle user profile update here.
+                window.location.href = './database';
+              });
+            });
+          },
+        );
       },
     );
   }
@@ -91,10 +105,6 @@ export class LogIn extends Component {
               ref="password"
               onChange={(event) => this.handleTextChange(event)}
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
