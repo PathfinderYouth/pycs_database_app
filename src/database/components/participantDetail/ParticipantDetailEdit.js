@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { participantDetailSteps } from '../../../fields';
+import { participantDetailSteps, createRecordValidationSchema } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
 import { participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
@@ -77,6 +77,7 @@ export const ParticipantDetailEdit = ({
     <ParticipantDetailForm
       formTitle="Edit participant details"
       initialValues={participant}
+      validationSchema={createRecordValidationSchema}
       participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}
       handleClickToggleEdit={handleClickChangeMode}

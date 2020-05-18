@@ -6,6 +6,7 @@ import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 export const ParticipantDetailForm = ({
   formTitle,
   initialValues,
+  validationSchema,
   participantDetailViewMode,
   handleSubmit,
   handleClickToggleEdit,
@@ -14,6 +15,7 @@ export const ParticipantDetailForm = ({
   return (
     <Formik
       initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         handleSubmit(values, setSubmitting);
       }}
@@ -22,6 +24,7 @@ export const ParticipantDetailForm = ({
         <ParticipantDetailPageHeader
           title={`${formTitle} - ${step.stepName}`}
           participant={initialValues}
+          form={form}
           participantDetailViewMode={participantDetailViewMode}
           handleClickToggleEdit={handleClickToggleEdit}
           handleClickSave={form.submitForm}

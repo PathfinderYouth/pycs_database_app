@@ -1027,6 +1027,11 @@ export const requiredFields = formSteps.reduce((reqs, step) => {
   return reqs;
 }, []);
 
+export const belongsToStepIndex = (fieldName) => {
+  const step = formSteps.find(step => step.fields.find(field => field.name === fieldName))
+  return formSteps.indexOf(step)
+}
+
 export const stepNames = formSteps.map((step) => step.stepName);
 export const participantDetailStepNames = participantDetailSteps.map((step) => step.stepName);
 

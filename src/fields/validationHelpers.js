@@ -116,3 +116,11 @@ export const validationSchema = yup.object().shape(
     ['phoneCell', 'email'],
   ],
 );
+
+export const createRecordValidationSchema = yup.object().shape({
+  sin: yup
+    .string()
+    .required('SIN is required')
+    .length(9, 'SIN must be 9 digits long')
+    .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
+});
