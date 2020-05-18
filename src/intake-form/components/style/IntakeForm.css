@@ -36,7 +36,14 @@
 
 .intake-form-breadcrumbs {
   padding: 0 0.5em;
-  display: flex;
+  display: block;
+}
+
+/* .intake-form-topBar padding bottom will be gone if its in tablet or mobile device */
+@media only screen and (max-width: 768px) {
+  .intake-form-breadcrumbs {
+    margin-top: 1em;
+  }
 }
 
 .intake-form-captcha {
