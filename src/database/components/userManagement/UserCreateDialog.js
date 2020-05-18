@@ -48,8 +48,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
       <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To finish creating user account, have this user log in. The password they enter the first
-          time they log in will be the password associated with their account.
+          In order to finish account creation, the new user must log in using the email address just provided. The 
+          password they enter the first time they log in will be the password associated with their account.
         </DialogContentText>
         <TextField
           autoFocus
