@@ -27,7 +27,7 @@ export const UserManagementAction = ({ row }) => {
           <RotateLeftIcon />
         </IconButton>
       </Tooltip>
-      {row && row.email !== currentUser.email && (
+      {row.email !== currentUser.email && (
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
             <IconButton color="inherit" size="small" onClick={() => setDeleteDialogOpen(true)}>
