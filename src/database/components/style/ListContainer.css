@@ -9,3 +9,7 @@ table {
 tr {
   cursor: pointer;
 }
+
+.list-container {
+  margin-bottom: 5em;
+}
