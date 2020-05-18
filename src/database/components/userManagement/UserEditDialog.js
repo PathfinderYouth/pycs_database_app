@@ -50,13 +50,7 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
     setEditDialogOpen(false);
   };
   return (
-    <Dialog
-      open={editDialogOpen}
-      onClose={() => {
-        setEditDialogOpen(false);
-      }}
-      aria-labelledby="form-dialog-title"
-    >
+    <Dialog open={editDialogOpen} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Update a user</DialogTitle>
       <DialogContent>
         <TextField

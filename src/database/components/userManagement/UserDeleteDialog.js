@@ -34,7 +34,6 @@ export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen
     <div>
       <Dialog
         open={deleteDialogOpen}
-        onClose={setDeleteDialogOpen}
         maxWidth={'sm'}
         fullWidth
         aria-labelledby="alert-dialog-title"

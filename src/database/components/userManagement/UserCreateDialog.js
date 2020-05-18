@@ -43,7 +43,7 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
     );
   };
   return (
-    <Dialog open={addStaffOpen} onClose={setAddStaffOpen} aria-labelledby="form-dialog-title">
+    <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
       <DialogContent>
         <TextField

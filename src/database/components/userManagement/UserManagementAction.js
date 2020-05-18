@@ -4,7 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { UserDeleteDialog } from './UserDeleteDialog';
 import { UserEditDialog } from './UserEditDialog';
 import { UserResetPasswordDialog } from './UserResetPasswordDialog';
@@ -24,10 +24,10 @@ export const UserManagementAction = ({ row }) => {
       </Tooltip>
       <Tooltip title="Send reset password email" aria-label="reset" placement="bottom">
         <IconButton color="inherit" size="small" onClick={() => setResetPasswordDialogOpen(true)}>
-          <RotateLeftIcon />
+          <VpnKeyIcon />
         </IconButton>
       </Tooltip>
-      {row.email !== currentUser.email && (
+      {currentUser !== null && row.email !== currentUser.email && (
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
             <IconButton color="inherit" size="small" onClick={() => setDeleteDialogOpen(true)}>

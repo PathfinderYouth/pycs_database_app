@@ -38,9 +38,6 @@ export const UserResetPasswordDialog = ({
     <div>
       <Dialog
         open={resetPasswordDialogOpen}
-        onClose={() => {
-          setResetPasswordDialogOpen(false);
-        }}
         maxWidth={'sm'}
         fullWidth
         aria-labelledby="alert-dialog-title"
