@@ -368,7 +368,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  deletePermanent(data, userName, onSuccess, onError) {
+  archivePermanent(data, userName, onSuccess, onError) {
     const { id: docId, history: oldHistory, status: participantStatus } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
@@ -399,7 +399,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  undoDeletePermanent(data, userName, onSuccess, onError) {
+  restorePermanent(data, userName, onSuccess, onError) {
     const { id: docId, history: oldHistory, prevStatus } = data;
     const updatedHistory = this.getUpdatedHistory(
       userName,
@@ -425,7 +425,7 @@ export default class DatabaseManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  deleteForeverPermanent(docId, onSuccess, onError) {
+  deletePermanent(docId, onSuccess, onError) {
     this.permanentRef.doc(docId).delete().then(onSuccess).catch(onError);
   }
 

@@ -16,7 +16,7 @@ export const ParticipantDetailPage = inject(
   'uiStore',
 )(
   observer(() => {
-    const { currentParticipant, collection, setCurrentParticipant } = participantStore;
+    const { currentParticipant, setCurrentParticipant } = participantStore;
     const {
       currentParticipantDetailStep,
       currentParticipantDetailViewMode,
@@ -54,7 +54,6 @@ export const ParticipantDetailPage = inject(
           return (
             <ParticipantDetailView
               participant={currentParticipant}
-              collection={collection}
               currentStep={currentParticipantDetailStep}
               handleClickChangeMode={() =>
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)

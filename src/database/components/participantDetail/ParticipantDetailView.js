@@ -8,14 +8,13 @@ import Button from '@material-ui/core/Button';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailSteps } from '../../../fields';
-import { collectionType, masks, participantDetailViewModes } from '../../../constants';
+import { masks, participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
   participant,
-  collection,
   currentStep,
   handleClickChangeMode,
   handleClickChangeView,
@@ -86,11 +85,7 @@ export const ParticipantDetailView = ({
         handleClickChangeView();
       },
       (error) => {
-        let message = error.name === 'DuplicateError'
-          ? 'Unable to save participant record, record with that SIN already exists'
-          : 'There was a problem saving the participant record.';
-
-        enqueueSnackbar(message, {
+        enqueueSnackbar('There was a problem saving the participant record.', {
           variant: 'error',
         });
         handleClickChangeView();
@@ -100,36 +95,26 @@ export const ParticipantDetailView = ({
 
   const handleClickDelete = () => {
     const db = service.getDatabase();
-    const { id: docID } = participant;
-    collection === collectionType.NEW
-      ? db.deleteNew(
+    const { id: docID, status: participantStatus } = participant;
+    if (participantStatus === status.NEW) {
+      db.deleteNew(
+        docID,
+        (success) => {
+          enqueueSnackbar('Submission deleted.');
+          handleClickChangeView();
+        },
+        (error) => {
+          enqueueSnackbar('There was a problem deleting the submission.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        },
+      )
+    } else if (participantStatus === status.ARCHIVED) {
+      db.deletePermanent(
           docID,
           (success) => {
-            enqueueSnackbar('Submission deleted.');
-            handleClickChangeView();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem updating the submission.', {
-              variant: 'error',
-            });
-            handleClickChangeView();
-          },
-        )
-      : db.deletePermanent(
-          participant,
-          userID,
-          (updatedParticpant) => {
-            enqueueSnackbar('Participant record archived.', {
-              action: (
-                <Button
-                  color="secondary"
-                  onClick={() => handleClickUndoDelete(updatedParticpant, userID)}
-                >
-                  Undo
-                </Button>
-              ),
-              autoHideDuration: 3000,
-            });
+            enqueueSnackbar('Participant record deleted.');
             handleClickChangeView();
           },
           (error) => {
@@ -138,21 +123,49 @@ export const ParticipantDetailView = ({
             });
             handleClickChangeView();
           },
-        );
+        )
+    } else {
+      db.archivePermanent(
+        participant,
+        userID,
+        (updatedParticpant) => {
+          enqueueSnackbar('Participant record archived.', {
+            action: (
+              <Button
+                color="secondary"
+                onClick={() => handleClickRestore(updatedParticpant, userID)}
+              >
+                Undo
+              </Button>
+            ),
+            autoHideDuration: 3000,
+          });
+          handleClickChangeView();
+        },
+        (error) => {
+          enqueueSnackbar('There was a problem archiving the participant record.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        },
+      );
+    }   
   };
 
-  const handleClickUndoDelete = (participant, userID) => {
+  const handleClickRestore = (participant, userID) => {
     const db = service.getDatabase();
-    db.undoDeletePermanent(
+    db.restorePermanent(
       participant,
       userID,
       (success) => {
         enqueueSnackbar('Participant record restored.', { variant: 'success' });
+        handleClickChangeView();
       },
       (error) => {
         enqueueSnackbar('There was a problem restoring the participant record.', {
           variant: 'error',
         });
+        handleClickChangeView();
       },
     );
   };
@@ -200,13 +213,13 @@ export const ParticipantDetailView = ({
         title={`Viewing participant record - ${step.stepName}`}
         participant={participant}
         step={step}
-        collection={collection}
         participantDetailViewMode={participantDetailViewModes.VIEW}
-        handleClickChangeMode={handleClickChangeMode}
+        handleClickToggleEdit={handleClickChangeMode}
         handleClickMove={handleClickMove}
         handleClickDelete={handleClickDelete}
-        handleOpenDialog={() => setDialogOpen(true)}
+        handleClickApprove={() => setDialogOpen(true)}
         handleClickDecline={handleClickDecline}
+        handleClickRestore={() => handleClickRestore(participant, userID)}
       >
         {step.fields.map((field) => {
           const { name, size, detailSize, prettyName } = field;

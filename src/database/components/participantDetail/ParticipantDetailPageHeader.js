@@ -10,122 +10,158 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import { StatusIndicator } from '../StatusIndicator';
-import { collectionType, participantDetailViewModes, status } from '../../../constants';
+import { participantDetailViewModes } from '../../../constants';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailPageHeader = ({
   children,
   title,
   participant = undefined,
-  collection = undefined,
   participantDetailViewMode = undefined,
-  handleSubmit = undefined,
-  handleClickChangeMode = undefined,
+  handleClickSave = undefined,
+  handleClickToggleEdit = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
-  handleOpenDialog = undefined,
+  handleClickApprove = undefined,
   handleClickDecline = undefined,
+  handleClickRestore = undefined,
 }) => {
   const { nameGiven, nameLast, status: participantStatus } = participant;
   const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
 
+  const buttonsMap = {
+    approve: {
+      ariaLabel: 'approve',
+      tooltip: 'Approve participant',
+      onClick: handleClickApprove,
+      icon: ThumbUpIcon,
+    },
+    archive: {
+      ariaLabel: 'archive',
+      tooltip: 'Archive participant record',
+      onClick: handleClickDelete,
+      confirm: 'Archive participant record?',
+      icon: ArchiveIcon,
+    },
+    cancel: {
+      ariaLabel: 'cancel',
+      tooltip: 'Discard changes',
+      onClick: handleClickToggleEdit,
+      confirm: 'Discard changes? Changes will not be saved.',
+      icon: CloseIcon,
+      color: 'error',
+    },
+    decline: {
+      ariaLabel: 'decline',
+      tooltip: 'Decline participant',
+      onClick: handleClickDecline,
+      confirm: 'Decline participant?',
+      icon: ThumbDownIcon,
+    },
+    delete: {
+      ariaLabel: 'delete',
+      tooltip: 'Delete participant record',
+      onClick: handleClickDelete,
+      confirm: 'Delete participant record? This cannot be undone.',
+      icon: DeleteIcon,
+      color: 'error',
+    },
+    edit: {
+      ariaLabel: 'edit',
+      tooltip: 'Edit participant record',
+      onClick: handleClickToggleEdit,
+      icon: EditIcon,
+    },
+    move: {
+      ariaLabel: 'accept',
+      tooltip: 'Accept and save',
+      onClick: handleClickMove,
+      confirm: 'Accept and save this submission to the database?',
+      icon: SaveIcon,
+    },
+    restore: {
+      ariaLabel: 'restore',
+      tooltip: 'Restore participant record',
+      onClick: handleClickRestore,
+      confirm: 'Restore participant record?',
+      icon: UnarchiveIcon,
+    },
+    save: {
+      ariaLabel: 'confirm',
+      tooltip: 'Save changes',
+      onClick: handleClickSave,
+      confirm: 'Save changes?',
+      icon: DoneIcon,
+    },
+  };
+
+  const buttonStatusMap = {
+    new: [
+      {
+        ...buttonsMap.edit,
+        tooltip: 'Edit submission',
+      },
+      buttonsMap.move,
+      {
+        ...buttonsMap.delete,
+        tooltip: 'Discard submission',
+        confirm: 'Discard submission? This cannot be undone.',
+      },
+    ],
+    pending: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.archive],
+    approved: [buttonsMap.edit, buttonsMap.decline, buttonsMap.archive],
+    declined: [buttonsMap.edit, buttonsMap.approve, buttonsMap.archive],
+    archived: [buttonsMap.restore, buttonsMap.delete]
+  };
+
+  const editButtons = [buttonsMap.save, buttonsMap.cancel];
+
+  const createButtons = [
+    {
+      ...buttonsMap.save,
+      tooltip: 'Create participant record',
+      confirm: 'Create new participant record?',
+    },
+    buttonsMap.cancel,
+  ];
+
+  const DetailButton = ({ ariaLabel, tooltip, onClick, confirm, icon: Icon, color }) => (
+    <Tooltip title={tooltip} aria-label={ariaLabel}>
+      <IconButton
+        edge='end'
+        onClick={() => {
+          if (!!confirm) {
+            if (window.confirm(confirm)) {
+              onClick();
+            }
+          } else {
+            onClick();
+          }
+        }}
+      >
+        <Icon color={color} />
+      </IconButton>
+    </Tooltip>
+  );
+
   const getButtons = () => {
-    return participantDetailViewMode === participantDetailViewModes.VIEW ? (
-      collection === collectionType.NEW ? (
-        <div className="participant-detail-controls">
-          <Tooltip title="Edit submission" aria-label="edit">
-            <IconButton onClick={handleClickChangeMode}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Accept and save" aria-label="accept">
-            <IconButton
-              onClick={() => {
-                if (window.confirm('Accept and save this submission to the database?')) {
-                  handleClickMove();
-                }
-              }}
-            >
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Discard submission" aria-label="delete">
-            <IconButton
-              onClick={() => {
-                if (window.confirm('Discard submission? This cannot be undone.')) {
-                  handleClickDelete();
-                }
-              }}
-            >
-              <DeleteIcon color="error" />
-            </IconButton>
-          </Tooltip>
-        </div>
-      ) : (
-        <div className="participant-detail-controls">
-          <Tooltip title="Edit participant record" aria-label="edit">
-            <IconButton onClick={handleClickChangeMode}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          {!!participant && participant.status !== status.APPROVED && (
-            <Tooltip title="Approve participant" aria-label="approve">
-              <IconButton onClick={handleOpenDialog}>
-                <ThumbUpIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-          {!!participant && participant.status !== status.DECLINED && (
-            <Tooltip title="Decline participant" aria-label="decline">
-              <IconButton
-                onClick={() => {
-                  if (window.confirm('Decline participant?')) {
-                    handleClickDecline();
-                  }
-                }}
-              >
-                <ThumbDownIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Archive participant record" aria-label="archive">
-            <IconButton
-              onClick={() => {
-                if (window.confirm('Archive participant record?')) {
-                  handleClickDelete();
-                }
-              }}
-            >
-              <DeleteIcon color="error" />
-            </IconButton>
-          </Tooltip>
-        </div>
-      )
-    ) : (
+    let buttons;
+
+    if (participantDetailViewMode === participantDetailViewModes.VIEW) {
+      buttons = buttonStatusMap[participant.status];
+    } else if (participantDetailViewMode === participantDetailViewModes.EDIT) {
+      buttons = editButtons;
+    } else {
+      buttons = createButtons;
+    }
+    return (
       <div className="participant-detail-controls">
-        <Tooltip title="Save participant record" aria-label="confirm">
-          <IconButton
-            onClick={() => {
-              if (window.confirm('Save changes?')) {
-                handleSubmit();
-              }
-            }}
-          >
-            <DoneIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Discard changes" aria-label="discard">
-          <IconButton
-            onClick={() => {
-              if (window.confirm('Discard changes? Record will not be saved.')) {
-                handleClickChangeMode();
-              }
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Tooltip>
+        {buttons.map((button) => (
+          <DetailButton key={button.ariaLabel} {...button} />
+        ))}
       </div>
     );
   };
@@ -139,9 +175,11 @@ export const ParticipantDetailPageHeader = ({
         </div>
         <div className="participant-detail-buttons-indicator">
           {getButtons()}
-          <div className="participant-detail-status">
-            <StatusIndicator status={participantStatus} />
-          </div>
+          {!!participantStatus && (
+            <div className="participant-detail-status">
+              <StatusIndicator status={participantStatus} />
+            </div>
+          )}
         </div>
       </div>
       <div className="participant-detail-form-contents">

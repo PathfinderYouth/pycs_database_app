@@ -61,7 +61,6 @@ export const ParticipantDetailEdit = ({
                 error.name === 'DuplicateError'
                   ? 'Unable to save participant record, record with that SIN already exists'
                   : 'There was a problem saving the participant record.';
-
               enqueueSnackbar(message, {
                 variant: 'error',
               });
@@ -80,7 +79,7 @@ export const ParticipantDetailEdit = ({
       initialValues={participant}
       participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}
-      handleClickChangeMode={handleClickChangeMode}
+      handleClickToggleEdit={handleClickChangeMode}
       step={step}
     />
   );
