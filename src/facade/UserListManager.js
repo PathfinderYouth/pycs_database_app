@@ -26,6 +26,29 @@ export default class UserListManager {
     this.userRef = this.db.collection('user');
   }
 
+  checkEmailNotExist(docId, emailLower, onSuccess, onError) {
+    if (emailLower) {
+      this.userRef.where('emailLower', '==', emailLower).get().then((querySnap) => {
+        if (querySnap.docs.length > 0) {
+          querySnap.docs.forEach(queryDocSnap => {
+            if (queryDocSnap.id !== docId && onError) {
+              let error = new Error('Email already exists');
+              error.name = 'DuplicateError';
+              throw error;
+            }
+          });
+        }
+
+        onSuccess();
+      }).catch(onError);
+      return;
+    }
+
+    if (onError) {
+      onError(new Error('Email cannot be empty'));
+    }
+  }
+
   /**
    * Add a new document into user collection.
    * @param {user: Object}
@@ -40,16 +63,18 @@ export default class UserListManager {
       ...user,
       nameLower: user.name.toLowerCase(),
       emailLower: user.email.toLowerCase(),
-    }
+    };
 
-    this.userRef
-      .add(user)
-      .then((docRef) => {
-        if (onSuccess) {
-          onSuccess(docRef.id);
-        }
-      })
-      .catch(onError);
+    this.checkEmailNotExist(null, user.emailLower, () => {
+      this.userRef
+        .add(user)
+        .then((docRef) => {
+          if (onSuccess) {
+            onSuccess(docRef.id);
+          }
+        })
+        .catch(onError);
+    }, onError);
   }
 
   /**
@@ -94,7 +119,9 @@ export default class UserListManager {
   updateUser(docId, data, onSuccess, onError) {
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-    this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
+    this.checkEmailNotExist(docId, data.emailLower, () => {
+      this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
+    }, onError);
   }
 
   /**

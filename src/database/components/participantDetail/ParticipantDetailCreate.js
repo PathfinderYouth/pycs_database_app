@@ -26,7 +26,11 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
         handleClickChangeMode();
       },
       (error) => {
-        enqueueSnackbar('There was a problem creating the participant record.', {
+        let message = error.name === 'DuplicateError'
+          ? 'Unable to save participant record, record with that SIN already exists'
+          : 'There was a problem saving the participant record.';
+
+        enqueueSnackbar(message, {
           variant: 'error',
         });
         handleClickChangeMode();

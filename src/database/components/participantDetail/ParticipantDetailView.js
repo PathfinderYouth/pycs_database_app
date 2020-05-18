@@ -86,7 +86,11 @@ export const ParticipantDetailView = ({
         handleClickChangeView();
       },
       (error) => {
-        enqueueSnackbar('There was a problem saving the participant record.', {
+        let message = error.name === 'DuplicateError'
+          ? 'Unable to save participant record, record with that SIN already exists'
+          : 'There was a problem saving the participant record.';
+
+        enqueueSnackbar(message, {
           variant: 'error',
         });
         handleClickChangeView();
