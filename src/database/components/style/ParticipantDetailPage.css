@@ -19,6 +19,7 @@
 
 .participant-detail-controls {
   display: flex;
+  justify-content: flex-end;
 }
 
 .participant-detail-form-contents {
@@ -28,7 +29,7 @@
 .participant-detail-buttons-indicator {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  
 }
 
 .participant-detail-status {

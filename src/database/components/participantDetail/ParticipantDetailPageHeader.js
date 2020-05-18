@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import { StatusIndicator } from '../StatusIndicator';
-import { collectionType, participantDetailViewModes, status } from '../../../constants';
+import { participantDetailViewModes } from '../../../constants';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailPageHeader = ({
@@ -131,6 +131,7 @@ export const ParticipantDetailPageHeader = ({
   const DetailButton = ({ ariaLabel, tooltip, onClick, confirm, icon: Icon, color }) => (
     <Tooltip title={tooltip} aria-label={ariaLabel}>
       <IconButton
+        edge='end'
         onClick={() => {
           if (!!confirm) {
             if (window.confirm(confirm)) {

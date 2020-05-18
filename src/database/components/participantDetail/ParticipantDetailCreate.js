@@ -14,7 +14,6 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
   } = useContext(AuthContext);
 
   const handleSubmit = (values, setSubmitting) => {
-    console.log('add permanent')
     const db = service.getDatabase();
     db.addPermanent(
       values,

@@ -74,7 +74,6 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickMove = () => {
-    console.log('move')
     const db = service.getDatabase();
     db.moveToPermanent(
       participant,
@@ -86,11 +85,7 @@ export const ParticipantDetailView = ({
         handleClickChangeView();
       },
       (error) => {
-        let message = error.name === 'DuplicateError'
-          ? 'Unable to save participant record, record with that SIN already exists'
-          : 'There was a problem saving the participant record.';
-
-        enqueueSnackbar(message, {
+        enqueueSnackbar('There was a problem saving the participant record.', {
           variant: 'error',
         });
         handleClickChangeView();
@@ -102,7 +97,6 @@ export const ParticipantDetailView = ({
     const db = service.getDatabase();
     const { id: docID, status: participantStatus } = participant;
     if (participantStatus === status.NEW) {
-      console.log('delete new')
       db.deleteNew(
         docID,
         (success) => {
@@ -110,7 +104,6 @@ export const ParticipantDetailView = ({
           handleClickChangeView();
         },
         (error) => {
-          console.log(error)
           enqueueSnackbar('There was a problem deleting the submission.', {
             variant: 'error',
           });
@@ -118,7 +111,6 @@ export const ParticipantDetailView = ({
         },
       )
     } else if (participantStatus === status.ARCHIVED) {
-      console.log('delete permanent')
       db.deletePermanent(
           docID,
           (success) => {
@@ -133,7 +125,6 @@ export const ParticipantDetailView = ({
           },
         )
     } else {
-      console.log('archive')
       db.archivePermanent(
         participant,
         userID,
@@ -162,7 +153,6 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickRestore = (participant, userID) => {
-    console.log('restore')
     const db = service.getDatabase();
     db.restorePermanent(
       participant,
@@ -181,7 +171,6 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickApprove = (confirmationNumber) => {
-    console.log('approve')
     const db = service.getDatabase();
     db.approvePending(
       participant,
@@ -201,7 +190,6 @@ export const ParticipantDetailView = ({
   };
 
   const handleClickDecline = () => {
-    console.log('decline')
     const db = service.getDatabase();
     db.declinePending(
       participant,
@@ -218,24 +206,6 @@ export const ParticipantDetailView = ({
       },
     );
   };
-
-  // const handleClickRestore = () => {
-  //   const db = service.getDatabase();
-  //   db.restorePermanent(
-  //     participant,
-  //     userID,
-  //     (success) => {
-  //       enqueueSnackbar('Participant record restored.', { variant: 'success' });
-  //       handleClickChangeView();
-  //     },
-  //     (error) => {
-  //       enqueueSnackbar('There was a problem restoring the participant record.', {
-  //         variant: 'error',
-  //       });
-  //       handleClickChangeView();
-  //     },
-  //   );
-  // };
 
   return (
     <>

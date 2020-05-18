@@ -22,7 +22,6 @@ export const ParticipantDetailEdit = ({
   const userID = !!displayName ? displayName : email;
 
   const handleSubmit = (values, setSubmitting) => {
-    console.log('update new')
     const db = service.getDatabase();
     if (participant !== values) { // if there were changes
       participantStatus === status.NEW
@@ -62,7 +61,6 @@ export const ParticipantDetailEdit = ({
                 error.name === 'DuplicateError'
                   ? 'Unable to save participant record, record with that SIN already exists'
                   : 'There was a problem saving the participant record.';
-
               enqueueSnackbar(message, {
                 variant: 'error',
               });

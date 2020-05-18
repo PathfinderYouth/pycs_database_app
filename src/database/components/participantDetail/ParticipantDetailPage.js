@@ -16,7 +16,7 @@ export const ParticipantDetailPage = inject(
   'uiStore',
 )(
   observer(() => {
-    const { currentParticipant, collection, setCurrentParticipant } = participantStore;
+    const { currentParticipant, setCurrentParticipant } = participantStore;
     const {
       currentParticipantDetailStep,
       currentParticipantDetailViewMode,
