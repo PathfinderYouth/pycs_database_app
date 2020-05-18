@@ -128,7 +128,7 @@ export const ListContainer = inject(
       };
 
       return (
-        <div className={`${classes.root} maxWidth`}>
+        <div className={`${classes.root} maxWidth list-container`}>
           <Paper className={`${classes.paper} maxWidth`}>
             <RecordSearchBar title={pageTitle} onSearchClicked={handleSearchClicked} />
             <TableContainer>
