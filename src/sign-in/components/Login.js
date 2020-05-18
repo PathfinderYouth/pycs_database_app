@@ -53,7 +53,6 @@ export class LogIn extends Component {
           // perform sign-up if login fails
           () => {
             this.authService.signUp(this.state.email, this.state.password, (user) => {
-              alert(JSON.stringify(user));
               this.authService.logIn(this.state.email, this.state.password, () => {
                 // TODO handle user profile update here.
                 window.location.href = './database';
