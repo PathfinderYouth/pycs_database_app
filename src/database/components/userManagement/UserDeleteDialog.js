@@ -19,7 +19,6 @@ export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen
         enqueueSnackbar('User successfully deleted.', {
           variant: 'success',
         });
-        setDeleteDialogOpen(false);
       },
       () => {
         enqueueSnackbar('Failed to delete user.', {
