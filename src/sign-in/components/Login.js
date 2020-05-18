@@ -21,6 +21,12 @@ export class LogIn extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.authService.getCurrentUser()) {
+      window.location.href = './database';
+    }
+  }
+
   /**
    * handles log in event
    * @param {event: onSubmit event}
