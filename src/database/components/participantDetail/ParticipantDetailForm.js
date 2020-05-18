@@ -1,12 +1,11 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { FormFieldBuilder } from '../../../fields';
+import { FormFieldBuilder, detailPageValidationSchema } from '../../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 
 export const ParticipantDetailForm = ({
   formTitle,
   initialValues,
-  validationSchema,
   participantDetailViewMode,
   handleSubmit,
   handleClickToggleEdit,
@@ -15,7 +14,7 @@ export const ParticipantDetailForm = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={detailPageValidationSchema}
       onSubmit={(values, { setSubmitting }) => {
         handleSubmit(values, setSubmitting);
       }}

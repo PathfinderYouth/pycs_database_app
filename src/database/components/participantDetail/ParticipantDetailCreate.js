@@ -41,7 +41,6 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
     <ParticipantDetailForm
       formTitle="Create participant record"
       initialValues={initialValues}
-      validationSchema={createRecordValidationSchema}
       participantDetailViewMode={participantDetailViewModes.CREATE}
       handleSubmit={handleSubmit}
       handleClickToggleEdit={handleClickChangeMode}

@@ -77,7 +77,6 @@ export const ParticipantDetailEdit = ({
     <ParticipantDetailForm
       formTitle="Edit participant details"
       initialValues={participant}
-      validationSchema={createRecordValidationSchema}
       participantDetailViewMode={participantDetailViewModes.EDIT}
       handleSubmit={handleSubmit}
       handleClickToggleEdit={handleClickChangeMode}

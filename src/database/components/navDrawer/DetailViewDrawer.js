@@ -31,7 +31,7 @@ export const DetailViewDrawer = inject('uiStore')(
 
     const handleClickBack = () => {
       if (
-        currentParticipantDetailViewMode === participantDetailViewModes.EDIT &&
+        currentParticipantDetailViewMode !== participantDetailViewModes.VIEW &&
         window.confirm('Leave this page? Any unsaved changes will be lost.')
       ) {
         handleResetPage()

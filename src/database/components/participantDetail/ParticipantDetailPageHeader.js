@@ -24,9 +24,7 @@ export const ParticipantDetailPageHeader = ({
   form = undefined,
   participant = undefined,
   participantDetailViewMode = undefined,
-  handleClickSave = undefined,
   handleClickToggleEdit = undefined,
-  handleClickChangeMode = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
   handleClickApprove = undefined,
@@ -58,6 +56,11 @@ export const ParticipantDetailPageHeader = ({
       setCurrentParticipantDetailStep(belongsToStepIndex(fieldName));
     }
   };
+
+  const handleClickSave = () => {
+    const { submitForm, errors } = form;
+    submitForm().catch(handleFormErrors(errors))
+  }
 
   const buttonsMap = {
     approve: {
