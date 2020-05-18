@@ -10,12 +10,12 @@ import { userRole } from '../../../constants';
 import service from '../../../facade/service';
 import { MenuItem } from '@material-ui/core';
 
-export const UserEditDialog = ({ user, editDialogOpen, setEditDialogOpen }) => {
+export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) => {
   let db = service.getUserList();
   const { enqueueSnackbar } = useSnackbar();
-  let userEmail = user.email;
-  const [name, setName] = useState(user.name);
-  const [role, setRole] = useState(user.role);
+  let userEmail = record.email;
+  const [name, setName] = useState(record.name);
+  const [role, setRole] = useState(record.role);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
 
   const handleEditUser = () => {
@@ -23,13 +23,29 @@ export const UserEditDialog = ({ user, editDialogOpen, setEditDialogOpen }) => {
       setErrorNameStatus(name === '');
       return;
     }
-    //TODO
-    setEditDialogOpen(false);
+    let data = { email: userEmail, name: name, role: role };
+    db.updateUser(
+      record.id,
+      data,
+      () => {
+        enqueueSnackbar('User information successfully updated.', {
+          variant: 'success',
+        });
+        setEditDialogOpen(false);
+      },
+      () => {
+        enqueueSnackbar('Failed to update user information.', {
+          variant: 'error',
+        });
+        setEditDialogOpen(false);
+      },
+    );
   };
 
   const handleCancelClick = () => {
-    setName(user.name);
-    setRole(user.role);
+    // reset edit form fields
+    setName(record.name);
+    setRole(record.role);
     setErrorNameStatus(false);
     setEditDialogOpen(false);
   };

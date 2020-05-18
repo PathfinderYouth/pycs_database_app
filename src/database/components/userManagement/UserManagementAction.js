@@ -4,14 +4,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import { UserDeleteDialog } from './UserDeleteDialog';
 import { UserEditDialog } from './UserEditDialog';
+import { UserResetPasswordDialog } from './UserResetPasswordDialog';
 
 export const UserManagementAction = ({ row }) => {
-  let selectedUser = { email: row.email, name: row.name, role: row.role };
   const { currentUser } = useContext(AuthContext);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
 
   return (
     <>
@@ -20,7 +22,12 @@ export const UserManagementAction = ({ row }) => {
           <EditIcon />
         </IconButton>
       </Tooltip>
-      {row['email'] !== currentUser.email && (
+      <Tooltip title="Send reset password email" aria-label="reset" placement="bottom">
+        <IconButton color="inherit" size="small" onClick={() => setResetPasswordDialogOpen(true)}>
+          <RotateLeftIcon />
+        </IconButton>
+      </Tooltip>
+      {row && row.email !== currentUser.email && (
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
             <IconButton color="inherit" size="small" onClick={() => setDeleteDialogOpen(true)}>
@@ -30,14 +37,19 @@ export const UserManagementAction = ({ row }) => {
         </>
       )}
       <UserDeleteDialog
-        user={selectedUser}
+        record={row}
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
       />
-      <UserEditDialog 
-        user={selectedUser}
+      <UserEditDialog
+        record={row}
         editDialogOpen={editDialogOpen}
         setEditDialogOpen={setEditDialogOpen}
+      />
+      <UserResetPasswordDialog
+        record={row}
+        resetPasswordDialogOpen={resetPasswordDialogOpen}
+        setResetPasswordDialogOpen={setResetPasswordDialogOpen}
       />
     </>
   );

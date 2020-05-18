@@ -34,8 +34,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         });
         setAddStaffOpen(false);
       },
-      (error) => {
-        enqueueSnackbar(`Cannot create new user, ${error}.`, {
+      () => {
+        enqueueSnackbar('Failed to create new user.', {
           variant: 'error',
         });
         setAddStaffOpen(false);

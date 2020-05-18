@@ -8,24 +8,28 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSnackbar } from 'notistack';
 import service from '../../../facade/service';
 
-export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen }) => {
-  let db = service.getUserList();
-  let userName = record.name;
+export const UserResetPasswordDialog = ({
+  record,
+  resetPasswordDialogOpen,
+  setResetPasswordDialogOpen,
+}) => {
+  let auth = service.getAuthentication();
+  let userEmail = record.email;
   const { enqueueSnackbar } = useSnackbar();
-  const handleDeleteUser = () => {
-    db.deleteUser(
-      record.id,
+  const handleResetPassword = () => {
+    auth.resetPassword(
+      userEmail,
       () => {
-        enqueueSnackbar('User successfully deleted.', {
+        enqueueSnackbar('Reset password email successfully sent.', {
           variant: 'success',
         });
-        setDeleteDialogOpen(false);
+        setResetPasswordDialogOpen(false);
       },
       () => {
-        enqueueSnackbar('Failed to delete user.', {
+        enqueueSnackbar('Failed to send reset password email.', {
           variant: 'error',
         });
-        setDeleteDialogOpen(false);
+        setResetPasswordDialogOpen(false);
       },
     );
   };
@@ -33,29 +37,31 @@ export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen
   return (
     <div>
       <Dialog
-        open={deleteDialogOpen}
-        onClose={setDeleteDialogOpen}
+        open={resetPasswordDialogOpen}
+        onClose={() => {
+          setResetPasswordDialogOpen(false);
+        }}
         maxWidth={'sm'}
         fullWidth
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Delete User</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Reset Password</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Delete user <b>{userName}</b>?
+            Send password reset email to <b>{userEmail}</b>?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
-              setDeleteDialogOpen(false);
+              setResetPasswordDialogOpen(false);
             }}
             color="primary"
           >
             Cancel
           </Button>
-          <Button onClick={handleDeleteUser} color="primary" autoFocus>
+          <Button onClick={handleResetPassword} color="primary" autoFocus>
             Confirm
           </Button>
         </DialogActions>
