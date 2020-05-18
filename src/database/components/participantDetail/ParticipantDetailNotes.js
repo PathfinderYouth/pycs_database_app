@@ -24,10 +24,14 @@ export const ParticipantDetailNotes = inject('participantStore')(
     } = useContext(AuthContext);
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const notes = !!currentParticipant.notes ? currentParticipant.notes : [];
 
     const handleChange = ({ target: { value } }) => {
+      if (value !== '') {
+        setError(false);
+      }
       setNewNoteFieldValue(value);
     };
 
@@ -65,6 +69,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               setSubmitting(false);
             },
             (error) => {
+              console.log(error)
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
@@ -73,21 +78,26 @@ export const ParticipantDetailNotes = inject('participantStore')(
     };
 
     const addNote = () => {
-      const now = moment.utc().format();
-      const note = {
-        text: newNoteFieldValue,
-        timeStamp: now,
-        user: userID,
-      };
-
-      const newNotes = [note, ...notes];
-      if (window.confirm('Add new note?')) {
-        const newValues = {
-          ...currentParticipant,
-          notes: newNotes,
+      if (newNoteFieldValue === '') {
+        setError(true);
+      } else {
+        
+        const now = moment.utc().format();
+        const note = {
+          text: newNoteFieldValue,
+          timeStamp: now,
+          user: userID,
         };
-        setSubmitting(true);
-        handleNoteSubmit(newValues);
+
+        const newNotes = [note, ...notes];
+        if (window.confirm('Add new note?')) {
+          const newValues = {
+            ...currentParticipant,
+            notes: newNotes,
+          };
+          setSubmitting(true);
+          handleNoteSubmit(newValues);
+        }
       }
     };
 
@@ -107,6 +117,8 @@ export const ParticipantDetailNotes = inject('participantStore')(
               label={label}
               value={newNoteFieldValue}
               onChange={handleChange}
+              error={error}
+              helperText={error && 'Note cannot be blank'}
               fullWidth
               multiline
             />
