@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import { useSnackbar } from 'notistack';
 import { userRole } from '../../../constants';
 import service from '../../../facade/service';
@@ -46,6 +47,10 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
     <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
       <DialogContent>
+        <DialogContentText>
+          To finish creating user account, have this user log in. The password they enter the first
+          time they log in will be the password associated with their account.
+        </DialogContentText>
         <TextField
           autoFocus
           required
