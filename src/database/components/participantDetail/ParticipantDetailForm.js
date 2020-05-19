@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik';
-import { FormFieldBuilder } from '../../../fields';
+import { FormFieldBuilder, detailPageValidationSchema } from '../../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
 
 export const ParticipantDetailForm = ({
@@ -14,6 +14,7 @@ export const ParticipantDetailForm = ({
   return (
     <Formik
       initialValues={initialValues}
+      validationSchema={detailPageValidationSchema}
       onSubmit={(values, { setSubmitting }) => {
         handleSubmit(values, setSubmitting);
       }}
@@ -22,6 +23,7 @@ export const ParticipantDetailForm = ({
         <ParticipantDetailPageHeader
           title={`${formTitle} - ${step.stepName}`}
           participant={initialValues}
+          form={form}
           participantDetailViewMode={participantDetailViewMode}
           handleClickToggleEdit={handleClickToggleEdit}
           handleClickSave={form.submitForm}

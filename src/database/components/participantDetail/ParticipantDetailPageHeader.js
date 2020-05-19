@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import EditIcon from '@material-ui/icons/Edit';
@@ -12,15 +13,17 @@ import ArchiveIcon from '@material-ui/icons/Archive';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import { DetailButton } from './DetailButton';
 import { StatusIndicator } from '../StatusIndicator';
-import { participantDetailViewModes } from '../../../constants';
+import { uiStore } from '../../../injectables';
+import { collectionType, participantDetailViewModes, status } from '../../../constants';
+import { belongsToStepIndex } from '../../../fields';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailPageHeader = ({
   children,
   title,
+  form = undefined,
   participant = undefined,
   participantDetailViewMode = undefined,
-  handleClickSave = undefined,
   handleClickToggleEdit = undefined,
   handleClickMove = undefined,
   handleClickDelete = undefined,
@@ -30,6 +33,34 @@ export const ParticipantDetailPageHeader = ({
 }) => {
   const { nameGiven, nameLast, status: participantStatus } = participant;
   const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+  const { enqueueSnackbar } = useSnackbar();
+  const { setCurrentParticipantDetailStep } = uiStore;
+
+  useEffect(() => {
+    if (!!form) {
+      form.validateForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * Navigates to the first form step with errors
+   * @param Object errors
+   */
+  const handleFormErrors = (errors) => {
+    const error = Object.entries(errors)[0];
+    if (!!error) {
+      const errorMessage = error[1];
+      const fieldName = error[0];
+      enqueueSnackbar(errorMessage, { variant: 'error' });
+      setCurrentParticipantDetailStep(belongsToStepIndex(fieldName));
+    }
+  };
+
+  const handleClickSave = () => {
+    const { submitForm, errors } = form;
+    submitForm().catch(handleFormErrors(errors))
+  }
 
   const buttonsMap = {
     approve: {

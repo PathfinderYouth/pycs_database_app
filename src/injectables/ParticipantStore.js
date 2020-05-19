@@ -33,6 +33,8 @@ class ParticipantStore {
 
   _statistics = null;
 
+  isListLoading = false;
+
   constructor() {
     db.getNumOfNew((doc) => {
       this._statistics = doc;
@@ -64,6 +66,7 @@ class ParticipantStore {
     }
 
     this._participants = newList;
+    this.setIsListLoading(false);
 
     this._isLastPage =
       newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
@@ -72,6 +75,7 @@ class ParticipantStore {
   _updateList = autorun(
     () => {
       // Run this whenever type of collection, filter, or sorter changes
+      this.setIsListLoading(true);
 
       // Unsubscribe to previous real-time listener and reset list to empty
       if (this._controller) {
@@ -87,6 +91,7 @@ class ParticipantStore {
             this._sorter,
             this._limit,
             this._onChildNext,
+            this.setIsListLoading
           );
           break;
 
@@ -96,6 +101,7 @@ class ParticipantStore {
             this._sorter,
             this._limit,
             this._onChildNext,
+            this.setIsListLoading
           );
           break;
 
@@ -138,6 +144,10 @@ class ParticipantStore {
 
   goToNextPage = () => {
     this._controller.next(() => (this._participants = []));
+  };
+
+  setIsListLoading = (isLoading) => {
+    this.isListLoading = isLoading;
   };
 
   get participants() {
@@ -187,6 +197,7 @@ decorate(ParticipantStore, {
   _collection: observable,
   _isLastPage: observable,
   _statistics: observable,
+  isListLoading: observable,
   setCurrentParticipant: action,
   setFilter: action,
   setSorter: action,
@@ -194,6 +205,7 @@ decorate(ParticipantStore, {
   setCollection: action,
   goToPreviousPage: action,
   goToNextPage: action,
+  setIsListLoading: action,
   participants: computed,
   numOfNewParticipants: computed,
   isLastPage: computed,

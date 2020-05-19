@@ -13,3 +13,10 @@ tr {
 .list-container {
   margin-bottom: 5em;
 }
+
+.list-empty-contents {
+  width: 100%;
+  display: flex;
+  padding: 5em 0;
+  justify-content: center;
+}

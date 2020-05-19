@@ -46,39 +46,48 @@ const ageValidation = (value) => {
   return age >= 15 && age <= 30;
 };
 
+const commonValidationSchema = {
+  nameGiven: yup.string().required('Given name is required'),
+  nameLast: yup.string().required('Last name is required'),
+  phoneHome: yup
+    .string()
+    .length(10, 'Must be 10 digits long')
+    .when(['phoneCell', 'email'], {
+      is: (phoneCell, email) => !phoneCell && !email,
+      then: yup.string().required('A contact method is required'),
+    }),
+  phoneCell: yup
+    .string()
+    .length(10, 'Must be 10 digits long')
+    .when(['phoneHome', 'email'], {
+      is: (phoneHome, email) => !phoneHome && !email,
+      then: yup.string().required('A contact method is required'),
+    }),
+  email: yup
+    .string()
+    .email('Invalid email address')
+    .when(['phoneHome', 'phoneCell'], {
+      is: (phoneHome, phoneCell) => !phoneHome && !phoneCell,
+      then: yup.string().required('A contact method is required'),
+    }),
+  birthDate: yup
+    .date()
+    .required('Birthdate is required')
+    .test('age-test', 'Must be between 15 and 30 years old', (value) => ageValidation(value)),
+  sin: yup
+    .string()
+    .required('SIN is required')
+    .length(9, 'Must be 9 digits long')
+    .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
+};
+
 export const validationSchema = yup.object().shape(
   {
-    nameGiven: yup.string().required('Given name is required'),
-    nameLast: yup.string().required('Last name is required'),
+    ...commonValidationSchema,
     programAppliedFor: yup.string().required('Must select an option'),
     addressPostalCode: yup
       .string()
       .matches(/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/, 'Invalid postal code'),
-    phoneHome: yup
-      .string()
-      .length(10, 'Must be 10 digits long')
-      .when(['phoneCell', 'email'], {
-        is: (phoneCell, email) => !phoneCell && !email,
-        then: yup.string().required('A contact method is required'),
-      }),
-    phoneCell: yup
-      .string()
-      .length(10, 'Must be 10 digits long')
-      .when(['phoneHome', 'email'], {
-        is: (phoneHome, email) => !phoneHome && !email,
-        then: yup.string().required('A contact method is required'),
-      }),
-    email: yup
-      .string()
-      .email('Invalid email address')
-      .when(['phoneHome', 'phoneCell'], {
-        is: (phoneHome, phoneCell) => !phoneHome && !phoneCell,
-        then: yup.string().required('A contact method is required'),
-      }),
-    birthDate: yup
-      .date()
-      .required('Birthdate is required')
-      .test('age-test', 'Must be between 15 and 30 years old', (value) => ageValidation(value)),
     emergencyContact1PhoneHome: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneWork: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneCell: yup.string().length(10, 'Must be 10 digits long'),
@@ -98,17 +107,23 @@ export const validationSchema = yup.object().shape(
       )
       .required('BC care card number is required')
       .length(10, 'Must be 10 digits long'),
-    sin: yup
-      .string()
-      .required('SIN is required')
-      .length(9, 'Must be 9 digits long')
-      .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
     whyApplied: yup.string().required('Please enter the reason you applied to Pathfinder'),
     whyShouldBeAccepted: yup
       .string()
       .required('Please enter why you think you should be accepted to Pathfinder'),
     hasMentalHealthIssues: yup.string().required('Please select an option'),
     housingSituation: yup.string().required('Please select an option'),
+  },
+  [
+    ['phoneHome', 'phoneCell'],
+    ['phoneHome', 'email'],
+    ['phoneCell', 'email'],
+  ],
+);
+
+export const detailPageValidationSchema = yup.object().shape(
+  {
+    ...commonValidationSchema,
   },
   [
     ['phoneHome', 'phoneCell'],
