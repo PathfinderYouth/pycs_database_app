@@ -19,7 +19,7 @@ import {
   PieChart,
   Work,
 } from '@material-ui/icons';
-import { participantStore, uiStore } from '../../../injectables';
+import { participantStore, uiStore, userStore } from '../../../injectables';
 import { collectionType, status, viewModes } from '../../../constants';
 import { StyledListItem } from '../StyledListItem';
 import '../style/NavDrawer.css';
@@ -36,13 +36,14 @@ const useStyles = makeStyles((theme) => ({
 export const ListViewDrawer = inject(
   'uiStore',
   'participantStore',
+  'userStore',
 )(
   observer(({ numNew, onParticipantViewChanged, onStaffViewChanged }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
     const { currentViewMode, setCurrentViewMode } = uiStore;
     const { collection } = participantStore;
-
+    const { currentSignedInUser } = userStore;
     const statuses = [
       { id: status.PENDING, name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: status.APPROVED, name: 'Approved', icon: <Check /> },
@@ -125,20 +126,21 @@ export const ListViewDrawer = inject(
             <ListItemText primary="Statistics" />
           </StyledListItem>
           <Divider />
-          {/*//TODO: only render this if user is admin*/}
-          <StyledListItem
-            button
-            selected={currentViewMode === viewModes.STAFF_LIST}
-            onClick={() => {
-              setCurrentViewMode(viewModes.STAFF_LIST);
-              onStaffViewChanged();
-            }}
-          >
-            <ListItemIcon>
-              <Work />
-            </ListItemIcon>
-            <ListItemText primary="Staff Management" />
-          </StyledListItem>
+          {currentSignedInUser.role === 'admin' && (
+            <StyledListItem
+              button
+              selected={currentViewMode === viewModes.STAFF_LIST}
+              onClick={() => {
+                setCurrentViewMode(viewModes.STAFF_LIST);
+                onStaffViewChanged();
+              }}
+            >
+              <ListItemIcon>
+                <Work />
+              </ListItemIcon>
+              <ListItemText primary="Staff Management" />
+            </StyledListItem>
+          )}
           <Divider />
         </List>
       </div>

@@ -109,21 +109,21 @@ export const ParticipantDetailView = ({
           });
           handleClickChangeView();
         },
-      )
+      );
     } else if (participantStatus === status.ARCHIVED) {
       db.deletePermanent(
-          docID,
-          (success) => {
-            enqueueSnackbar('Participant record deleted.');
-            handleClickChangeView();
-          },
-          (error) => {
-            enqueueSnackbar('There was a problem archiving the participant record.', {
-              variant: 'error',
-            });
-            handleClickChangeView();
-          },
-        )
+        docID,
+        (success) => {
+          enqueueSnackbar('Participant record deleted.');
+          handleClickChangeView();
+        },
+        (error) => {
+          enqueueSnackbar('There was a problem archiving the participant record.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        },
+      );
     } else {
       db.archivePermanent(
         participant,
@@ -149,7 +149,7 @@ export const ParticipantDetailView = ({
           handleClickChangeView();
         },
       );
-    }   
+    }
   };
 
   const handleClickRestore = (participant, userID) => {

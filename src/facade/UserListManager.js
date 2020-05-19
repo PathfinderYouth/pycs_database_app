@@ -28,19 +28,23 @@ export default class UserListManager {
 
   checkEmailNotExist(docId, emailLower, onSuccess, onError) {
     if (emailLower) {
-      this.userRef.where('emailLower', '==', emailLower).get().then((querySnap) => {
-        if (querySnap.docs.length > 0) {
-          querySnap.docs.forEach(queryDocSnap => {
-            if (queryDocSnap.id !== docId && onError) {
-              let error = new Error('Email already exists');
-              error.name = 'DuplicateError';
-              throw error;
-            }
-          });
-        }
+      this.userRef
+        .where('emailLower', '==', emailLower)
+        .get()
+        .then((querySnap) => {
+          if (querySnap.docs.length > 0) {
+            querySnap.docs.forEach((queryDocSnap) => {
+              if (queryDocSnap.id !== docId && onError) {
+                let error = new Error('Email already exists');
+                error.name = 'DuplicateError';
+                throw error;
+              }
+            });
+          }
 
-        onSuccess();
-      }).catch(onError);
+          onSuccess();
+        })
+        .catch(onError);
       return;
     }
 
@@ -65,22 +69,27 @@ export default class UserListManager {
       emailLower: user.email.toLowerCase(),
     };
 
-    this.checkEmailNotExist(null, user.emailLower, () => {
-      this.userRef
-        .add(user)
-        .then((docRef) => {
-          if (onSuccess) {
-            onSuccess(docRef.id);
-          }
-        })
-        .catch(onError);
-    }, onError);
+    this.checkEmailNotExist(
+      null,
+      user.emailLower,
+      () => {
+        this.userRef
+          .add(user)
+          .then((docRef) => {
+            if (onSuccess) {
+              onSuccess(docRef.id);
+            }
+          })
+          .catch(onError);
+      },
+      onError,
+    );
   }
 
   /**
    * Get a document from user collection.
-   * @param {docId: string}
-   *  Document id
+   * @param {email: string}
+   *  Email of the user
    * @param {onNext: (doc: Object) => void}
    *  Callback function when document changes
    * @param {onError?: (error: Error) => void}
@@ -88,18 +97,14 @@ export default class UserListManager {
    * @returns {() => void}
    *  Unsubscribe function
    */
-  getUser(docId, onNext, onError) {
-    return this.userRef.doc(docId).onSnapshot({
-      next: (docSnap) => {
-        let doc = docSnap.data();
-        if (doc) {
-          onNext(doc);
-          return;
+  getUser(email, onNext, onError) {
+    return this.userRef.where('emailLower', '==', email.toLowerCase()).onSnapshot({
+      next: (querySnap) => {
+        if (querySnap.docs.length === 0) {
+          throw new Error('Email does not exist');
         }
 
-        if (onError) {
-          onError(new Error('Document does not exist'));
-        }
+        onNext(querySnap.docs[0].data());
       },
       error: onError,
     });
@@ -119,9 +124,14 @@ export default class UserListManager {
   updateUser(docId, data, onSuccess, onError) {
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-    this.checkEmailNotExist(docId, data.emailLower, () => {
-      this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
-    }, onError);
+    this.checkEmailNotExist(
+      docId,
+      data.emailLower,
+      () => {
+        this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
+      },
+      onError,
+    );
   }
 
   /**
@@ -144,7 +154,13 @@ export default class UserListManager {
           throw new Error('Email does not exist');
         }
 
-        querySnap.docs[0].ref.update({ uid: uid }).then(onSuccess).catch(onError);
+        let doc = querySnap.docs[0];
+        doc.ref
+          .update({ uid: uid })
+          .then(() => {
+            onSuccess(doc.data());
+          })
+          .catch(onError);
       })
       .catch(onError);
   }

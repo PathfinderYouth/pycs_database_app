@@ -20,8 +20,9 @@ export const ParticipantDetailNotes = inject('participantStore')(
     const { currentParticipant, setCurrentParticipant, collection } = participantStore;
     const { label } = noteField;
     const {
-      currentUser: { email: userID },
+      currentUser: { email, displayName },
     } = useContext(AuthContext);
+    const userID = !!displayName ? displayName : email;
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
@@ -69,7 +70,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               setSubmitting(false);
             },
             (error) => {
-              console.log(error)
+              console.log(error);
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
@@ -81,7 +82,6 @@ export const ParticipantDetailNotes = inject('participantStore')(
       if (newNoteFieldValue === '') {
         setError(true);
       } else {
-        
         const now = moment.utc().format();
         const note = {
           text: newNoteFieldValue,

@@ -10,8 +10,9 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
   const {
-    currentUser: { email: userID },
+    currentUser: { email, displayName },
   } = useContext(AuthContext);
+  const userID = !!displayName ? displayName : email;
 
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
@@ -26,9 +27,10 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
         handleClickChangeMode();
       },
       (error) => {
-        let message = error.name === 'DuplicateError'
-          ? 'Unable to save participant record, record with that SIN already exists'
-          : 'There was a problem saving the participant record.';
+        let message =
+          error.name === 'DuplicateError'
+            ? 'Unable to save participant record, record with that SIN already exists'
+            : 'There was a problem saving the participant record.';
 
         enqueueSnackbar(message, {
           variant: 'error',
