@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useSnackbar } from 'notistack';
 import { participantDetailSteps } from '../../../fields';
-import { AuthContext } from '../../../sign-in';
 import { participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
@@ -10,25 +9,23 @@ import '../style/ParticipantDetailPage.css';
 export const ParticipantDetailEdit = ({
   participant,
   currentStep,
+  user,
   handleClickChangeMode,
   onSuccessfulEdit,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
   const { status: participantStatus } = participant;
-  const {
-    currentUser: { email, displayName },
-  } = useContext(AuthContext);
-  const userID = !!displayName ? displayName : email;
 
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
-    if (participant !== values) { // if there were changes
+    if (participant !== values) {
+      // if there were changes
       participantStatus === status.NEW
         ? db.updateNew(
             participant, // old data
             values, // new data from form
-            userID, // user
+            user, // user
             (updatedParticipant) => {
               setSubmitting(false);
               enqueueSnackbar('Participant record updated.', {
@@ -47,7 +44,7 @@ export const ParticipantDetailEdit = ({
         : db.updatePermanent(
             participant,
             values,
-            userID,
+            user,
             (updatedParticipant) => {
               setSubmitting(false);
               enqueueSnackbar('Participant record updated.', {

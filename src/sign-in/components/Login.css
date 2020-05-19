@@ -1,10 +1,36 @@
-.paperStyle {
+.login-container {
+  height: calc(100% - 64px);
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin: 3em;
 }
 
-.maxWidth {
+.login-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 10em;
+}
+
+.login-logo {
+  width: 15em;
+}
+
+.login-bottom-links {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login-form-field {
+  padding-top: 1em;
+  height: 4em;
+}
+
+.login-form-error-text {
+  height: 5em;
   width: 100%;
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
 import { useSnackbar } from 'notistack';
@@ -10,20 +10,16 @@ import { ParticipantApproveDialog } from './ParticipantApproveDialog';
 import { participantDetailSteps } from '../../../fields';
 import { masks, participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
-import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailView.css';
 
 export const ParticipantDetailView = ({
   participant,
   currentStep,
+  user,
   handleClickChangeMode,
   handleClickChangeView,
 }) => {
   const step = participantDetailSteps[currentStep];
-  const {
-    currentUser: { email, displayName },
-  } = useContext(AuthContext);
-  const userID = !!displayName ? displayName : email;
   const { enqueueSnackbar } = useSnackbar();
   const [openDialog, setDialogOpen] = useState(false);
 
@@ -79,7 +75,7 @@ export const ParticipantDetailView = ({
     const db = service.getDatabase();
     db.moveToPermanent(
       participant,
-      userID,
+      user,
       (updatedParticipant) => {
         enqueueSnackbar('Participant record saved to database.', {
           variant: 'success',
@@ -129,13 +125,13 @@ export const ParticipantDetailView = ({
     } else {
       db.archivePermanent(
         participant,
-        userID,
+        user,
         (updatedParticpant) => {
           enqueueSnackbar('Participant record archived.', {
             action: (
               <Button
                 color="secondary"
-                onClick={() => handleClickRestore(updatedParticpant, userID)}
+                onClick={() => handleClickRestore(updatedParticpant, user)}
               >
                 Undo
               </Button>
@@ -154,11 +150,11 @@ export const ParticipantDetailView = ({
     }
   };
 
-  const handleClickRestore = (participant, userID) => {
+  const handleClickRestore = (participant, user) => {
     const db = service.getDatabase();
     db.restorePermanent(
       participant,
-      userID,
+      user,
       (success) => {
         enqueueSnackbar('Participant record restored.', { variant: 'success' });
         handleClickChangeView();
@@ -176,7 +172,7 @@ export const ParticipantDetailView = ({
     const db = service.getDatabase();
     db.approvePending(
       participant,
-      userID,
+      user,
       confirmationNumber,
       (success) => {
         enqueueSnackbar('Participant approved.', { variant: 'success' });
@@ -195,7 +191,7 @@ export const ParticipantDetailView = ({
     const db = service.getDatabase();
     db.declinePending(
       participant,
-      userID,
+      user,
       (success) => {
         enqueueSnackbar('Participant declined.');
         handleClickChangeView();
@@ -221,7 +217,7 @@ export const ParticipantDetailView = ({
         handleClickDelete={handleClickDelete}
         handleClickApprove={() => setDialogOpen(true)}
         handleClickDecline={handleClickDecline}
-        handleClickRestore={() => handleClickRestore(participant, userID)}
+        handleClickRestore={() => handleClickRestore(participant, user)}
       >
         {step.fields.map((field) => {
           const { name, size, detailSize, prettyName } = field;
