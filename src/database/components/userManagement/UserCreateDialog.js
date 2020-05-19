@@ -45,7 +45,7 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
   };
   return (
     <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Create a new user</DialogTitle>
+      <DialogTitle id="form-dialog-title">Create User</DialogTitle>
       <DialogContent>
         <DialogContentText>
           In order to finish account creation, the new user must log in using the email address just provided. The 
