@@ -170,7 +170,7 @@ export default class DatabaseManager {
     const newHistory = this.getUpdatedHistory(
       'System',
       eventType.CREATED,
-      'Received registration data from participant',
+      'Registration data submitted by participant',
     );
     let document = {
       ...data,
@@ -304,7 +304,7 @@ export default class DatabaseManager {
       const newHistory = this.getUpdatedHistory(
         userName,
         eventType.CREATED,
-        'Created new participant record',
+        'Participant record created',
         data.history,
       );
       let document = {

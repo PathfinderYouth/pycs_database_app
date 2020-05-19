@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
@@ -56,6 +56,7 @@ export const StatisticsView = inject('participantStore')(
 
     useEffect(() => {
       readStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -100,7 +101,7 @@ export const StatisticsView = inject('participantStore')(
           <Grid item xs={12}>
             <FormControl className="statisticsDropdown">
               <InputLabel>Select demographic</InputLabel>
-              <Select defaultValue={''} onChange={onDropdownChange}>
+              <Select value={dropdownSelection} onChange={onDropdownChange}>
                 {dropdownOptions.map((group) => (
                   <MenuItem value={group.id} key={group.id}>
                     {group.label}
@@ -112,8 +113,8 @@ export const StatisticsView = inject('participantStore')(
           {currentGroup !== null &&
             currentGroup.subcategories.map((category) => {
               return (
-                <>
-                  <Grid item xs={12} key={category.id}>
+                <Fragment key={category.id}>
+                  <Grid item xs={12}>
                     <Typography variant="h6">{category.label}</Typography>
                   </Grid>
                   {[
@@ -139,7 +140,7 @@ export const StatisticsView = inject('participantStore')(
                       </Grid>
                     );
                   })}
-                </>
+                </Fragment>
               );
             })}
         </Grid>

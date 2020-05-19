@@ -14,7 +14,7 @@ import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import { DetailButton } from './DetailButton';
 import { StatusIndicator } from '../StatusIndicator';
 import { uiStore } from '../../../injectables';
-import { collectionType, participantDetailViewModes, status } from '../../../constants';
+import { participantDetailViewModes } from '../../../constants';
 import { belongsToStepIndex } from '../../../fields';
 import '../style/ParticipantDetailView.css';
 

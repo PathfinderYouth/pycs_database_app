@@ -17,11 +17,16 @@ export const ParticipantDetailHistory = ({ participant }) => {
   const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
 
   // Gets display values for the changed fields table cells
-  const getCellValue = (header, data) => {
+  const getCellValue = (header, data, fieldName) => {
     if (header === 'name') {
       return fieldNames[data];
     } else {
-      const value = Array.isArray(data) ? data.join(', ') : data;
+      let value
+      if (fieldName === 'birthDate') {
+        value = data !== '' ? moment(data).format('MMM D, YYYY') : ''
+      } else {
+        value = Array.isArray(data) ? data.join(', ') : data;
+      }
       return value === [] || value === '' ? <em>None</em> : value;
     }
   };
@@ -52,7 +57,7 @@ export const ParticipantDetailHistory = ({ participant }) => {
                       const { id } = header;
                       return (
                         <TableCell key={`history-fields-${field.name}-${id}`}>
-                          {getCellValue(id, field[id])}
+                          {getCellValue(id, field[id], field.name)}
                         </TableCell>
                       );
                     })}

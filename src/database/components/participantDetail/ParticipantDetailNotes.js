@@ -20,13 +20,14 @@ export const ParticipantDetailNotes = inject('participantStore')(
     const { currentParticipant, setCurrentParticipant, collection } = participantStore;
     const { label } = noteField;
     const {
-      currentUser: { email: userID },
+      currentUser: { email, displayName },
     } = useContext(AuthContext);
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { nameLast, nameGiven } = currentParticipant;
+    const userID = !!displayName ? displayName : email;
     const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
     const notes = !!currentParticipant.notes ? currentParticipant.notes : [];
 

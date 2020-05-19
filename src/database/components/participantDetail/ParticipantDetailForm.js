@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Formik } from 'formik';
 import { FormFieldBuilder, detailPageValidationSchema } from '../../../fields';
 import { ParticipantDetailPageHeader } from './ParticipantDetailPageHeader';
@@ -16,7 +17,9 @@ export const ParticipantDetailForm = ({
       initialValues={initialValues}
       validationSchema={detailPageValidationSchema}
       onSubmit={(values, { setSubmitting }) => {
-        handleSubmit(values, setSubmitting);
+        // formats the birth date field into UTC
+        const newValues = { ...values, birthDate: moment(values.birthDate).utc().format() };
+        handleSubmit(newValues, setSubmitting);
       }}
     >
       {(form) => (
