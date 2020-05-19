@@ -13,7 +13,7 @@ export class LogIn extends Component {
     super(props);
     this.authService = service.getAuthentication();
     this.userService = service.getUserList();
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLoginSession = this.handleLoginSession.bind(this);
     this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
     this.state = {
       email: '',
@@ -29,12 +29,7 @@ export class LogIn extends Component {
     }
   }
 
-  /**
-   * handles log in event
-   * @param {event: onSubmit event}
-   *
-   */
-  handleLogin(event) {
+  handleLoginSession(event) {
     event.preventDefault();
     this.userService.checkEmailNotExist(
       null,
@@ -45,21 +40,36 @@ export class LogIn extends Component {
       },
       // if email exists in user collection
       () => {
-        this.authService.logIn(
-          this.state.email,
-          this.state.password,
+        this.authService.setAuthPersistence(
           () => {
-            window.location.href = './database';
+            // auth state is persisted in current session only
+            this.handleSignIn(this.state.email, this.state.password);
           },
-          // perform sign-up if login fails
-          (error) => {
-            if (error.code === 'auth/wrong-password') {
-              this.setState({ errorPasswordStatus: true });
-              return;
-            }
-            this.handleSignUp(this.state.email, this.state.password);
+          () => {
+            // if the current environment doesn't support session presistence
+            // still allow login with a warning
+            this.handleSignIn(this.state.email, this.state.password);
+            alert('Reminder: please sign out when you finish this session');
           },
         );
+      },
+    );
+  }
+
+  handleSignIn(userEmail, userPassword) {
+    this.authService.logIn(
+      userEmail,
+      userPassword,
+      () => {
+        window.location.href = './database';
+      },
+      // perform sign-up if login fails
+      (error) => {
+        if (error.code === 'auth/wrong-password') {
+          this.setState({ errorPasswordStatus: true });
+          return;
+        }
+        this.handleSignUp(userEmail, userPassword);
       },
     );
   }
@@ -137,7 +147,7 @@ export class LogIn extends Component {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={this.handleLogin}
+              onClick={this.handleLoginSession}
             >
               Sign In
             </Button>
