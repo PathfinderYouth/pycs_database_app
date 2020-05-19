@@ -1,8 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -12,6 +10,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import { DetailButton } from './DetailButton';
 import { StatusIndicator } from '../StatusIndicator';
 import { participantDetailViewModes } from '../../../constants';
 import '../style/ParticipantDetailView.css';
@@ -114,7 +113,7 @@ export const ParticipantDetailPageHeader = ({
     pending: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.archive],
     approved: [buttonsMap.edit, buttonsMap.decline, buttonsMap.archive],
     declined: [buttonsMap.edit, buttonsMap.approve, buttonsMap.archive],
-    archived: [buttonsMap.restore, buttonsMap.delete]
+    archived: [buttonsMap.restore, buttonsMap.delete],
   };
 
   const editButtons = [buttonsMap.save, buttonsMap.cancel];
@@ -128,28 +127,8 @@ export const ParticipantDetailPageHeader = ({
     buttonsMap.cancel,
   ];
 
-  const DetailButton = ({ ariaLabel, tooltip, onClick, confirm, icon: Icon, color }) => (
-    <Tooltip title={tooltip} aria-label={ariaLabel}>
-      <IconButton
-        edge='end'
-        onClick={() => {
-          if (!!confirm) {
-            if (window.confirm(confirm)) {
-              onClick();
-            }
-          } else {
-            onClick();
-          }
-        }}
-      >
-        <Icon color={color} />
-      </IconButton>
-    </Tooltip>
-  );
-
   const getButtons = () => {
     let buttons;
-
     if (participantDetailViewMode === participantDetailViewModes.VIEW) {
       buttons = buttonStatusMap[participant.status];
     } else if (participantDetailViewMode === participantDetailViewModes.EDIT) {

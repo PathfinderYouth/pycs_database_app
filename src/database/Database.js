@@ -92,6 +92,8 @@ export const Database = inject(
       setRecordSearchBoxActive(searchText !== '');
       filterFunction(filter);
     };
+    
+    const handleDrawerClose = () => setNavigationDrawerOpen(false)
 
     /**
      * Gets content of side drawer
@@ -100,7 +102,7 @@ export const Database = inject(
       switch (currentViewMode) {
         // detail modes
         case viewModes.PARTICIPANT_DETAIL:
-          return <DetailViewDrawer />;
+          return <DetailViewDrawer handleDrawerClose={handleDrawerClose} />;
         // list modes
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
@@ -109,6 +111,7 @@ export const Database = inject(
             <ListViewDrawer
               numNew={numOfNewParticipants}
               classes={classes}
+              handleDrawerClose={handleDrawerClose} 
               onParticipantViewChanged={handleParticipantViewChanged}
               onStaffViewChanged={handleStaffViewChanged}
             />
@@ -181,7 +184,7 @@ export const Database = inject(
           drawerState={navigationDrawerOpen}
         />
         <NavDrawer
-          handleDrawerClose={() => setNavigationDrawerOpen(false)}
+          handleDrawerClose={handleDrawerClose}
           drawerState={navigationDrawerOpen}
         >
           {getNavDrawerContents()}
