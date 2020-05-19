@@ -10,7 +10,7 @@ export const ParticipantTabs = inject('uiStore')(
   observer(({ handleClick }) => {
     const { currentParticipantDetailStep, currentParticipantDetailViewMode } = uiStore;
     const steps =
-      currentParticipantDetailViewMode === participantDetailViewModes.CREATE
+      currentParticipantDetailViewMode !== participantDetailViewModes.VIEW
         ? stepNames
         : participantDetailStepNames;
 
