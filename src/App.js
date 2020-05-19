@@ -12,9 +12,9 @@ import { theme } from './ui';
 import './App.css';
 
 const App = () => (
-  <AuthProvider>
-    <Provider participantStore={participantStore} userStore={userStore} uiStore={uiStore}>
-      <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
+    <AuthProvider>
+      <Provider participantStore={participantStore} userStore={userStore} uiStore={uiStore}>
         <SnackbarProvider
           anchorOrigin={{
             vertical: 'bottom',
@@ -28,9 +28,9 @@ const App = () => (
             <NotFound default />
           </Router>
         </SnackbarProvider>
-      </ThemeProvider>
-    </Provider>
-  </AuthProvider>
+      </Provider>
+    </AuthProvider>
+  </ThemeProvider>
 );
 
 export default App;

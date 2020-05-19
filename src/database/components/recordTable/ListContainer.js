@@ -11,8 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
-import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
 import { StatusIndicator } from '../StatusIndicator';
@@ -50,8 +51,7 @@ export const ListContainer = inject(
     }) => {
       const classes = useStyles();
       const [page, setPage] = useState(0);
-      const [rowsPerPage, setRowsPerPage] = useState(20);
-      const { collection, limit: participantLimit } = participantStore;
+      const { collection, limit: participantLimit, isListLoading } = participantStore;
       const { users, limit: userLimit } = userStore;
       const {
         headers,
@@ -143,45 +143,57 @@ export const ListContainer = inject(
                   rowCount={records.length}
                   headerCells={headers}
                 />
-                <TableBody>
-                  {records.map((row) => (
-                    <TableRow
-                      hover
-                      key={row.id}
-                      onClick={() =>
-                        currentViewMode === viewModes.PARTICIPANT_LIST &&
-                        handleParticipantRowClicked(row)
-                      }
-                    >
-                      {headers.map((column) => (
-                        <TableCell key={`${row.id}-${column.id}`}>
-                          {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
-                            <UserManagementAction row={row} />
-                          ) : (
-                            <ListCell data={row} column={column.id} />
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
+                {!isListLoading && (
+                  <TableBody>
+                    {records.map((row) => (
+                      <TableRow
+                        hover
+                        key={row.id}
+                        onClick={() =>
+                          currentViewMode === viewModes.PARTICIPANT_LIST &&
+                          handleParticipantRowClicked(row)
+                        }
+                      >
+                        {headers.map((column) => (
+                          <TableCell key={`${row.id}-${column.id}`}>
+                            {currentViewMode === viewModes.STAFF_LIST && column.id === 'action' ? (
+                              <UserManagementAction row={row} />
+                            ) : (
+                              <ListCell data={row} column={column.id} />
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                )}
               </Table>
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[20, 50, 100]}
-              component="div"
-              count={-1}
-              rowsPerPage={
-                currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit
-              }
-              page={page}
-              labelDisplayedRows={({ page }) => `Page ${page + 1}`}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              nextIconButtonProps={{
-                disabled: nextButtonDisabled,
-              }}
-            />
+            {records.length < 1 ? (
+              <div className="list-empty-contents">
+                {isListLoading ? (
+                  <CircularProgress color="primary" />
+                ) : (
+                  <Typography color="textSecondary">No records to show</Typography>
+                )}
+              </div>
+            ) : (
+              <TablePagination
+                rowsPerPageOptions={[20, 50, 100]}
+                component="div"
+                count={-1}
+                rowsPerPage={
+                  currentViewMode === viewModes.PARTICIPANT_LIST ? participantLimit : userLimit
+                }
+                page={page}
+                labelDisplayedRows={({ page }) => `Page ${page + 1}`}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                nextIconButtonProps={{
+                  disabled: nextButtonDisabled,
+                }}
+              />
+            )}
           </Paper>
           {collection !== collectionType.NEW && (
             <Tooltip

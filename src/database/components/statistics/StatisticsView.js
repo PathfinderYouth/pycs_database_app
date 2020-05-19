@@ -168,7 +168,7 @@ export const StatisticsView = inject('participantStore')(
       </div>
     ) : (
       <div className="statisticsLoading">
-        <CircularProgress />
+        <CircularProgress color="primary" />
       </div>
     );
   }),

@@ -1,5 +1,5 @@
 export default class Controller {
-  constructor(query, limit, onChildNext, onError) {
+  constructor(query, limit, onChildNext, setLoading, onError) {
     this._query = query;
 
     this._checkPoints = [];
@@ -7,18 +7,23 @@ export default class Controller {
     this._currentPage = 0;
 
     this._observer = {
-      next: querySnap => {
+      next: (querySnap) => {
         let firstSnap = querySnap.docs[0];
         let lastSnap = querySnap.docs[querySnap.docs.length - 1];
 
         this._checkPoints[this._currentPage] = firstSnap;
         this._checkPoints[this._currentPage + 1] = lastSnap;
 
-        querySnap.docChanges().forEach(docChg => {
-          let doc = docChg.doc.data();
-          doc.id = docChg.doc.id;
-          onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
-        });
+        let changes = querySnap.docChanges();
+        if (changes.length > 0) {
+          changes.forEach((docChg) => {
+            let doc = docChg.doc.data();
+            doc.id = docChg.doc.id;
+            onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
+          });
+        } else {
+          setLoading(false)
+        }
       },
       error: onError,
     };
@@ -31,7 +36,7 @@ export default class Controller {
 
   _subscribeToEnd() {
     return this._query.limitToLast(1).onSnapshot({
-      next: querySnap => {
+      next: (querySnap) => {
         if (querySnap.docs.length > 0) {
           this.endId = querySnap.docs[0].id;
         }

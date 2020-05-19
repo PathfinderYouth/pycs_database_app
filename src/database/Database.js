@@ -91,8 +91,8 @@ export const Database = inject(
       setRecordSearchBoxActive(searchText !== '');
       filterFunction(filter);
     };
-    
-    const handleDrawerClose = () => setNavigationDrawerOpen(false)
+
+    const handleDrawerClose = () => setNavigationDrawerOpen(false);
 
     /**
      * Gets content of side drawer
@@ -111,7 +111,7 @@ export const Database = inject(
             <ListViewDrawer
               numNew={numOfNewParticipants}
               classes={classes}
-              handleDrawerClose={handleDrawerClose} 
+              handleDrawerClose={handleDrawerClose}
               onParticipantViewChanged={handleParticipantViewChanged}
               onStaffViewChanged={handleStaffViewChanged}
             />
@@ -180,18 +180,16 @@ export const Database = inject(
     });
 
     return (
-      <div className={`${classes.root} root`}>
+      <div className={`${classes.root} database-root`}>
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
           drawerState={navigationDrawerOpen}
         />
-        <NavDrawer
-          handleDrawerClose={handleDrawerClose}
-          drawerState={navigationDrawerOpen}
-        >
+        <NavDrawer handleDrawerClose={handleDrawerClose} drawerState={navigationDrawerOpen}>
           {getNavDrawerContents()}
         </NavDrawer>
-        <div className={`${classes.content} content`}>{getContent()}</div>
+
+        <div className={`${classes.content} database-content`}>{getContent()}</div>
       </div>
     );
   }),

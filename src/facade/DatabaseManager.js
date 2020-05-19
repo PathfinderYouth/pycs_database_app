@@ -548,10 +548,10 @@ export default class DatabaseManager {
    * @returns {Controller}
    *  A controller object
    */
-  getNewList(filter, sorter, limit, onChildNext, onError) {
+  getNewList(filter, sorter, limit, onChildNext, onSuccess, onError) {
     let { status, ...newFilter } = filter;
     let query = this._buildQuery(this.newRef, newFilter, sorter);
-    return new Controller(query, limit, onChildNext, onError);
+    return new Controller(query, limit, onChildNext, onSuccess, onError);
   }
 
   /**
@@ -570,7 +570,7 @@ export default class DatabaseManager {
    * @returns {Controller}
    *  A controller object
    */
-  getPermanentList(filter, sorter, limit, onChildNext, onError) {
+  getPermanentList(filter, sorter, limit, onChildNext, onSuccess, onError) {
     let { status: participantStatus, ...newFilter } = filter;
     let query = this._buildQuery(this.permanentRef, newFilter, sorter);
 
@@ -579,7 +579,7 @@ export default class DatabaseManager {
     } else {
       query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED]);
     }
-    return new Controller(query, limit, onChildNext, onError);
+    return new Controller(query, limit, onChildNext, onSuccess, onError);
   }
 
   /**

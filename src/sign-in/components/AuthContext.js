@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import service from '../../facade/service';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Logo from '../../assets/Pathfinder-Logo.jpg';
 import './AuthContext.css';
 
 // get firebase authentication service
@@ -30,8 +31,9 @@ export const AuthProvider = ({ children }) => {
 
   if (pending) {
     return (
-      <div className="pendingProgress">
-        <CircularProgress />
+      <div className="auth-context-progress">
+        <img className="auth-context-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
+        <CircularProgress color="primary"/>
       </div>
     );
   }
