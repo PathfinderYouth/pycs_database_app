@@ -56,7 +56,7 @@ export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) 
   const { currentUser } = useContext(AuthContext);
   useEffect(() => {
     if (currentUser) {
-      setUserName(currentUser.displayName ? currentUser.displayName : currentUser.email);
+      setUserName(!!currentUser.displayName ? currentUser.displayName : currentUser.email);
     }
   });
 
