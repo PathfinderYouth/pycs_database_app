@@ -51,7 +51,7 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
   };
   return (
     <Dialog open={editDialogOpen} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Update a user</DialogTitle>
+      <DialogTitle id="form-dialog-title">Edit User</DialogTitle>
       <DialogContent>
         <TextField
           required

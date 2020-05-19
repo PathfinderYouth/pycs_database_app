@@ -3,7 +3,7 @@ import { AuthContext } from '../../../sign-in';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { UserDeleteDialog } from './UserDeleteDialog';
 import { UserEditDialog } from './UserEditDialog';
@@ -18,20 +18,20 @@ export const UserManagementAction = ({ row }) => {
   return (
     <>
       <Tooltip title="Edit user" aria-label="edit" placement="bottom">
-        <IconButton color="inherit" size="small" onClick={() => setEditDialogOpen(true)}>
+        <IconButton size="small" onClick={() => setEditDialogOpen(true)}>
           <EditIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Send reset password email" aria-label="reset" placement="bottom">
-        <IconButton color="inherit" size="small" onClick={() => setResetPasswordDialogOpen(true)}>
+        <IconButton size="small" onClick={() => setResetPasswordDialogOpen(true)}>
           <VpnKeyIcon />
         </IconButton>
       </Tooltip>
       {currentUser !== null && row.email !== currentUser.email && (
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
-            <IconButton color="inherit" size="small" onClick={() => setDeleteDialogOpen(true)}>
-              <DeleteIcon />
+            <IconButton size="small" onClick={() => setDeleteDialogOpen(true)}>
+              <DeleteIcon color="error"/>
             </IconButton>
           </Tooltip>
         </>

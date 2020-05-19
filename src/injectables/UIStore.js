@@ -15,7 +15,7 @@ class UIStore {
     { id: 'name', queryId: 'nameLower', label: 'Name', sortable: true },
     { id: 'email', queryId: 'emailLower', label: 'Email', sortable: true },
     { id: 'role', queryId: 'role', label: 'Role', sortable: true },
-    { id: 'action', label: 'Action', sortable: false },
+    { id: 'action', label: 'Actions', sortable: false },
   ];
 
   participantSearchFilters = [
