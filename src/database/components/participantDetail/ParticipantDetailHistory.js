@@ -12,7 +12,9 @@ import { fieldNames } from '../../../fields';
 import '../style/ParticipantDetailHistory.css';
 
 export const ParticipantDetailHistory = ({ participant }) => {
-  const events = !!participant.history ? participant.history : [];
+  const { nameLast, nameGiven, history } = participant;
+  const events = !!history ? history : [];
+  const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
 
   // Gets display values for the changed fields table cells
   const getCellValue = (header, data) => {
@@ -93,7 +95,10 @@ export const ParticipantDetailHistory = ({ participant }) => {
   return (
     <>
       <div className="participant-detail-header">
-        <Typography variant="h6">{`Participant Details - History`}</Typography>
+        <div className="participant-detail-header-text">
+          <Typography variant="h6">{`Participant Details - History`}</Typography>
+          <Typography variant="h5">{participantName}</Typography>
+        </div>
       </div>
       <>
         {events.map((event, index) => (

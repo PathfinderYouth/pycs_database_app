@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSnackbar } from 'notistack';
-import { participantDetailSteps } from '../../../fields';
+import { participantDetailSteps, createRecordValidationSchema } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
 import { participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';

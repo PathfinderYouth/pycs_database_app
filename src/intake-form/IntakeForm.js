@@ -3,8 +3,8 @@ import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import service from '../facade/service';
-import { IntakeFormPage, validationSchema } from './components';
-import { initialValues, formSteps } from '../fields';
+import { IntakeFormPage } from './components';
+import { initialValues, formSteps, validationSchema  } from '../fields';
 import { uiStore } from '../injectables';
 
 export const IntakeForm = () => {

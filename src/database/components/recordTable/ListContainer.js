@@ -63,11 +63,13 @@ export const ListContainer = inject(
         setCurrentListViewOrder,
         setCurrentListViewOrderBy,
         setCurrentParticipantDetailViewMode,
+        setCurrentParticipantDetailStep
       } = uiStore;
 
       const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
 
       const handleClickNew = () => {
+        setCurrentParticipantDetailStep(0)
         setCurrentViewMode(viewModes.PARTICIPANT_DETAIL);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
       };

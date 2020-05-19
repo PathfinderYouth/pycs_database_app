@@ -26,6 +26,8 @@ export const ParticipantDetailNotes = inject('participantStore')(
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const { nameLast, nameGiven } = currentParticipant;
+    const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
     const notes = !!currentParticipant.notes ? currentParticipant.notes : [];
 
     const handleChange = ({ target: { value } }) => {
@@ -69,7 +71,6 @@ export const ParticipantDetailNotes = inject('participantStore')(
               setSubmitting(false);
             },
             (error) => {
-              console.log(error)
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
@@ -81,7 +82,6 @@ export const ParticipantDetailNotes = inject('participantStore')(
       if (newNoteFieldValue === '') {
         setError(true);
       } else {
-        
         const now = moment.utc().format();
         const note = {
           text: newNoteFieldValue,
@@ -108,7 +108,10 @@ export const ParticipantDetailNotes = inject('participantStore')(
     return (
       <>
         <div className="participant-detail-header">
-          <Typography variant="h6">{`Participant Details - Notes`}</Typography>
+          <div className="participant-detail-header-text">
+            <Typography variant="h6">{`Participant Details - Notes`}</Typography>
+            <Typography variant="h5">{participantName}</Typography>
+          </div>
         </div>
         <FormControl component="fieldset" fullWidth>
           <div className="participant-detail-form-contents">
