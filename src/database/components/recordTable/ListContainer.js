@@ -65,7 +65,12 @@ export const ListContainer = inject(
         setCurrentParticipantDetailViewMode,
       } = uiStore;
 
-      const pageTitle = currentViewMode === viewModes.PARTICIPANT_LIST ? 'Participants' : 'Staff';
+      const pageTitle =
+        currentViewMode === viewModes.PARTICIPANT_LIST
+          ? collection === collectionType.NEW
+            ? 'New Applications'
+            : 'Participants'
+          : 'Staff';
 
       const handleClickNew = () => {
         setCurrentViewMode(viewModes.PARTICIPANT_DETAIL);
