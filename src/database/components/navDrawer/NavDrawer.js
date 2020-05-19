@@ -58,7 +58,8 @@ export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) 
     if (currentUser) {
       setUserName(!!currentUser.displayName ? currentUser.displayName : currentUser.email);
     }
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const drawer = (
     <div>
