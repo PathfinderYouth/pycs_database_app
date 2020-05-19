@@ -48,8 +48,9 @@ export class LogIn extends Component {
           () => {
             // if the current environment doesn't support session presistence
             // still allow login with a warning
+            alert('Reminder: please sign out when you finish current session');
             this.handleSignIn(this.state.email, this.state.password);
-            alert('Reminder: please sign out when you finish this session');
+
           },
         );
       },
