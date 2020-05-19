@@ -1,7 +1,8 @@
 import { action, autorun, computed, decorate, observable } from 'mobx';
 import service from '../facade/service';
 
-const db = service.getUserList();
+const userService = service.getUserList();
+const authService = service.getAuthentication();
 
 const checkEqual = (obj1, obj2) => {
   return Object.entries(obj1).sort().toString() === Object.entries(obj2).sort().toString();
@@ -20,6 +21,8 @@ class UserStore {
 
   _users = [];
 
+  _currentSignedInUser = {};
+
   _selectedUser = null;
 
   _controller = null;
@@ -27,6 +30,27 @@ class UserStore {
   _isLastPage = true;
 
   _limit = 20;
+
+  _isInit = false;
+
+  updateCurrentUser = (email) => {
+    if (!this._isInit) {
+      userService.getUser(
+        email,
+        (user) => {
+          this._currentSignedInUser = user;
+          let cUser = authService.getCurrentUser();
+          if (cUser.displayName !== user.name) {
+            cUser.updateProfile({
+              displayName: user.name,
+            });
+          }
+        },
+        (error) => {},
+      );
+      this._isInit = true;
+    }
+  };
 
   _onChildNext = (doc, newIndex, oldIndex, type) => {
     let newList = this._users.slice();
@@ -51,9 +75,8 @@ class UserStore {
 
     this._users = newList;
 
-    this._isLastPage = newList.length > 0
-      ? this._controller.endId === newList[newList.length - 1].id
-      : true;
+    this._isLastPage =
+      newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
   };
 
   _updateList = autorun(
@@ -64,14 +87,14 @@ class UserStore {
         this._controller.unsubscribe();
       }
 
-      this._controller = db.getAllList(
+      this._controller = userService.getAllList(
         this._filter,
         this._sorter,
         this._limit,
         this._onChildNext,
       );
     },
-    { delay: 500 }
+    { delay: 500 },
   );
 
   setSelectedUser = (user) => {
@@ -115,23 +138,30 @@ class UserStore {
   get limit() {
     return this._limit;
   }
+
+  get currentSignedInUser() {
+    return this._currentSignedInUser;
+  }
 }
 
 decorate(UserStore, {
   _filter: observable,
   _sorter: observable,
   _limit: observable,
+  _currentSignedInUser: observable,
   _users: observable,
   _isLastPage: observable,
   setSelectedUser: action,
   setFilter: action,
   setSorter: action,
   setLimit: action,
+  updateCurrentUser: action,
   goToPreviousPage: action,
   goToNextPage: action,
   users: computed,
   isLastPage: computed,
   limit: computed,
+  currentSignedInUser: computed,
 });
 
 let userStore = new UserStore();

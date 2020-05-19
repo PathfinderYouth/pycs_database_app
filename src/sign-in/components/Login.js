@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { navigate } from '@reach/router';
 import service from '../../facade/service';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -15,12 +12,21 @@ export class LogIn extends Component {
   constructor(props) {
     super(props);
     this.authService = service.getAuthentication();
+    this.userService = service.getUserList();
     this.handleLogin = this.handleLogin.bind(this);
     this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
     this.state = {
       email: '',
       password: '',
+      errorEmailStatus: false,
+      errorPasswordStatus: false,
     };
+  }
+
+  componentDidMount() {
+    if (this.authService.getCurrentUser()) {
+      window.location.href = './database';
+    }
   }
 
   /**
@@ -30,34 +36,61 @@ export class LogIn extends Component {
    */
   handleLogin(event) {
     event.preventDefault();
-    this.authService.logIn(
-      this.state.email,
-      this.state.password,
-      (auth) => {
-        console.log(auth.type);
-        console.log(auth.additional);
-        console.log(auth.email);
-        navigate('/database');
+    this.userService.checkEmailNotExist(
+      null,
+      this.state.email.toLocaleLowerCase(),
+      // if email doesn't exist in user collection
+      () => {
+        this.setState({ errorEmailStatus: true });
       },
-      (error) => {
-        alert(error.message);
+      // if email exists in user collection
+      () => {
+        this.authService.logIn(
+          this.state.email,
+          this.state.password,
+          () => {
+            window.location.href = './database';
+          },
+          // perform sign-up if login fails
+          (error) => {
+            if (error.code === 'auth/wrong-password') {
+              this.setState({ errorPasswordStatus: true });
+              return;
+            }
+            this.handleSignUp(this.state.email, this.state.password);
+          },
+        );
       },
     );
+  }
+
+  handleSignUp(userEmail, userPassword) {
+    this.authService.signUp(userEmail, userPassword, (user) => {
+      this.userService.updateFirstTimeUser(user.email, user.uid, (doc) => {
+        let newUser = this.authService.getCurrentUser();
+        newUser.updateProfile({ displayName: doc.name }).then(() => {
+          window.location.href = './database';
+        });
+      });
+    });
   }
 
   handlePasswordResetEmail() {
     alert('Please contact your supervisor to reset password');
   }
 
-  /**
-   * handles email and password TextFields text change event
-   * @param {event: TextField onChange}
-   */
-  handleTextChange(event) {
-    let newText = event.target.value;
-    let newState = {};
-    newState[event.target.name] = newText;
-    this.setState(newState);
+  handleEmailTextChange(event) {
+    this.setState({ email: event.target.value });
+    if (event.target.value === '') {
+      this.setState({ errorEmailStatus: false });
+    }
+  }
+
+  handlePasswordTextChange(event) {
+    this.setState({ password: event.target.value });
+    if (event.target.value === '') {
+      this.setState({ errorPasswordStatus: false });
+    }
   }
 
   render() {
@@ -75,9 +108,14 @@ export class LogIn extends Component {
               label="Email Address"
               name="email"
               autoComplete="email"
-              onChange={(event) => this.handleTextChange(event)}
               ref="email"
               autoFocus
+              error={this.state.errorEmailStatus}
+              helperText={
+                this.state.errorEmailStatus &&
+                'User account not authorized. Please contact Pathfinder Youth Centre Society administration.'
+              }
+              onChange={(event) => this.handleEmailTextChange(event)}
             />
             <TextField
               variant="outlined"
@@ -87,14 +125,12 @@ export class LogIn extends Component {
               name="password"
               label="Password"
               type="password"
+              autoComplete="current-password"
               id="password"
               ref="password"
-              onChange={(event) => this.handleTextChange(event)}
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              error={this.state.errorPasswordStatus}
+              helperText={this.state.errorPasswordStatus && 'Invalid Password.'}
+              onChange={(event) => this.handlePasswordTextChange(event)}
             />
             <Button
               type="submit"

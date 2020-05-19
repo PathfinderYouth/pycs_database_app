@@ -52,6 +52,7 @@ export const Database = inject(
     } = participantStore;
     const {
       users,
+      updateCurrentUser,
       setSelectedUser,
       goToPreviousPage: goToUserPreviousPage,
       goToNextPage: goToUserNextPage,
@@ -101,7 +102,6 @@ export const Database = inject(
       switch (currentViewMode) {
         // detail modes
         case viewModes.PARTICIPANT_DETAIL:
-        case viewModes.STAFF_DETAIL:
           return <DetailViewDrawer handleDrawerClose={handleDrawerClose} />;
         // list modes
         case viewModes.PARTICIPANT_LIST:
@@ -154,10 +154,6 @@ export const Database = inject(
      */
     const getContent = () => {
       switch (currentViewMode) {
-        case viewModes.STAFF_DETAIL:
-          // We don't really need staff details page, because each user object only has 3 fields which are displayed on staff table.
-          return <div>Staff Details</div>; //TODO replace with staff detail page
-
         case viewModes.PARTICIPANT_DETAIL:
           return <ParticipantDetailPage />;
 
@@ -176,6 +172,8 @@ export const Database = inject(
     useEffect(() => {
       if (!currentUser) {
         navigate('/sign-in');
+      } else {
+        updateCurrentUser(currentUser.email);
       }
     });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
@@ -8,11 +8,8 @@ import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import service from '../../../facade/service';
+import { AuthContext } from '../../../sign-in/components/AuthContext';
 import '../style/NavDrawer.css';
-
-// get firebase authentication service
-const authService = service.getAuthentication();
 
 const drawerWidth = 240;
 
@@ -55,17 +52,18 @@ export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) 
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const { currentUser } = useContext(AuthContext);
   useEffect(() => {
-    if (authService.getCurrentUser()) {
-      setUserEmail(authService.getCurrentUser().email);
+    if (currentUser) {
+      setUserName(!!currentUser.displayName ? currentUser.displayName : currentUser.email);
     }
-  }, []);
+  });
 
   const drawer = (
     <div>
       <div className={`${classes.drawerHeader} drawerHeader`}>
-        <Typography variant="h6">{userEmail}</Typography>
+        <Typography variant="h6">{userName}</Typography>
 
         {matches ? (
           <IconButton

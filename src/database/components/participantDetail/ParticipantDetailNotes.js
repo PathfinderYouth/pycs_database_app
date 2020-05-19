@@ -22,6 +22,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
     const {
       currentUser: { email, displayName },
     } = useContext(AuthContext);
+    const userID = !!displayName ? displayName : email;
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);

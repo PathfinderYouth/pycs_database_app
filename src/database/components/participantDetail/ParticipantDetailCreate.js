@@ -10,8 +10,9 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) 
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
   const {
-    currentUser: { email: userID },
+    currentUser: { email, displayName },
   } = useContext(AuthContext);
+  const userID = !!displayName ? displayName : email;
 
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();

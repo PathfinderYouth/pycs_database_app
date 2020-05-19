@@ -68,13 +68,7 @@ export default class AuthenticationManager {
       .createUserWithEmailAndPassword(email, password)
       .then((userCred) => {
         if (onSuccess) {
-          let authObj = {
-            type: userCred.operationType,
-            additional: userCred.additionalUserInfo,
-            userName: userCred.user.displayName,
-            email: userCred.email,
-          };
-          onSuccess(authObj);
+          onSuccess(userCred.user);
         }
       })
       .catch(onError);
