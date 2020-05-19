@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(4),
     right: theme.spacing(4),
   },
+  statsContent: {
+    marginBottom: theme.spacing(10),
+  },
 }));
 
 export const StatisticsView = inject('participantStore')(
@@ -56,7 +59,7 @@ export const StatisticsView = inject('participantStore')(
 
     useEffect(() => {
       readStats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -80,7 +83,12 @@ export const StatisticsView = inject('participantStore')(
 
     return loaded ? (
       <div className="maxWidth maxHeight">
-        <Grid className="maxWidth" container spacing={1} alignItems="stretch">
+        <Grid
+          className={`${classes.statsContent} maxWidth`}
+          container
+          spacing={1}
+          alignItems="stretch"
+        >
           <Grid item xs={4}>
             <Typography className="sectionHead">All Time</Typography>
           </Grid>
