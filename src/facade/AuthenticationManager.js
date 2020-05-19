@@ -76,9 +76,9 @@ export default class AuthenticationManager {
 
   /**
    * set up firebase authentication sign in session
-   * if the environment support session auth state is persisted in current
-   * session only. Closing the window would clear any existing state
-   * even if a user forgets to sign out
+   * if the environment support session persistence, auth state is persisted 
+   * in current session only. Closing the window would clear any existing state
+   * even if a user forgets to sign out.
    * @param {onSuccess?: () => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
