@@ -186,6 +186,19 @@ class ParticipantStore {
   get limit() {
     return this._limit;
   }
+
+  clearStore = () => {
+    this._filter = { status: null };
+    this._sorter = { createdAt: 'desc' };
+    this._limit = 20;
+    this._participants = [];
+    this._currentParticipant = null;
+    this._collection = collectionType.PERMANENT;
+    this._controller = null;
+    this._isLastPage = true;
+    this._statistics = null;
+    this.isListLoading = false;
+  }
 }
 
 decorate(ParticipantStore, {
@@ -210,6 +223,7 @@ decorate(ParticipantStore, {
   numOfNewParticipants: computed,
   isLastPage: computed,
   limit: computed,
+  clearStore: action
 });
 
 let participantStore = new ParticipantStore();
