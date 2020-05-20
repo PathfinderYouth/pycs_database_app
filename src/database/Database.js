@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import IdleTimer from 'react-idle-timer';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,6 +35,7 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
+    const [idleTimer, setIdleTimer] = useState(null);
     const {
       currentViewMode,
       navigationDrawerOpen,
@@ -65,6 +67,22 @@ export const Database = inject(
       setSorter: setUserSorter,
       setLimit: setUserLimit,
     } = userStore;
+
+    useEffect(() => {});
+
+    const onAction = (e) => {
+      console.log('user did something', e);
+    };
+
+    const onActive = (e) => {
+      console.log('user is active', e);
+      console.log('time remaining', idleTimer.getRemainingTime());
+    };
+
+    const onIdle = (e) => {
+      console.log('user is idle', e);
+      console.log('last active', idleTimer.getLastActiveTime());
+    };
 
     /**
      * Changes the participant list view depending on the collection, status, and search text
@@ -216,6 +234,16 @@ export const Database = inject(
 
     return (
       <div className={`${classes.root} database-root`}>
+        <IdleTimer
+          ref={(ref) => {
+            setIdleTimer(ref);
+          }}
+          element={document}
+          onActive={() => onActive()}
+          onIdle={() => onIdle()}
+          onAction={() => onAction()}
+          timeout={10000}
+        />
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
           drawerState={navigationDrawerOpen}
