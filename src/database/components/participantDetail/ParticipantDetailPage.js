@@ -17,7 +17,8 @@ import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailPage.css';
 
 /**
- * Entry point and container for ParticipantDetailView, ParticipantDetailEdit, ParticipantDetailCreate
+ * Entry point and container component for ParticipantDetailView, ParticipantDetailEdit,
+ * & ParticipantDetailCreate
  */
 export const ParticipantDetailPage = inject(
   'participantStore',
@@ -32,12 +33,13 @@ export const ParticipantDetailPage = inject(
       setCurrentParticipantDetailViewMode,
       setCurrentParticipantDetailStep,
     } = uiStore;
-    const stepsLength = participantDetailSteps.length;
+    // if user is defined, get their display name (if defined), otherwise user their email
     const { currentUser } = useContext(AuthContext);
     let userID;
     if (!!currentUser) {
       userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email;
     }
+    const stepsLength = participantDetailSteps.length;
     const notesStep = stepsLength - 2;
     const historyStep = stepsLength - 1;
 
@@ -66,7 +68,7 @@ export const ParticipantDetailPage = inject(
      */
     const getParticipantDetailContents = () => {
       if (currentParticipantDetailStep === notesStep) {
-        return <ParticipantDetailNotes />;
+        return <ParticipantDetailNotes user={userID} />;
       } else if (currentParticipantDetailStep === historyStep) {
         return <ParticipantDetailHistory participant={currentParticipant} />;
       } else {

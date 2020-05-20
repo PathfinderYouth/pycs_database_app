@@ -12,6 +12,14 @@ import { masks, participantDetailViewModes, status } from '../../../constants';
 import service from '../../../facade/service';
 import '../style/ParticipantDetailView.css';
 
+/**
+ * Component used to display participant details
+ * @param {Object} participant participant data object
+ * @param {int} currentStep index of the current step in participantDetailSteps
+ * @param {user} string userID (display name or email) of the currently-logged-in user
+ * @param {function} handleClickChangeMode toggle function that switches between view and edit mode in UIStore
+ * @param {function} handleClickChangeView function that changes the view mode from 'detail' to 'list' 
+ */
 export const ParticipantDetailView = ({
   participant,
   currentStep,

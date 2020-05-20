@@ -6,6 +6,14 @@ import service from '../../../facade/service';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import '../style/ParticipantDetailPage.css';
 
+/**
+ * Component used to edit participant details
+ * @param {Object} participant participant data object
+ * @param {int} currentStep index of the current step in participantDetailSteps
+ * @param {user} string userID (display name or email) of the currently-logged-in user
+ * @param {function} handleClickChangeMode toggle function that switches between view and edit mode in UIStore
+ * @param {function} onSuccessfulEdit callback function that updates currentParticipant in ParticipantStore
+ */
 export const ParticipantDetailEdit = ({
   participant,
   currentStep,
@@ -17,6 +25,13 @@ export const ParticipantDetailEdit = ({
   const step = participantDetailSteps[currentStep];
   const participantStatus = !!participant ? participant.status : undefined;
 
+  /**
+   * OnSubmit handler function. If changes were made (participant data has different values than the form), 
+   * initiate a connection to the database to push the changes. Displays a success or failure snackbar once 
+   * complete. If no changes were made, snackbar informing the user.
+   * @param {Object} values form values object
+   * @param {function} setSubmitting Formik function to set submitting status
+   */
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     if (participant !== values) {
@@ -25,7 +40,7 @@ export const ParticipantDetailEdit = ({
         ? db.updateNew(
             participant, // old data
             values, // new data from form
-            user, // user
+            user,
             (updatedParticipant) => {
               setSubmitting(false);
               enqueueSnackbar('Participant record updated.', {

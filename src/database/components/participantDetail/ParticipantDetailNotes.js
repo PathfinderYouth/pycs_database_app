@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import { inject, observer } from 'mobx-react';
@@ -9,38 +9,44 @@ import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import { noteField } from '../../../fields';
 import { participantStore } from '../../../injectables';
-import { AuthContext } from '../../../sign-in';
-import { collectionType } from '../../../constants';
+import { status } from '../../../constants';
 import service from '../../../facade/service';
 import '../style/ParticipantDetailNotes.css';
 import '../style/ParticipantDetailPage.css';
 
+/**
+ * Participant notes page component that utilizes the specialized noteField
+ * @param {string} user userID (display name or email)
+ */
 export const ParticipantDetailNotes = inject('participantStore')(
-  observer(() => {
-    const { currentParticipant, setCurrentParticipant, collection } = participantStore;
+  observer(({ user }) => {
+    const { currentParticipant, setCurrentParticipant } = participantStore;
     const { label } = noteField;
-    const {
-      currentUser
-    } = useContext(AuthContext);
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
-    let userID;
-    if (!!currentUser) {
-      const { displayName, email} = currentUser;
-      userID = !!displayName ? displayName : email;
-    }
-
+    // if currentParticipant is defined, extract the name, status, and notes, else leave undefined
     let participantName;
+    let participantStatus;
     let notes = [];
     if (!!currentParticipant) {
-        const { nameLast, nameGiven, notes: participantNotes } = currentParticipant;
-        participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
-        notes = !!participantNotes ? participantNotes : [];
-      }
+      const {
+        nameLast,
+        nameGiven,
+        notes: participantNotes,
+        status: currentParticipantStatus,
+      } = currentParticipant;
+      participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+      participantStatus = currentParticipantStatus;
+      notes = !!participantNotes ? participantNotes : [];
+    }
 
+    /**
+     * OnChange handler for note field
+     * @param {Object} event 
+     */
     const handleChange = ({ target: { value } }) => {
       if (value !== '') {
         setError(false);
@@ -48,13 +54,17 @@ export const ParticipantDetailNotes = inject('participantStore')(
       setNewNoteFieldValue(value);
     };
 
+    /**
+     * OnSubmit handler for note field
+     * @param {Object} values form values object
+     */
     const handleNoteSubmit = (values) => {
       const db = service.getDatabase();
-      collection === collectionType.NEW
+      participantStatus === status.NEW
         ? db.updateNew(
             currentParticipant,
             values,
-            userID,
+            user,
             (updatedParticipant) => {
               enqueueSnackbar('Note added.', {
                 variant: 'success',
@@ -72,7 +82,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
         : db.updatePermanent(
             currentParticipant,
             values,
-            userID,
+            user,
             (updatedParticipant) => {
               enqueueSnackbar('Note added.', {
                 variant: 'success',
@@ -89,6 +99,10 @@ export const ParticipantDetailNotes = inject('participantStore')(
           );
     };
 
+    /**
+     * Creates a note object. If the notes field is empty, show an error message, if not, create a notes 
+     * object with the note text, timestamp, and username.
+     */
     const addNote = () => {
       if (newNoteFieldValue === '') {
         setError(true);
@@ -97,9 +111,10 @@ export const ParticipantDetailNotes = inject('participantStore')(
         const note = {
           text: newNoteFieldValue,
           timeStamp: now,
-          user: userID,
+          user: user,
         };
 
+        // inserts the note as into front of the list of notes
         const newNotes = [note, ...notes];
         if (window.confirm('Add new note?')) {
           const newValues = {
@@ -112,6 +127,10 @@ export const ParticipantDetailNotes = inject('participantStore')(
       }
     };
 
+    /**
+     * Formats the note into a more readable string
+     * @param {string} timestamp UTC date string
+     */
     const formatDate = (timestamp) => {
       return moment(timestamp).format('ddd, MMM D YYYY, h:mm a');
     };

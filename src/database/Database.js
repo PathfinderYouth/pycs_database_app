@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Entry point and routing component of the participant database
+ */
 export const Database = inject(
   'participantStore',
   'userStore',
@@ -62,6 +65,11 @@ export const Database = inject(
       setLimit: setUserLimit,
     } = userStore;
 
+    /**
+     * Changes the participant list view depending on the collection, status, and search text
+     * @param {string} collection collection name - new | permanent
+     * @param {string} status status to filter the participant list by - initially set to null
+     */
     const handleParticipantViewChanged = (collection, status) => {
       // Reset participant-collection query to default state
       setCurrentStatus(status);
@@ -73,6 +81,9 @@ export const Database = inject(
       setRecordSearchBoxActive(false);
     };
 
+    /**
+     * Resets the staff list view 
+     */
     const handleStaffViewChanged = () => {
       // Reset user-collection query to default state
       setUserFilter({});
@@ -82,6 +93,11 @@ export const Database = inject(
       setRecordSearchBoxActive(false);
     };
 
+    /**
+     * Handler for sorting changes
+     * @param {string} orderBy field to sort list by - last name, given name, sin, etc
+     * @param {string} order current sorting order
+     */
     const handleOrderChanged = (orderBy, order) => {
       // Update query to sort the results
       let sorter = {};
@@ -91,6 +107,11 @@ export const Database = inject(
       sortFunction(sorter);
     };
 
+    /**
+     * Handler for searching actions
+     * @param {string} searchBy field to search by - last name, given name, sin, etc
+     * @param {string} searchText text to search with
+     */
     const handleSearchClicked = (searchBy, searchText) => {
       // Update query to filter the results by the value of a field
       let filter = currentViewMode === viewModes.STAFF_LIST ? {} : { status: currentStatus };
@@ -101,10 +122,13 @@ export const Database = inject(
       filterFunction(filter);
     };
 
+    /**
+     * Handler to close the navigation drawer
+     */
     const handleDrawerClose = () => setNavigationDrawerOpen(false);
 
     /**
-     * Gets content of side drawer
+     * Gets content of side drawer (detail or list view)
      */
     const getNavDrawerContents = () => {
       switch (currentViewMode) {
@@ -128,7 +152,8 @@ export const Database = inject(
     };
 
     /**
-     * Gets content of list view
+     * Sets the props of the list container and returns the initialized ListContainer component
+     * depending on the currently-set view mode in the UIStore
      */
     const getListView = () => {
       const listViewProps =
@@ -158,7 +183,8 @@ export const Database = inject(
     };
 
     /**
-     * Gets content of main page view
+     * Gets content of main page view (participant detail, list (staff or participants), or statistics) 
+     * depending on the currently-set view mode in the UIStore
      */
     const getContent = () => {
       switch (currentViewMode) {
@@ -178,6 +204,7 @@ export const Database = inject(
     // useContext hook accepts value from AuthContext provider
     const { currentUser } = useContext(AuthContext);
     useEffect(() => {
+      // if currentUser is null or undefined, navigate back to sign-in
       if (!currentUser) {
         navigate('/sign-in');
       } else {

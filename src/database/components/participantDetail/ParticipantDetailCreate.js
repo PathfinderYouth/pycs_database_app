@@ -5,10 +5,22 @@ import { ParticipantDetailForm } from './ParticipantDetailForm';
 import { participantDetailViewModes } from '../../../constants';
 import service from '../../../facade/service';
 
+/**
+ * Component used to create a new participant record from within the database application
+ * @param {int} currentStep index of the current step in participantDetailSteps
+ * @param {function} handleClickChangeMode toggle function that switches between view and edit mode in UIStore
+ * @param {user} string userID (display name or email) of the currently-logged-in user
+ */
 export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode, user }) => {
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
 
+  /**
+   * OnSubmit handler function. Initiate a connection to the database to add a new participant record to the 
+   * permanent collection in Firestore. Displays a success or failure snackbar once complete.
+   * @param {Object} values form values object
+   * @param {function} setSubmitting Formik function to set submitting status
+   */
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     db.addPermanent(
