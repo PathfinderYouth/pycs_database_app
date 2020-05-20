@@ -5,6 +5,11 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { FormCheckBox } from './FormCheckBox';
 
+/**
+ * Checklist field component with variable number of FormCheckBox components
+ * @param {Object} form Formik object
+ * @param {Object} field field object containing the properties of the field
+ */
 export const FormCheckList = ({ form, field }) => {
   const { errors, touched } = form;
   const { name, options, label = undefined, required = undefined } = field;

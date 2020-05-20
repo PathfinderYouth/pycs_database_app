@@ -5,8 +5,15 @@ import { FormRadioGroup } from './FormRadioGroup';
 import { FormCheckList } from './FormCheckList';
 import { FormSelect } from './FormSelect';
 
-const isFieldDisabled = (field, values, name) => {
-  const { dependsOnOtherField } = field;
+/**
+ * Determines if a field should be disabled if the if has another field that it depends on and that field does not contain the necessary value
+ * @param {Object} field field object containing the properties of the field
+ * @param {Object} values values of the Formik form
+ * @param {string} name
+ * @return {boolean} disabled
+ */
+const isFieldDisabled = (field, values) => {
+  const { name, dependsOnOtherField } = field;
   let disabled = false;
   if (!!dependsOnOtherField) {
     // dependingField = field this field depends on
@@ -26,6 +33,11 @@ const isFieldDisabled = (field, values, name) => {
   return disabled;
 };
 
+/**
+ * Determines which field component to render depending on the field type and wraps it in a Material-UI Grid component
+ * @param {Object} form Formik object
+ * @param {Object} field field object containing the properties of the field
+ */
 export const FormFieldBuilder = ({ form, field }) => {
   const { name, type, size } = field;
   let newField = null;
@@ -47,6 +59,7 @@ export const FormFieldBuilder = ({ form, field }) => {
       );
   }
   return (
+    // don't render the field if it is the confirmationNumber field
     name !== 'confirmationNumber' && (
       <Grid key={name} item md={!!size ? size : true} xs={12}>
         {newField}

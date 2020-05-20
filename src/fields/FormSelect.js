@@ -3,6 +3,11 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 
+/**
+ * Dropdown select field component
+ * @param {Object} form Formik object
+ * @param {Object} field field object containing the properties of the field
+ */
 export const FormSelect = ({ form, field }) => {
   const { values, errors, touched, handleChange, handleBlur } = form;
   const { name, label, options, required = undefined } = field;

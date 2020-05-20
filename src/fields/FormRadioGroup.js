@@ -10,7 +10,7 @@ export const FormRadioGroup = ({ form, field, isFieldDisabled }) => {
   const { values, errors, touched, handleChange, handleBlur } = form;
   const { name, options, label = undefined, required = undefined } = field;
 
-  const disabled = isFieldDisabled(field, values, name);
+  const disabled = isFieldDisabled(field, values);
 
   return (
     <FormControl component="fieldset" error={!!errors[name] && touched[name]} required={required}>

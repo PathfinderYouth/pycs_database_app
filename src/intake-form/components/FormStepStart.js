@@ -3,6 +3,9 @@ import Logo from '../../assets/Pathfinder-Logo.jpg';
 import Typography from '@material-ui/core/Typography';
 import './style/IntakeForm.css';
 
+/**
+ * Starting step of the intake form
+ */
 export const FormStepStart = () => {
   return (
     <div className="intake-form-pageContainer">

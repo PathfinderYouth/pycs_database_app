@@ -4,6 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import './style/IntakeForm.css';
 
+/**
+ * Final step of the intake form, shown after the form data is sucessfully posted to the Firestore database
+ */
 export const FormStepConfirmation = () => {
   return (
     <div className="intake-form-pageContainer">
