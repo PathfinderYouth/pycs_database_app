@@ -23,6 +23,10 @@ export const ParticipantDetailView = ({
   const { enqueueSnackbar } = useSnackbar();
   const [openDialog, setDialogOpen] = useState(false);
 
+  /**
+   * Renders a clickable masked sin component that reveals the full sin when clicked on
+   * @param {string} sin social insurance number
+   */
   const MaskedSIN = ({ sin }) => {
     const maskedSIN = `XXX XXX ${sin.slice(6)} (click to show)`;
     const formattedSIN = <NumberFormat value={sin} format={masks.sin} displayType="text" />;
@@ -36,6 +40,11 @@ export const ParticipantDetailView = ({
     );
   };
 
+  /**
+   * Renders and formats field data for display in ParticipantDetailView
+   * @param {Object} field field object
+   * @param {string | array | undefined} data field data
+   */
   const renderFieldData = (field, data) => {
     const { name, type, mask, adornment } = field;
     let renderedData = null;
@@ -65,12 +74,14 @@ export const ParticipantDetailView = ({
     } else {
       renderedData = Array.isArray(data) ? data.join(', ') : data;
     }
-
     return <Typography color="textSecondary">{renderedData}</Typography>;
   };
 
-  
-
+  /**
+   * Initiates a connection to the database to move a participant record from the new collection to the
+   * permanent collection in Firestore
+   * Once complete, shows a snackbar indicating success or fail
+   */
   const handleClickMove = () => {
     const db = service.getDatabase();
     db.moveToPermanent(
@@ -91,6 +102,13 @@ export const ParticipantDetailView = ({
     );
   };
 
+  /**
+   * Initiates a connection to the database to delete a participant record, depending on the record status.
+   * If new, deletes the record from the new collection
+   * If archived, deletes the record from the permanent collection
+   * If any other status, sets the record to archived status
+   * Once complete, shows a snackbar indicating success or fail.
+   */
   const handleClickDelete = () => {
     const db = service.getDatabase();
     const { id: docID, status: participantStatus } = participant;
@@ -129,10 +147,7 @@ export const ParticipantDetailView = ({
         (updatedParticpant) => {
           enqueueSnackbar('Participant record archived.', {
             action: (
-              <Button
-                color="secondary"
-                onClick={() => handleClickRestore(updatedParticpant, user)}
-              >
+              <Button color="secondary" onClick={() => handleClickRestore(updatedParticpant, user)}>
                 Undo
               </Button>
             ),
@@ -150,6 +165,11 @@ export const ParticipantDetailView = ({
     }
   };
 
+  /**
+   * Initiates a connection to the database to set a participant record to their previous status before it
+   * was archived
+   * Once complete, shows a snackbar indicating success or fail
+   */
   const handleClickRestore = (participant, user) => {
     const db = service.getDatabase();
     db.restorePermanent(
@@ -168,6 +188,10 @@ export const ParticipantDetailView = ({
     );
   };
 
+  /**
+   * Initiates a connection to the database to set a participant record to approved status
+   * Once complete, shows a snackbar indicating success or fail
+   */
   const handleClickApprove = (confirmationNumber) => {
     const db = service.getDatabase();
     db.approvePending(
@@ -187,6 +211,10 @@ export const ParticipantDetailView = ({
     );
   };
 
+  /**
+   * Initiates a connection to the database to set a participant record to declined status
+   * Once complete, shows a snackbar indicating success or fail
+   */
   const handleClickDecline = () => {
     const db = service.getDatabase();
     db.declinePending(
@@ -224,10 +252,12 @@ export const ParticipantDetailView = ({
           // if both size & detailSize undefined, use true, else use detailSize if defined, size if not
           const viewSize = !detailSize && !size ? true : !!detailSize ? detailSize : size;
           return (
-            <Grid key={name} item md={viewSize} xs={12}>
-              <Typography variant="button">{prettyName}</Typography>{' '}
-              {renderFieldData(field, participant[name])}
-            </Grid>
+            !!participant && (
+              <Grid key={name} item md={viewSize} xs={12}>
+                <Typography variant="button">{prettyName}</Typography>{' '}
+                {renderFieldData(field, participant[name])}
+              </Grid>
+            )
           );
         })}
       </ParticipantDetailPageHeader>

@@ -12,9 +12,14 @@ import { fieldNames } from '../../../fields';
 import '../style/ParticipantDetailHistory.css';
 
 export const ParticipantDetailHistory = ({ participant }) => {
-  const { nameLast, nameGiven, history } = participant;
-  const events = !!history ? history : [];
-  const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+  let events = [];
+  let participantName;
+  if (!!participant) {
+    const { nameLast, nameGiven, history } = participant;
+    events = !!history ? history : [];
+    participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+  }
+  
 
   // Gets display values for the changed fields table cells
   const getCellValue = (header, data, fieldName) => {

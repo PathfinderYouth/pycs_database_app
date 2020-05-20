@@ -31,8 +31,14 @@ export const ParticipantDetailPageHeader = ({
   handleClickDecline = undefined,
   handleClickRestore = undefined,
 }) => {
-  const { nameGiven, nameLast, status: participantStatus } = participant;
-  const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+  let participantName;
+  let participantStatus;
+  if (!!participant) {
+    const { nameGiven, nameLast, status: currentStatus } = participant;
+    participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+    participantStatus = currentStatus;
+  }
+
   const { enqueueSnackbar } = useSnackbar();
   const { setCurrentParticipantDetailStep } = uiStore;
 
@@ -59,8 +65,8 @@ export const ParticipantDetailPageHeader = ({
 
   const handleClickSave = () => {
     const { submitForm, errors } = form;
-    submitForm().catch(handleFormErrors(errors))
-  }
+    submitForm().catch(handleFormErrors(errors));
+  };
 
   const buttonsMap = {
     approve: {
@@ -161,18 +167,20 @@ export const ParticipantDetailPageHeader = ({
   const getButtons = () => {
     let buttons;
     if (participantDetailViewMode === participantDetailViewModes.VIEW) {
-      buttons = buttonStatusMap[participant.status];
+      buttons = !!participantStatus ? buttonStatusMap[participantStatus] : [];
     } else if (participantDetailViewMode === participantDetailViewModes.EDIT) {
       buttons = editButtons;
     } else {
       buttons = createButtons;
     }
     return (
-      <div className="participant-detail-controls">
-        {buttons.map((button) => (
-          <DetailButton key={button.ariaLabel} {...button} />
-        ))}
-      </div>
+      !!buttons && (
+        <div className="participant-detail-controls">
+          {buttons.map((button) => (
+            <DetailButton key={button.ariaLabel} {...button} />
+          ))}
+        </div>
+      )
     );
   };
 
