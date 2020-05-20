@@ -1005,6 +1005,21 @@ export const noteStep = {
   fields: [noteField],
 };
 
+// Special field type for action plan
+export const actionPlanField = {
+  name: 'actionPlan',
+  label: 'Action plan',
+  description: 'Participant action plan',
+  type: 'actionPlan',
+  size: 12,
+};
+
+// Action plan step for the participant detail view
+export const actionPlanStep = {
+  stepName: 'Action Plan',
+  fields: [actionPlanField]
+}
+
 // Special field type for history
 export const historyField = {
   name: 'history',
@@ -1021,7 +1036,7 @@ export const historyStep = {
 };
 
 // Participant detail steps containing all of the form steps from the intake form as well as the noteStep and the historyStep
-export const participantDetailSteps = [...formSteps, noteStep, historyStep];
+export const participantDetailSteps = [...formSteps, noteStep, actionPlanStep, historyStep];
 
 // Initial values of the intake form extracted from formSteps used to initialize the Formik form
 export const initialValues = formSteps.reduce((values, step) => {

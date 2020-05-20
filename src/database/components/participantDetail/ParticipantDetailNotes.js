@@ -77,6 +77,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
+              setSubmitting(false);
             },
           )
         : db.updatePermanent(
@@ -95,6 +96,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
+              setSubmitting(false);
             },
           );
     };
@@ -155,7 +157,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               fullWidth
               multiline
             />
-            <div className="participant-notes-addButton">
+            <div className="participant-notes-ap-addButton">
               <Button
                 color="primary"
                 variant="contained"

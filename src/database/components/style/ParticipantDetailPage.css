@@ -42,3 +42,15 @@
   justify-content: flex-end;
   padding: 0 1em 1em 0;
 }
+
+.participant-notes-ap-addButton {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participant-ap-text {
+  white-space: pre-line;
+  padding: 1em;
+}
