@@ -38,6 +38,10 @@ class UserStore {
       userService.getUser(
         email,
         (user) => {
+          if (user == null) {
+            authService.signOut();
+            return;
+          }
           this._currentSignedInUser = user;
           let cUser = authService.getCurrentUser();
           if (cUser.displayName !== user.name) {
