@@ -63,8 +63,6 @@ class UIStore {
 
   navigationDrawerOpen = false;
 
-  isListLoading = true;
-
   get headers() {
     return this.currentViewMode === viewModes.STAFF_LIST
       ? this.staffHeaders

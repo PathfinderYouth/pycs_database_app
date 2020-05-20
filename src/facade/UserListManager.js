@@ -101,10 +101,10 @@ export default class UserListManager {
     return this.userRef.where('emailLower', '==', email.toLowerCase()).onSnapshot({
       next: (querySnap) => {
         if (querySnap.docs.length === 0) {
-          throw new Error('Email does not exist');
+          onNext(null);
+        } else {
+          onNext(querySnap.docs[0].data());
         }
-
-        onNext(querySnap.docs[0].data());
       },
       error: onError,
     });

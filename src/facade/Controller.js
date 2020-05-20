@@ -22,7 +22,9 @@ export default class Controller {
             onChildNext(doc, docChg.newIndex, docChg.oldIndex, docChg.type);
           });
         } else {
-          setLoading(false)
+          if (setLoading) {
+            setLoading(false);
+          }
         }
       },
       error: onError,
