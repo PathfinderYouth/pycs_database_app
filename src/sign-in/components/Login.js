@@ -91,8 +91,22 @@ export const LogIn = () => {
       email.toLocaleLowerCase(),
       // if email doesn't exist in user collection
       () => {
-        setSubmitting(false);
-        setErrorMessage('User account not authorized. Please contact Pathfinder administration.');
+        // delete account if account exists in firebase auth user list
+        authService.logIn(
+          email,
+          password,
+          () => {
+            authService.getCurrentUser().delete();
+            setSubmitting(false);
+            setErrorMessage('User account does not exist.');
+          },
+          () => {
+            setSubmitting(false);
+            setErrorMessage(
+              'User account not authorized. Please contact Pathfinder administration.',
+            );
+          },
+        );
       },
       // if email exists in user collection
       () => {
