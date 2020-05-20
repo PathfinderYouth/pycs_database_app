@@ -4,7 +4,6 @@ import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import service from '../../facade/service';
 import Logo from '../../assets/Pathfinder-Logo.jpg';
@@ -96,7 +95,9 @@ export const LogIn = () => {
     <div className="login-container">
       <div className="login-content">
         <img className="login-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
-        <Typography variant="h5">PYCS Staff Login Portal</Typography>
+        <Typography align="center" variant="h5">
+          PYCS Staff Login Portal
+        </Typography>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -107,86 +108,74 @@ export const LogIn = () => {
         >
           {({ values, errors, touched, handleChange, handleBlur, submitForm }) => (
             <div className="login-form-contents">
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <div className="login-form-field">
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      label="Email address"
-                      name="email"
-                      type="email"
-                      value={values.email}
-                      error={!!errors.email && !!touched.email}
-                      helperText={!!errors.email && !!touched.email && errors.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className="login-form-field">
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      label="Password"
-                      name="password"
-                      type={passwordVisible ? 'text' : 'password'}
-                      error={!!errors.password && !!touched.password}
-                      helperText={!!errors.password && !!touched.password && errors.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button fullWidth variant="contained" color="primary" onClick={submitForm}>
-                    Sign In
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className="login-bottom-links">
-                    <Link
-                      href="#"
-                      variant="body2"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        togglePasswordVisible(!passwordVisible);
-                      }}
-                    >
-                      Show password
-                    </Link>
-                    <Link
-                      href="#"
-                      variant="body2"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setPasswordResetClicked(true);
-                      }}
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                </Grid>
-                <div className="login-form-error-text">
-                  {!!errorMessage && (
-                    <Grid item xs={12}>
-                      <Typography variant="body2" color="error">
-                        {errorMessage}
-                      </Typography>
-                    </Grid>
-                  )}
-                  {passwordResetClicked && (
-                    <Grid item xs={12}>
-                      <Typography variant="body2" color="textSecondary">
-                        Please contact Pathfinder administration to reset your password.
-                      </Typography>
-                    </Grid>
-                  )}
-                </div>
-              </Grid>
+              <div className="login-form-field">
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Email address"
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  error={!!errors.email && !!touched.email}
+                  helperText={!!errors.email && !!touched.email && errors.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </div>
+              <div className="login-form-field">
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password"
+                  name="password"
+                  type={passwordVisible ? 'text' : 'password'}
+                  error={!!errors.password && !!touched.password}
+                  helperText={!!errors.password && !!touched.password && errors.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </div>
+              <Button fullWidth variant="contained" color="primary" onClick={submitForm}>
+                Sign In
+              </Button>
+              <div className="login-bottom-links">
+                <Link
+                  href="#"
+                  variant="body2"
+                  display="inline"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    togglePasswordVisible(!passwordVisible);
+                  }}
+                >
+                  {passwordVisible ? 'Hide password' : 'Show password'}
+                </Link>
+                <Link
+                  href="#"
+                  variant="body2"
+                  display="inline"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setPasswordResetClicked(true);
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="login-form-info">
+                {!!errorMessage && (
+                  <Typography gutterBottom variant="body2" color="error">
+                    {errorMessage}
+                  </Typography>
+                )}
+                {passwordResetClicked && (
+                  <Typography variant="body2" color="textSecondary">
+                    Please contact Pathfinder administration to reset your password.
+                  </Typography>
+                )}
+              </div>
             </div>
           )}
         </Formik>
