@@ -16,6 +16,9 @@ import { participantDetailSteps } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailPage.css';
 
+/**
+ * Entry point and container for ParticipantDetailView, ParticipantDetailEdit, ParticipantDetailCreate
+ */
 export const ParticipantDetailPage = inject(
   'participantStore',
   'uiStore',
@@ -33,23 +36,34 @@ export const ParticipantDetailPage = inject(
     const { currentUser } = useContext(AuthContext);
     let userID;
     if (!!currentUser) {
-      userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email
+      userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email;
     }
     const notesStep = stepsLength - 2;
     const historyStep = stepsLength - 1;
 
+    /**
+     * Steps the detail view back one step
+     */
     const handleClickBack = () => {
       if (currentParticipantDetailStep > 0) {
         setCurrentParticipantDetailStep(currentParticipantDetailStep - 1);
       }
     };
 
+    /**
+     * Steps the detail view forward one step
+     */
     const handleClickForward = () => {
       if (currentParticipantDetailStep < stepsLength - 1) {
         setCurrentParticipantDetailStep(currentParticipantDetailStep + 1);
       }
     };
 
+    /**
+     * Determines which content to populate the detail view with - notes step, history step, or a form step
+     * If a form step, render the step using the Detail, Edit, or Create component using the
+     * currentParticipantDetailView mode set in UIStore
+     */
     const getParticipantDetailContents = () => {
       if (currentParticipantDetailStep === notesStep) {
         return <ParticipantDetailNotes />;
@@ -98,6 +112,7 @@ export const ParticipantDetailPage = inject(
 
     return (
       <div className="participant-detail-container">
+        {/* If the view is a narrow or mobile view, add navigation buttons to step though the form */}
         <Hidden mdUp>
           <div className="participant-detail-nav-buttons">
             {currentParticipantDetailStep > 0 && (

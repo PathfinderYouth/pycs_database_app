@@ -20,16 +20,26 @@ export const ParticipantDetailNotes = inject('participantStore')(
     const { currentParticipant, setCurrentParticipant, collection } = participantStore;
     const { label } = noteField;
     const {
-      currentUser: { email, displayName },
+      currentUser
     } = useContext(AuthContext);
     const [newNoteFieldValue, setNewNoteFieldValue] = useState('');
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const { nameLast, nameGiven } = currentParticipant;
-    const userID = !!displayName ? displayName : email;
-    const participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
-    const notes = !!currentParticipant.notes ? currentParticipant.notes : [];
+
+    let userID;
+    if (!!currentUser) {
+      const { displayName, email} = currentUser;
+      userID = !!displayName ? displayName : email;
+    }
+
+    let participantName;
+    let notes = [];
+    if (!!currentParticipant) {
+        const { nameLast, nameGiven, notes: participantNotes } = currentParticipant;
+        participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
+        notes = !!participantNotes ? participantNotes : [];
+      }
 
     const handleChange = ({ target: { value } }) => {
       if (value !== '') {

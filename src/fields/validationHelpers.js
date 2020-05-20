@@ -1,11 +1,12 @@
 import * as yup from 'yup';
+import moment from 'moment';
 
 /**
  * Validates SIN using the Luhn algorithm
- * @param value: int
+ * @param {string} sinString social insurance number as a numeric string
  */
-const sinValidation = (value) => {
-  const sin = String(value).split('');
+const sinValidation = (sinString) => {
+  const sin = String(sinString).split('');
   const luhnNumber = [1, 2, 1, 2, 1, 2, 1, 2, 1];
   let total = 0;
   for (let i = 0; i < sin.length; i++) {
@@ -20,32 +21,29 @@ const sinValidation = (value) => {
   return total % 10 === 0;
 };
 
-export const calculateAge = (value) => {
-  const today = new Date();
-  const birthDate = value;
-  if (birthDate !== '') {
-    const birthday = new Date(birthDate);
-    let age = today.getFullYear() - birthday.getFullYear();
-    if (today.getMonth() < birthday.getMonth()) {
-      age--;
-    } else if (today.getMonth() === birthday.getMonth()) {
-      if (today.getDate() < birthday.getDate() + 1) {
-        age--;
-      }
-    }
-    return age;
+/**
+ * Calculates the age of a participant by counting the number of years since they were born
+ * @param {string} dateString date string in the format YYYY-MM-DD
+ * @return {int} age
+ */
+export const calculateAge = (dateString) => {
+  const today = new moment();
+  if (dateString !== '') {
+    return today.diff(moment(dateString), 'years')
   }
 };
 
 /**
  * Validation that ensures participants are between 15 and 30 years old
- * @param value: date object
+ * @param {string} dateString date string in the format YYYY-MM-DD
+ * @return {boolean} age between 15 and 30
  */
-const ageValidation = (value) => {
-  const age = calculateAge(value);
+const ageValidation = (dateString) => {
+  const age = calculateAge(dateString);
   return age >= 15 && age <= 30;
 };
 
+// Validation schema object shared between the intake form and the participant edit & create page forms
 const commonValidationSchema = {
   nameGiven: yup.string().required('Given name is required'),
   nameLast: yup.string().required('Last name is required'),
@@ -81,6 +79,7 @@ const commonValidationSchema = {
     .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
 };
 
+// Validation schema used by the intake form
 export const validationSchema = yup.object().shape(
   {
     ...commonValidationSchema,
@@ -121,6 +120,7 @@ export const validationSchema = yup.object().shape(
   ],
 );
 
+// Validation schema used by the participant detail edit and create forms
 export const detailPageValidationSchema = yup.object().shape(
   {
     ...commonValidationSchema,

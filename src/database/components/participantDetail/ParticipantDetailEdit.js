@@ -15,7 +15,7 @@ export const ParticipantDetailEdit = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
-  const { status: participantStatus } = participant;
+  const participantStatus = !!participant ? participant.status : undefined;
 
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();

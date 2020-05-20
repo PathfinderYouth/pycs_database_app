@@ -7,6 +7,12 @@ import { FastField } from 'formik';
 import { NumberMask } from './NumberMask';
 import './FormFields.css';
 
+/**
+ * Text field component
+ * @param {Object} form Formik object
+ * @param {Object} field field object containing the properties of the field
+ * @param {function} isFieldDisabled function for determining if this field should be disabled
+ */
 export const FormTextField = ({ form, field, isFieldDisabled }) => {
   const { values, errors, touched, handleChange, handleBlur } = form;
   const {
@@ -21,24 +27,34 @@ export const FormTextField = ({ form, field, isFieldDisabled }) => {
     adornment = undefined,
   } = field;
 
+  // Determine custom inputProps
   const inputProps =
+    // if mask and adornment are undefined
     !mask && !adornment
-      ? undefined
-      : !!mask
+      ? // inputProps = undefined
+        undefined
+      : // else if mask is defined inputProps = { inputComponent: NumberMask }
+      !!mask
       ? {
           inputComponent: NumberMask,
         }
-      : {
+      : // else inputProps = { startAdornment: <InputAdornment/> }
+        {
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         };
 
+  // Determine custom inputLabelProps
   const inputLabelProps =
+    // if type === date
     type === 'date'
-      ? {
+      ? // inputLabelProps = { shrink: true }
+        {
           shrink: true,
         }
-      : undefined;
+      : // else inputLabelProps = undefined
+        undefined;
 
+  // Common props shared between TextFields with and without a FastField wrapper
   const commonProps = {
     label: label,
     type: type,
@@ -51,8 +67,10 @@ export const FormTextField = ({ form, field, isFieldDisabled }) => {
     InputLabelProps: inputLabelProps,
   };
 
-  const disabled = isFieldDisabled(field, values, name);
+  // Determines if the field should be disabled and if so, clears its value
+  const disabled = isFieldDisabled(field, values);
 
+  // If the field depends on another field, render without a FastField wrapper
   return !!dependsOnOtherField ? (
     <FormControl component="fieldset" fullWidth>
       {!!description && (
@@ -70,6 +88,7 @@ export const FormTextField = ({ form, field, isFieldDisabled }) => {
       />
     </FormControl>
   ) : (
+    // If the field does not depend on an other field's value, wrap it in a FastField component to improve form performance
     <FastField name={name} onChange={handleChange} onBlur={handleBlur} value={values[name]}>
       {({ field }) => (
         <FormControl component="fieldset" fullWidth>

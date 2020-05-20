@@ -4,6 +4,11 @@ import Grid from '@material-ui/core/Grid';
 import { FormFieldBuilder } from '../../fields';
 import './style/IntakeForm.css';
 
+/**
+ * Renders the form fields depending on the
+ * @param {Object} form Formik object 
+ * @param {Object} step form step object containing the step name and array of fields
+ */
 export const FormStep = ({ form, step }) => {
   const { stepName, fields } = step;
 
