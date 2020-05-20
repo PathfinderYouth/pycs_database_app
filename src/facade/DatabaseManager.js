@@ -37,6 +37,14 @@ export default class DatabaseManager {
 
   /**
    * Private helper method to help build a query for getting a list of documents.
+   * @param {ref: CollectionReference}
+   *  A reference to a collection in Firestore
+   * @param {filter: Object}
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
+   * @returns {Query}
+   *  A Firestore query
    */
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
@@ -63,8 +71,10 @@ export default class DatabaseManager {
     return ref.orderBy(orderBy, order ? order : 'asc');
   }
 
-  /*
-   * Private helper method to update fields used for case-insensitive search and sort. 
+  /**
+   * Private helper method to update fields used for case-insensitive search and sort.
+   * @param {data: Object}
+   *  Object containing participant info
    */
   _updateCaseInsensitiveFields(data) {
     for (const [id, queryId] of QUERY_FIELDS) {
@@ -72,8 +82,16 @@ export default class DatabaseManager {
     }
   }
 
-  /*
+  /**
    * Private helper method to check for valid SIN
+   * @param {docId: string}
+   *  Document id
+   * @param {sin: string}
+   *  SIN of the participant
+   * @param {onSuccess?: (docId: string) => void}
+   *  Callback function when SIN is valid
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when SIN is invalid
    */
   _checkSin(docId, sin, onSuccess, onError) {
     if (!!sin) {
@@ -154,6 +172,16 @@ export default class DatabaseManager {
 
   /**
    * Private helper method to get single document
+   * @param {ref: CollectionReference}
+   *  A reference to a collection in Firestore
+   * @param {docId: string}
+   *  Document id
+   * @param {onNext: (doc: Object) => void}
+   *  Callback function when document changes
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   * @returns {() => void}
+   *  Unsubscribe function
    */
   _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
