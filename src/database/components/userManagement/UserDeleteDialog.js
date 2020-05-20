@@ -12,6 +12,10 @@ export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen
   let db = service.getUserList();
   let userName = record.name;
   const { enqueueSnackbar } = useSnackbar();
+
+  /**
+   * handle deleting user action
+   */
   const handleDeleteUser = () => {
     db.deleteUser(
       record.id,

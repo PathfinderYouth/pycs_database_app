@@ -16,6 +16,10 @@ export const UserResetPasswordDialog = ({
   let auth = service.getAuthentication();
   let userEmail = record.email;
   const { enqueueSnackbar } = useSnackbar();
+
+  /**
+   * handle sending reset password to a user action
+   */
   const handleResetPassword = () => {
     auth.resetPassword(
       userEmail,
