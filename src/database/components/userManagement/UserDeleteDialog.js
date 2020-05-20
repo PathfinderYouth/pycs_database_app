@@ -18,7 +18,7 @@ export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen
    */
   const handleDeleteUser = () => {
     db.deleteUser(
-      record.id,
+      record,
       () => {
         enqueueSnackbar('User successfully deleted.', {
           variant: 'success',
