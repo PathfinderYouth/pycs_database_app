@@ -68,6 +68,7 @@ class ParticipantStore {
     this._participants = newList;
     this.setIsListLoading(false);
 
+    // Update last page status
     this._isLastPage =
       newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
   };

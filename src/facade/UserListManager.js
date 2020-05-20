@@ -2,6 +2,9 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import Controller from './Controller';
 
+/**
+ * This class is used to simplify the interaction between the UI and user collection.
+ */
 export default class UserListManager {
   static instance;
 
@@ -34,6 +37,7 @@ export default class UserListManager {
         .then((querySnap) => {
           if (querySnap.docs.length > 0) {
             querySnap.docs.forEach((queryDocSnap) => {
+              // Perform document id check to allow update on that document
               if (queryDocSnap.id !== docId && onError) {
                 let error = new Error('Email already exists');
                 error.name = 'DuplicateError';
@@ -42,6 +46,7 @@ export default class UserListManager {
             });
           }
 
+          // Email is not being used
           onSuccess();
         })
         .catch(onError);
@@ -63,6 +68,7 @@ export default class UserListManager {
    *  Callback function when fail
    */
   addUser(user, onSuccess, onError) {
+    // Update fields used for case-insensitive search and sort. 
     user = {
       ...user,
       nameLower: user.name.toLowerCase(),
@@ -98,11 +104,13 @@ export default class UserListManager {
    *  Unsubscribe function
    */
   getUser(email, onNext, onError) {
+    // Search for the document with provided email
     return this.userRef.where('emailLower', '==', email.toLowerCase()).onSnapshot({
       next: (querySnap) => {
         if (querySnap.docs.length === 0) {
           onNext(null);
         } else {
+          // Found the document
           onNext(querySnap.docs[0].data());
         }
       },
@@ -122,8 +130,10 @@ export default class UserListManager {
    *  Callback function when fail
    */
   updateUser(docId, data, onSuccess, onError) {
+    // Update fields used for case-insensitive search and sort. 
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
+
     this.checkEmailNotExist(
       docId,
       data.emailLower,
@@ -140,12 +150,13 @@ export default class UserListManager {
    *  Email of the user who does inital sign-in
    * @param {uid: string}
    *  Firebase uid of the user who does inital sign-in
-   * @param {onSuccess?: () => void}
+   * @param {onSuccess?: (doc: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
   updateFirstTimeUser(email, uid, onSuccess, onError) {
+    // Search for the document with provided email
     this.userRef
       .where('emailLower', '==', email.toLowerCase())
       .get()
@@ -154,6 +165,7 @@ export default class UserListManager {
           throw new Error('Email does not exist');
         }
 
+        // Found the document
         let doc = querySnap.docs[0];
         doc.ref
           .update({ uid: uid })
@@ -198,6 +210,7 @@ export default class UserListManager {
     let query = this.userRef;
     let entries = Object.entries(filter);
     if (entries.length > 0) {
+      // Get first property of the filter object
       const [searchBy, searchText] = entries[0];
 
       if (searchText) {
@@ -205,6 +218,8 @@ export default class UserListManager {
         let searchTextEnd = searchText.substring(0, lastIndex);
         searchTextEnd += String.fromCharCode(searchText.charCodeAt(lastIndex) + 1);
 
+        // Find documents that has a field value starts with searchText value.
+        // Because of the orderBy statement here, other orderBy statements have little effect.
         query = query
           .where(searchBy, '>=', searchText)
           .where(searchBy, '<', searchTextEnd)
@@ -213,6 +228,7 @@ export default class UserListManager {
       }
     }
 
+    // Using the first property of the sorter object to sort the documents
     const [orderBy, order] = Object.entries(sorter)[0];
     query = query.orderBy(orderBy, order ? order : 'asc');
     return new Controller(query, limit, onChildNext, onError);

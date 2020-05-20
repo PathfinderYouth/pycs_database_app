@@ -86,6 +86,7 @@ export const ListContainer = inject(
       };
 
       const handleRequestSort = (event, property, queryProperty) => {
+        // Go back to the first page whenever there is an update on the sort field
         setPage(0);
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
         const order = isAsc ? 'desc' : 'asc';
@@ -95,11 +96,13 @@ export const ListContainer = inject(
       };
 
       const handleSearchClicked = (searchBy, searchText) => {
+        // Go back to the first page whenever the user perform a search
         setPage(0);
         onSearchClicked(searchBy, searchText);
       };
 
       const handleChangePage = (event, newPage) => {
+        // Checking the direction when moving from one page to another
         if (newPage < page) {
           onPrevButtonClicked();
         } else {
@@ -109,6 +112,7 @@ export const ListContainer = inject(
       };
 
       const handleChangeRowsPerPage = (event) => {
+        // Go back to the first page whenever the user changes the number of rows per page
         setPage(0);
         onChangeRowsPerPage(event.target.value);
       };
