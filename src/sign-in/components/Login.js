@@ -106,7 +106,7 @@ export const LogIn = () => {
             // allow login with a warning
             alert(
               'Remember to log out when you finish your current session.\r\n' +
-                'Tired of seeing this message? Consider switching to a more modern browser.',
+                'Switch to the latest version of Chrome or Firefox to remove this message.',
             );
             handleSignIn(email, password);
           },
