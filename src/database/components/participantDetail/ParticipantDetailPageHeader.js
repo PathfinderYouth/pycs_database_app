@@ -18,6 +18,20 @@ import { participantDetailViewModes } from '../../../constants';
 import { belongsToStepIndex } from '../../../fields';
 import '../style/ParticipantDetailView.css';
 
+/**
+ * Header wrapper component used in ParticipantDetailView, ParticipantDetailEdit, & ParticipantDetailCreate
+ * @param {Component} children React child component(s)
+ * @param {string} title Page title
+ * @param {Object} form Formik form object
+ * @param {Object} participant participant data object
+ * @param {string} participantDetailViewMode current detail mode - view | edit | create
+ * @param {function} handleClickToggleEdit toggle function that switches between view and edit mode in UIStore
+ * @param {function} handleClickMove database move function
+ * @param {function} handleClickDelete database delete function
+ * @param {function} handleClickApprove database approve function
+ * @param {function} handleClickDecline database decline function
+ * @param {function} handleClickRestore database restore function
+ */
 export const ParticipantDetailPageHeader = ({
   children,
   title,
@@ -31,6 +45,7 @@ export const ParticipantDetailPageHeader = ({
   handleClickDecline = undefined,
   handleClickRestore = undefined,
 }) => {
+  // if participant is defined, extract the name and status, otherwise leave undefined
   let participantName;
   let participantStatus;
   if (!!participant) {
@@ -38,10 +53,10 @@ export const ParticipantDetailPageHeader = ({
     participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
     participantStatus = currentStatus;
   }
-
   const { enqueueSnackbar } = useSnackbar();
   const { setCurrentParticipantDetailStep } = uiStore;
 
+  // validate form on initial load to generate errors that must be cleared in order to submit
   useEffect(() => {
     if (!!form) {
       form.validateForm();
@@ -51,7 +66,7 @@ export const ParticipantDetailPageHeader = ({
 
   /**
    * Navigates to the first form step with errors
-   * @param Object errors
+   * @param {Object} errors Formik errors object
    */
   const handleFormErrors = (errors) => {
     const error = Object.entries(errors)[0];
@@ -63,11 +78,15 @@ export const ParticipantDetailPageHeader = ({
     }
   };
 
+  /**
+   * Attempts to submit the form. If there are errors, catch and handle them using handleFormErrors
+   */
   const handleClickSave = () => {
     const { submitForm, errors } = form;
     submitForm().catch(handleFormErrors(errors));
   };
 
+  // Map of button props mapped to their names
   const buttonsMap = {
     approve: {
       ariaLabel: 'approve',
@@ -134,6 +153,7 @@ export const ParticipantDetailPageHeader = ({
     },
   };
 
+  // Map of button objects mapped to participant statuses
   const buttonStatusMap = {
     new: [
       {
@@ -153,8 +173,10 @@ export const ParticipantDetailPageHeader = ({
     archived: [buttonsMap.restore, buttonsMap.delete],
   };
 
+  // Button objects common to all statuses used in edit mode
   const editButtons = [buttonsMap.save, buttonsMap.cancel];
 
+  // Button objects used in create mode
   const createButtons = [
     {
       ...buttonsMap.save,
@@ -164,6 +186,10 @@ export const ParticipantDetailPageHeader = ({
     buttonsMap.cancel,
   ];
 
+  /**
+   * Renders buttons depenting on the current viewing mode. If in 'view' mode, render buttons based on the 
+   * participant status. If in 'edit' or 'create' mode, render buttons according to the mode.
+   */
   const getButtons = () => {
     let buttons;
     if (participantDetailViewMode === participantDetailViewModes.VIEW) {

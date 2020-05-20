@@ -8,7 +8,7 @@ import { initialValues, formSteps, validationSchema  } from '../fields';
 import { uiStore } from '../injectables';
 
 /**
- * Entry point of the participant intake web form
+ * Entry point and routing component of the participant intake web form
  */
 export const IntakeForm = () => {
   const { enqueueSnackbar } = useSnackbar();

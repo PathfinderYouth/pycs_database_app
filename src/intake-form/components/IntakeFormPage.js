@@ -17,7 +17,9 @@ import { formSteps, requiredFields } from '../../fields';
 import './style/IntakeForm.css';
 
 /**
- * Container component for the Intake Form. Displays different form pages depending on the current intake form step set in the UIStore
+ * Container component for the Intake Form. Displays different form pages depending on the current intake 
+ * form step set in the UIStore
+ * @param {Object} form Formik object
  */
 export const IntakeFormPage = inject('uiStore')(
   observer(({ form }) => {
