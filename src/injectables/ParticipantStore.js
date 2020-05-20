@@ -41,9 +41,19 @@ class ParticipantStore {
     });
   }
 
-  // This is an event listener/handler for when a document in a collection
-  // changes. Firestore will send the event, and this method will handle it.
-  // Reference: https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange
+  /**
+   * A function acts as an event listener/handler for when any document in the current query
+   * changes. Firestore will send the event, and this method will handle it. Reference:
+   * https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange
+   * @param {doc: Object}
+   *  The participant data/document
+   * @param {newIndex: number}
+   *  The new index of the document
+   * @param {oldIndex: number}
+   *  The old index of the document
+   * @param {type: string}
+   *  Type of document change. Can be either 'added', 'modified', or 'removed'
+   */
   _onChildNext = (doc, newIndex, oldIndex, type) => {
     let newList = this._participants.slice();
 
@@ -68,10 +78,14 @@ class ParticipantStore {
     this._participants = newList;
     this.setIsListLoading(false);
 
+    // Update last page status
     this._isLastPage =
       newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
   };
 
+  /**
+   * An autorun function for making a new query when there are changes in UI.
+   */
   _updateList = autorun(
     () => {
       // Run this whenever type of collection, filter, or sorter changes
@@ -109,6 +123,7 @@ class ParticipantStore {
         // Do nothing
       }
     },
+    // Setting delay so we don't make too many queries in a short amount of time
     { delay: 500 },
   );
 

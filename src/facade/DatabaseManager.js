@@ -6,6 +6,9 @@ import moment from 'moment';
 
 const FieldValue = firebase.firestore.FieldValue;
 
+/**
+ * This class is used to simplify the interaction between the UI and participant collections.
+ */
 export default class DatabaseManager {
   static instance;
 
@@ -34,10 +37,19 @@ export default class DatabaseManager {
 
   /**
    * Private helper method to help build a query for getting a list of documents.
+   * @param {ref: CollectionReference}
+   *  A reference to a collection in Firestore
+   * @param {filter: Object}
+   *  Object containing fields and values for filtering
+   * @param {sorter: Object}
+   *  Object containing fields and orders for sorting
+   * @returns {Query}
+   *  A Firestore query
    */
   _buildQuery(ref, filter, sorter) {
     let entries = Object.entries(filter);
     if (entries.length > 0) {
+      // Get first property of the filter object
       const [searchBy, searchText] = entries[0];
 
       if (searchText) {
@@ -45,6 +57,8 @@ export default class DatabaseManager {
         let searchTextEnd = searchText.substring(0, lastIndex);
         searchTextEnd += String.fromCharCode(searchText.charCodeAt(lastIndex) + 1);
 
+        // Find documents that has a field value starts with searchText value.
+        // Because of the orderBy statement here, other orderBy statements have little effect.
         return ref
           .where(searchBy, '>=', searchText)
           .where(searchBy, '<', searchTextEnd)
@@ -52,21 +66,39 @@ export default class DatabaseManager {
       }
     }
 
+    // Using the first property of the sorter object to sort the documents
     const [orderBy, order] = Object.entries(sorter)[0];
     return ref.orderBy(orderBy, order ? order : 'asc');
   }
 
+  /**
+   * Private helper method to update fields used for case-insensitive search and sort.
+   * @param {data: Object}
+   *  Object containing participant info
+   */
   _updateCaseInsensitiveFields(data) {
     for (const [id, queryId] of QUERY_FIELDS) {
       data[queryId] = data[id] ? data[id].toLowerCase() : '';
     }
   }
 
+  /**
+   * Private helper method to check for valid SIN
+   * @param {docId: string}
+   *  Document id
+   * @param {sin: string}
+   *  SIN of the participant
+   * @param {onSuccess?: (docId: string) => void}
+   *  Callback function when SIN is valid
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when SIN is invalid
+   */
   _checkSin(docId, sin, onSuccess, onError) {
     if (!!sin) {
       this.permanentRef.where('sin', '==', sin).get().then((querySnap) => {
         if (querySnap.docs.length > 0) {
           querySnap.docs.forEach(queryDocSnap => {
+            // Perform document id check to allow update on that document
             if (queryDocSnap.id !== docId && onError) {
               let error = new Error('SIN already exists');
               error.name = 'DuplicateError';
@@ -75,6 +107,7 @@ export default class DatabaseManager {
           });
         }
 
+        // SIN is valid (no duplicate found)
         onSuccess();
       }).catch(onError);
       return;
@@ -139,6 +172,16 @@ export default class DatabaseManager {
 
   /**
    * Private helper method to get single document
+   * @param {ref: CollectionReference}
+   *  A reference to a collection in Firestore
+   * @param {docId: string}
+   *  Document id
+   * @param {onNext: (doc: Object) => void}
+   *  Callback function when document changes
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   * @returns {() => void}
+   *  Unsubscribe function
    */
   _getSingleParticipant(ref, docId, onNext, onError) {
     return ref.doc(docId).onSnapshot({
@@ -159,7 +202,7 @@ export default class DatabaseManager {
 
   /**
    * Add a new participant document into new collection.
-   * @param {participant: Object}
+   * @param {data: Object}
    *  Object containing participant info
    * @param {onSuccess?: (docId: string) => void}
    *  Callback function when success
@@ -180,6 +223,7 @@ export default class DatabaseManager {
     };
     this._updateCaseInsensitiveFields(document);
 
+    // Add a document in new collection and increase the count in one write batch
     let docRef = this.newRef.doc();
     let batch = this.db.batch();
     batch.set(docRef, document);
@@ -213,11 +257,13 @@ export default class DatabaseManager {
    * Update a participant document in the specified collection.
    * @param {ref: database reference}
    *  Database reference
-   * @param {docId: string}
-   *  Document id
-   * @param {data: Object}
-   *  Object containing updated values
-   * @param {onSuccess?: () => void}
+   * @param {oldData: string}
+   *  Old data of the participant
+   * @param {newData: Object}
+   *  New/updated data of the participant
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {onSuccess?: (participant: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
@@ -259,11 +305,13 @@ export default class DatabaseManager {
 
   /**
    * Update a participant document in new collection.
-   * @param {docId: string}
-   *  Document id
-   * @param {data: Object}
-   *  Object containing updated values
-   * @param {onSuccess?: () => void}
+   * @param {oldData: string}
+   *  Old data of the participant
+   * @param {newData: Object}
+   *  New/updated data of the participant
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {onSuccess?: (participant: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
@@ -285,6 +333,7 @@ export default class DatabaseManager {
     let docRef = this.newRef.doc(docId);
     let batch = this.db.batch();
 
+    // Delete a document in new collection and decrease the count in one write batch
     batch.delete(docRef);
     batch.update(this.statRef.doc('participant'), { numOfNew: FieldValue.increment(-1) });
     batch.commit().then(onSuccess).catch(onError);
@@ -292,8 +341,10 @@ export default class DatabaseManager {
 
   /**
    * Add a new participant document into permanent collection.
-   * @param {participant: Object}
+   * @param {data: Object}
    *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
    * @param {onSuccess?: (docId: string) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -344,11 +395,13 @@ export default class DatabaseManager {
 
   /**
    * Update a participant document in permanent collection.
-   * @param {docId: string}
-   *  Document id
-   * @param {data: Object}
-   *  Object containing updated values
-   * @param {onSuccess?: () => void}
+   * @param {oldData: string}
+   *  Old data of the participant
+   * @param {newData: Object}
+   *  New/updated data of the participant
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {onSuccess?: (participant: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
@@ -360,10 +413,12 @@ export default class DatabaseManager {
   }
 
   /**
-   * Delete a participant document from permanent collection.
-   * @param {docId: string}
-   *  Document id
-   * @param {onSuccess?: () => void}
+   * Archive a participant document in permanent collection.
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {onSuccess?: (participant: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
@@ -391,9 +446,11 @@ export default class DatabaseManager {
   }
 
   /**
-   * Undo deleting a participant document from permanent collection.
-   * @param {docId: string}
-   *  Document id
+   * Restore an archived participant document in permanent collection.
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
    * @param {onSuccess?: () => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -431,8 +488,10 @@ export default class DatabaseManager {
 
   /**
    * Move a document in new collection to permanent collection.
-   * @param {docId: string}
-   *  Document id
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
    * @param {onSuccess?: (docId: string) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -460,6 +519,8 @@ export default class DatabaseManager {
           doc.status = status.PENDING;
           doc.history = updatedHistory;
 
+          // Copy the document to permanent collection, delete the old document, and descrease the
+          // count in one transaction
           transaction.set(newDocRef, doc);
           transaction.delete(oldDocRef);
           transaction.update(
@@ -482,8 +543,12 @@ export default class DatabaseManager {
 
   /**
    * Approve a pending document in permanent collection.
-   * @param {docId: string}
-   *  Document id
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {confirmationNumber: string}
+   *  The confirmation number
    * @param {onSuccess?: () => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -509,8 +574,10 @@ export default class DatabaseManager {
 
   /**
    * Decline a pending document in permanent collection.
-   * @param {docId: string}
-   *  Document id
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
    * @param {onSuccess?: () => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -543,12 +610,15 @@ export default class DatabaseManager {
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
+   * @param {onSuccess: (isLoaded: boolean) => void}
+   *  Callback function when fetching data is done
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    * @returns {Controller}
    *  A controller object
    */
   getNewList(filter, sorter, limit, onChildNext, onSuccess, onError) {
+    // Remove the status property from filter object before building a query
     let { status, ...newFilter } = filter;
     let query = this._buildQuery(this.newRef, newFilter, sorter);
     return new Controller(query, limit, onChildNext, onSuccess, onError);
@@ -565,6 +635,8 @@ export default class DatabaseManager {
    * @param {onChildNext: (doc: Object, newIndex: number,
    *                       oldIndex: number, type: string) => void}
    *  Callback function when document changes in the collection
+   * @param {onSuccess: (isLoaded: boolean) => void}
+   *  Callback function when fetching data is completed
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    * @returns {Controller}
@@ -574,9 +646,11 @@ export default class DatabaseManager {
     let { status: participantStatus, ...newFilter } = filter;
     let query = this._buildQuery(this.permanentRef, newFilter, sorter);
 
+    // Filter documents by status field
     if (participantStatus) {
       query = query.where('status', '==', participantStatus);
     } else {
+      // Ignore 'Archived' status by default
       query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED]);
     }
     return new Controller(query, limit, onChildNext, onSuccess, onError);
@@ -584,7 +658,8 @@ export default class DatabaseManager {
 
   /**
    * Get entire permanent participants collection. Use only for statistics.
-   * @param callback
+   * @param {callback: (participantsList: Array<Object>) => void}
+   *  Callback function when fetching data is completed
    */
   getAllPermanentParticipants(callback) {
     this.permanentRef

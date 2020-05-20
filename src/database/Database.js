@@ -63,20 +63,27 @@ export const Database = inject(
     } = userStore;
 
     const handleParticipantViewChanged = (collection, status) => {
+      // Reset participant-collection query to default state
       setCurrentStatus(status);
       setCollection(collection);
       setParticipantFilter({ status: status });
+
+      // Reset searchbar
       setCurrentSearchText('');
       setRecordSearchBoxActive(false);
     };
 
     const handleStaffViewChanged = () => {
+      // Reset user-collection query to default state
       setUserFilter({});
+
+      // Reset searchbar
       setCurrentSearchText('');
       setRecordSearchBoxActive(false);
     };
 
     const handleOrderChanged = (orderBy, order) => {
+      // Update query to sort the results
       let sorter = {};
       let sortFunction =
         currentViewMode === viewModes.STAFF_LIST ? setUserSorter : setParticipantSorter;
@@ -85,6 +92,7 @@ export const Database = inject(
     };
 
     const handleSearchClicked = (searchBy, searchText) => {
+      // Update query to filter the results by the value of a field
       let filter = currentViewMode === viewModes.STAFF_LIST ? {} : { status: currentStatus };
       let filterFunction =
         currentViewMode === viewModes.STAFF_LIST ? setUserFilter : setParticipantFilter;

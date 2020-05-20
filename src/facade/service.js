@@ -15,6 +15,10 @@ const CONFIG = {
 };
 
 let initialized = false;
+
+/**
+ * Helper method to make sure the app only get initialized once.
+ */
 function init() {
   if (!initialized) {
     firebase.initializeApp(CONFIG);
