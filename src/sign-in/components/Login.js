@@ -1,163 +1,185 @@
-import React, { Component } from 'react';
-import service from '../../facade/service';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import service from '../../facade/service';
+import Logo from '../../assets/Pathfinder-Logo.jpg';
 import './Login.css';
 
-export class LogIn extends Component {
-  constructor(props) {
-    super(props);
-    this.authService = service.getAuthentication();
-    this.userService = service.getUserList();
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handlePasswordResetEmail = this.handlePasswordResetEmail.bind(this);
-    this.state = {
-      email: '',
-      password: '',
-      errorEmailStatus: false,
-      errorPasswordStatus: false,
-    };
-  }
+export const LogIn = () => {
+  const authService = service.getAuthentication();
+  const userService = service.getUserList();
+  const [passwordResetClicked, setPasswordResetClicked] = useState(false);
+  const [passwordVisible, togglePasswordVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  componentDidMount() {
-    if (this.authService.getCurrentUser()) {
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email('Invalid email address')
+      .required('Please enter a valid email address'),
+    password: yup.string().required('Password is required'),
+  });
+
+  useEffect(() => {
+    if (authService.getCurrentUser()) {
       window.location.href = './database';
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
-   * handles log in event
-   * @param {event: onSubmit event}
-   *
+   * handle sign up when email is authorized but user has not yet set a password
+   * @param {string} userEmail
+   * @param {string} userPassword
    */
-  handleLogin(event) {
-    event.preventDefault();
-    this.userService.checkEmailNotExist(
-      null,
-      this.state.email.toLocaleLowerCase(),
-      // if email doesn't exist in user collection
-      () => {
-        this.setState({ errorEmailStatus: true });
-      },
-      // if email exists in user collection
-      () => {
-        this.authService.logIn(
-          this.state.email,
-          this.state.password,
-          () => {
-            window.location.href = './database';
-          },
-          // perform sign-up if login fails
-          (error) => {
-            if (error.code === 'auth/wrong-password') {
-              this.setState({ errorPasswordStatus: true });
-              return;
-            }
-            this.handleSignUp(this.state.email, this.state.password);
-          },
-        );
-      },
-    );
-  }
-
-  handleSignUp(userEmail, userPassword) {
-    this.authService.signUp(userEmail, userPassword, (user) => {
-      this.userService.updateFirstTimeUser(user.email, user.uid, (doc) => {
-        let newUser = this.authService.getCurrentUser();
+  const handleSignUp = (userEmail, userPassword) => {
+    authService.signUp(userEmail, userPassword, (user) => {
+      userService.updateFirstTimeUser(user.email, user.uid, (doc) => {
+        let newUser = authService.getCurrentUser();
         newUser.updateProfile({ displayName: doc.name }).then(() => {
           window.location.href = './database';
         });
       });
     });
-  }
+  };
 
-  handlePasswordResetEmail() {
-    alert('Please contact your supervisor to reset password');
-  }
+  /**
+   * Handles log in event
+   * @param {Object} values form values
+   * @param {function} setSubmitting
+   */
+  const handleLogin = (values, setSubmitting) => {
+    const { email, password } = values;
+    userService.checkEmailNotExist(
+      null,
+      email.toLocaleLowerCase(),
+      // if email doesn't exist in user collection
+      () => {
+        setSubmitting(false);
+        setErrorMessage('User account not authorized. Please contact Pathfinder administration.');
+      },
+      // if email exists in user collection
+      () => {
+        authService.logIn(
+          email,
+          password,
+          () => {
+            // login was successful
+            setSubmitting(false);
+            window.location.href = './database';
+          },
+          // perform sign-up if login fails
+          (error) => {
+            if (error.code === 'auth/wrong-password') {
+              setSubmitting(false);
+              setErrorMessage('Incorrect password');
+              return;
+            }
+            handleSignUp(email, password);
+          },
+        );
+      },
+    );
+  };
 
-  handleEmailTextChange(event) {
-    this.setState({ email: event.target.value });
-    if (event.target.value === '') {
-      this.setState({ errorEmailStatus: false });
-    }
-  }
-
-  handlePasswordTextChange(event) {
-    this.setState({ password: event.target.value });
-    if (event.target.value === '') {
-      this.setState({ errorPasswordStatus: false });
-    }
-  }
-
-  render() {
-    return (
-      <Container component="main" maxWidth="xs">
-        <div className={`paperStyle`}>
-          <Typography variant="h5">PYCS Staff Login Portal</Typography>
-          <form className="maxWidth" noValidate onSubmit={this.handleLogin}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              ref="email"
-              autoFocus
-              error={this.state.errorEmailStatus}
-              helperText={
-                this.state.errorEmailStatus &&
-                'User account not authorized. Please contact Pathfinder Youth Centre Society administration.'
-              }
-              onChange={(event) => this.handleEmailTextChange(event)}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              id="password"
-              ref="password"
-              error={this.state.errorPasswordStatus}
-              helperText={this.state.errorPasswordStatus && 'Invalid Password.'}
-              onChange={(event) => this.handlePasswordTextChange(event)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={this.handleLogin}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
+  return (
+    <div className="login-container">
+      <div className="login-content">
+        <img className="login-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
+        <Typography align="center" variant="h5">
+          PYCS Staff Login Portal
+        </Typography>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setErrorMessage('');
+            handleLogin(values, setSubmitting);
+          }}
+        >
+          {({ values, errors, touched, handleChange, handleBlur, submitForm }) => (
+            <div className="login-form-contents">
+              <div className="login-form-field">
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Email address"
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  error={!!errors.email && !!touched.email}
+                  helperText={!!errors.email && !!touched.email && errors.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </div>
+              <div className="login-form-field">
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password"
+                  name="password"
+                  type={passwordVisible ? 'text' : 'password'}
+                  error={!!errors.password && !!touched.password}
+                  helperText={!!errors.password && !!touched.password && errors.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </div>
+              <Button fullWidth variant="contained" color="primary" onClick={submitForm}>
+                Sign In
+              </Button>
+              <div className="login-bottom-links">
                 <Link
                   href="#"
                   variant="body2"
+                  display="inline"
                   onClick={(event) => {
                     event.preventDefault();
-                    this.handlePasswordResetEmail();
+                    togglePasswordVisible(!passwordVisible);
+                  }}
+                >
+                  {passwordVisible ? 'Hide password' : 'Show password'}
+                </Link>
+                <Link
+                  href="#"
+                  variant="body2"
+                  display="inline"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setPasswordResetClicked(true);
                   }}
                 >
                   Forgot password?
                 </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Container>
-    );
-  }
-}
+              </div>
+              <div className="login-form-info">
+                {!!errorMessage && (
+                  <Typography gutterBottom variant="body2" color="error">
+                    {errorMessage}
+                  </Typography>
+                )}
+                {passwordResetClicked && (
+                  <Typography variant="body2" color="textSecondary">
+                    Please contact Pathfinder administration to reset your password.
+                  </Typography>
+                )}
+              </div>
+            </div>
+          )}
+        </Formik>
+      </div>
+    </div>
+  );
+};

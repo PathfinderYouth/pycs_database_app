@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { inject, observer } from 'mobx-react';
 import Card from '@material-ui/core/Card';
 import Hidden from '@material-ui/core/Hidden';
@@ -13,6 +13,7 @@ import { DetailButton } from './DetailButton';
 import { participantStore, uiStore } from '../../../injectables';
 import { participantDetailViewModes, viewModes } from '../../../constants';
 import { participantDetailSteps } from '../../../fields';
+import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailPage.css';
 
 export const ParticipantDetailPage = inject(
@@ -29,6 +30,11 @@ export const ParticipantDetailPage = inject(
       setCurrentParticipantDetailStep,
     } = uiStore;
     const stepsLength = participantDetailSteps.length;
+    const { currentUser } = useContext(AuthContext);
+    let userID;
+    if (!!currentUser) {
+      userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email
+    }
     const notesStep = stepsLength - 2;
     const historyStep = stepsLength - 1;
 
@@ -55,6 +61,7 @@ export const ParticipantDetailPage = inject(
             <ParticipantDetailEdit
               participant={currentParticipant}
               currentStep={currentParticipantDetailStep}
+              user={userID}
               handleClickChangeMode={() =>
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW)
               }
@@ -67,6 +74,7 @@ export const ParticipantDetailPage = inject(
           return (
             <ParticipantDetailCreate
               currentStep={currentParticipantDetailStep}
+              user={userID}
               handleClickChangeMode={() => setCurrentViewMode(viewModes.PARTICIPANT_LIST)}
             />
           );
@@ -75,6 +83,7 @@ export const ParticipantDetailPage = inject(
             <ParticipantDetailView
               participant={currentParticipant}
               currentStep={currentParticipantDetailStep}
+              user={userID}
               handleClickChangeMode={() =>
                 setCurrentParticipantDetailViewMode(participantDetailViewModes.EDIT)
               }

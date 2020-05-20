@@ -1,24 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useSnackbar } from 'notistack';
 import { initialValues, participantDetailSteps } from '../../../fields';
 import { ParticipantDetailForm } from './ParticipantDetailForm';
 import { participantDetailViewModes } from '../../../constants';
-import { AuthContext } from '../../../sign-in';
 import service from '../../../facade/service';
 
-export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode }) => {
+export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode, user }) => {
   const { enqueueSnackbar } = useSnackbar();
   const step = participantDetailSteps[currentStep];
-  const {
-    currentUser: { email, displayName },
-  } = useContext(AuthContext);
-  const userID = !!displayName ? displayName : email;
 
   const handleSubmit = (values, setSubmitting) => {
     const db = service.getDatabase();
     db.addPermanent(
       values,
-      userID,
+      user,
       (newParticipant) => {
         setSubmitting(false);
         enqueueSnackbar('Participant record created.', {
