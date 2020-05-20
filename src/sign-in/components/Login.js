@@ -53,11 +53,38 @@ export const LogIn = () => {
   };
 
   /**
+   * handle sign in when email is authorized
+   * @param {string} userEmail
+   * @param {string} userPassword
+   * @param {function} setSubmitting
+   */
+  const handleSignIn = (userEmail, userPassword, setSubmitting) => {
+    authService.logIn(
+      userEmail,
+      userPassword,
+      () => {
+        // login was successful
+        setSubmitting(false);
+        window.location.href = './database';
+      },
+      // perform sign-up if login fails
+      (error) => {
+        if (error.code === 'auth/wrong-password') {
+          setSubmitting(false);
+          setErrorMessage('Incorrect password');
+          return;
+        }
+        handleSignUp(userEmail, userPassword);
+      },
+    );
+  };
+
+  /**
    * Handles log in event
    * @param {Object} values form values
    * @param {function} setSubmitting
    */
-  const handleLogin = (values, setSubmitting) => {
+  const handleLoginSession = (values, setSubmitting) => {
     const { email, password } = values;
     userService.checkEmailNotExist(
       null,
@@ -69,22 +96,19 @@ export const LogIn = () => {
       },
       // if email exists in user collection
       () => {
-        authService.logIn(
-          email,
-          password,
+        authService.setAuthPersistence(
           () => {
-            // login was successful
-            setSubmitting(false);
-            window.location.href = './database';
+            // auth state is persisted in current session only
+            handleSignIn(email, password, setSubmitting);
           },
-          // perform sign-up if login fails
-          (error) => {
-            if (error.code === 'auth/wrong-password') {
-              setSubmitting(false);
-              setErrorMessage('Incorrect password');
-              return;
-            }
-            handleSignUp(email, password);
+          () => {
+            // if the current environment doesn't support session presistence
+            // allow login with a warning
+            alert(
+              'Remember to log out when you finish your current session.\r\n' +
+                'Switch to the latest version of Chrome or Firefox to remove this message.',
+            );
+            handleSignIn(email, password);
           },
         );
       },
@@ -103,7 +127,7 @@ export const LogIn = () => {
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
             setErrorMessage('');
-            handleLogin(values, setSubmitting);
+            handleLoginSession(values, setSubmitting);
           }}
         >
           {({ values, errors, touched, handleChange, handleBlur, submitForm }) => (
