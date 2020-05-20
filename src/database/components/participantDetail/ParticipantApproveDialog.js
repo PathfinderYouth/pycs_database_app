@@ -7,14 +7,28 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+/**
+ * Form dialog used to accept confirmation numbers required to approve participants
+ * @param {boolean} open open state of the dialog
+ * @param {function} handleClickApprove database approve function
+ * @param {function} handleClose onClose handler function for closing the dialog
+ */
 export const ParticipantApproveDialog = ({ open, handleClickApprove, handleClose }) => {
   const [fieldValue, setFieldValue] = useState('');
   const [errorStatus, setErrorStatus] = useState(false);
 
+  /**
+   * OnChange handler for note field
+   * @param {Object} event
+   */
   const handleChange = ({ target: { value } }) => {
     setFieldValue(value);
   };
 
+  /**
+   * OnSubmit handler for confirmation number field
+   * @param {Object} values form values object
+   */
   const handleSubmit = () => {
     if (fieldValue === '') {
       setErrorStatus(true);

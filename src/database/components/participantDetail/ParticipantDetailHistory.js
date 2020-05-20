@@ -11,7 +11,12 @@ import TableRow from '@material-ui/core/TableRow';
 import { fieldNames } from '../../../fields';
 import '../style/ParticipantDetailHistory.css';
 
+/**
+ * Participant history page component
+ * @param {Object} participant participant data object
+ */
 export const ParticipantDetailHistory = ({ participant }) => {
+  // if participant is defined, extract the name and history, else leave undefined
   let events = [];
   let participantName;
   if (!!participant) {
@@ -21,21 +26,36 @@ export const ParticipantDetailHistory = ({ participant }) => {
   }
   
 
-  // Gets display values for the changed fields table cells
+  /**
+   * Formats cell data depending on if is a string, array, or date string
+   * @param {Object} header header key and name
+   * @param {string | array} data field data
+   * @param {string} fieldName field name key
+   */
   const getCellValue = (header, data, fieldName) => {
+    // if the header is the name of the field, get the prettyName of the field
     if (header === 'name') {
       return fieldNames[data];
     } else {
       let value
+      // if the fieldName is birthdate, format the date string using moment
       if (fieldName === 'birthDate') {
         value = data !== '' ? moment(data).format('MMM D, YYYY') : ''
       } else {
+        // if the fieldName is any other field, format it with commas if it is an array, otherwise just  
+        // return the field data
         value = Array.isArray(data) ? data.join(', ') : data;
       }
+      // if the field is empty, return "None"
       return value === [] || value === '' ? <em>None</em> : value;
     }
   };
 
+  /**
+   * For history events that contain a list of changed fields, render the changed fields into a table 
+   * component
+   * @param {array} fields list of changed fields
+   */
   const renderChangedFields = (fields) => {
     const headers = [
       { id: 'name', label: 'Field' },
@@ -76,6 +96,10 @@ export const ParticipantDetailHistory = ({ participant }) => {
     );
   };
 
+  /**
+   * Renders history event components
+   * @param {Object} historyEvent history event object
+   */
   const renderHistoryEvent = (historyEvent) => {
     const { text, fields, timestamp, user } = historyEvent;
     const dateString = moment(timestamp).format('ddd, MMM D YYYY, h:mm a');
@@ -111,7 +135,7 @@ export const ParticipantDetailHistory = ({ participant }) => {
         </div>
       </div>
       <>
-        {events.map((event, index) => (
+        {events.map((event) => (
           <div key={event.timestamp}>
             {renderHistoryEvent(event)}
             <Divider />
