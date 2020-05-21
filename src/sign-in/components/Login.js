@@ -137,7 +137,7 @@ export const LogIn = () => {
       <div className="login-content">
         <img className="login-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
         <Typography align="center" variant="h5">
-          PYCS Staff Login Portal
+          Staff Login Portal
         </Typography>
         <Formik
           initialValues={initialValues}
