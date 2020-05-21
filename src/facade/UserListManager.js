@@ -139,18 +139,15 @@ export default class UserListManager {
       .get()
       .then((doc) => {
         const user = doc.data();
-        console.log(user);
         let batch = this.db.batch();
         if (!!user && !!user.uid) {
+          // add/remove user to/from admin collection for security rules
           data.role === 'staff'
             ? batch.delete(this.adminRef.doc(user.uid))
             : batch.set(this.adminRef.doc(user.uid), { isAdmin: true });
         }
         batch.update(this.userRef.doc(docId), data);
-        batch
-          .commit()
-          .then(onSuccess)
-          .catch((error) => console.log(error));
+        batch.commit().then(onSuccess).catch(onError);
       });
   }
 
@@ -180,6 +177,7 @@ export default class UserListManager {
         let batch = this.db.batch();
 
         if (doc.data().role === 'admin') {
+          // Add UID to admins collection
           batch.set(this.adminRef.doc(uid), { isAdmin: true });
         }
         batch.update(doc.ref, { uid: uid });
@@ -205,6 +203,7 @@ export default class UserListManager {
   deleteUser(user, onSuccess, onError) {
     let batch = this.db.batch();
     if (!!user.uid && user.role === 'admin') {
+      //remove from admins collection
       batch.delete(this.adminRef.doc(user.uid));
     }
     batch.delete(this.userRef.doc(user.id));

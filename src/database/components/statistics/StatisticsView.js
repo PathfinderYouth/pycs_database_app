@@ -50,6 +50,9 @@ export const StatisticsView = inject('participantStore')(
       return { id: group.id, label: group.label };
     });
 
+    /**
+     * Gets current statistics counts from the database
+     */
     const readStats = () => {
       db.getAllStatistics((statistics) => {
         setTotalCounts(statistics.totalCounts);
@@ -58,6 +61,7 @@ export const StatisticsView = inject('participantStore')(
     };
 
     useEffect(() => {
+      //read stats from DB when page loads
       readStats();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -69,6 +73,7 @@ export const StatisticsView = inject('participantStore')(
         !!statsGroupCounts &&
         !!totalCounts
       ) {
+        //Clears loading circle and updates the "last updated" info on the refresh button
         setLoaded(true);
         setLastUpdated(
           'Last updated: ' + moment(statsGroupCounts.createdAt).format('ddd, MMM D YYYY, h:mm a'),

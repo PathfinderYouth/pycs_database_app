@@ -9,7 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 import service from '../../facade/service';
-import { participantStore } from '../../injectables'
+import { participantStore, uiStore } from '../../injectables';
 import './style/TopNavBar.css';
 
 const authService = service.getAuthentication();
@@ -51,7 +51,8 @@ export const TopNavBar = ({ drawerState, handleDrawerOpen }) => {
    */
   const handleSignOut = () => {
     authService.signOut(() => {
-      participantStore.clearStore()
+      participantStore.clearStore();
+      uiStore.setDatabaseActive(false);
     });
   };
 

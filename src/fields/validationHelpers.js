@@ -29,7 +29,7 @@ const sinValidation = (sinString) => {
 export const calculateAge = (dateString) => {
   const today = new moment();
   if (dateString !== '') {
-    return today.diff(moment(dateString), 'years')
+    return today.diff(moment(dateString), 'years');
   }
 };
 
@@ -70,7 +70,7 @@ const commonValidationSchema = {
     }),
   birthDate: yup
     .date()
-    .required('Birthdate is required')
+    .required('Birth date is required')
     .test('age-test', 'Must be between 15 and 30 years old', (value) => ageValidation(value)),
   sin: yup
     .string()

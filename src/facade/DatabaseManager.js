@@ -95,21 +95,25 @@ export default class DatabaseManager {
    */
   _checkSin(docId, sin, onSuccess, onError) {
     if (!!sin) {
-      this.permanentRef.where('sin', '==', sin).get().then((querySnap) => {
-        if (querySnap.docs.length > 0) {
-          querySnap.docs.forEach(queryDocSnap => {
-            // Perform document id check to allow update on that document
-            if (queryDocSnap.id !== docId && onError) {
-              let error = new Error('SIN already exists');
-              error.name = 'DuplicateError';
-              throw error;
-            }
-          });
-        }
+      this.permanentRef
+        .where('sin', '==', sin)
+        .get()
+        .then((querySnap) => {
+          if (querySnap.docs.length > 0) {
+            querySnap.docs.forEach((queryDocSnap) => {
+              // Perform document id check to allow update on that document
+              if (queryDocSnap.id !== docId && onError) {
+                let error = new Error('SIN already exists');
+                error.name = 'DuplicateError';
+                throw error;
+              }
+            });
+          }
 
-        // SIN is valid (no duplicate found)
-        onSuccess();
-      }).catch(onError);
+          // SIN is valid (no duplicate found)
+          onSuccess();
+        })
+        .catch(onError);
       return;
     }
 
@@ -275,9 +279,19 @@ export default class DatabaseManager {
     const updatedFields = this.getUpdatedFields(oldData, newData);
     let updatedHistory = oldHistory;
     if (updatedFields === 'notes') {
-      updatedHistory = this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added', oldHistory)
+      updatedHistory = this.getUpdatedHistory(
+        userName,
+        eventType.UPDATED,
+        'Note added',
+        oldHistory,
+      );
     } else if (updatedFields === 'actionPlan') {
-      updatedHistory = this.getUpdatedHistory(userName, eventType.UPDATED, 'Action plan updated', oldHistory)
+      updatedHistory = this.getUpdatedHistory(
+        userName,
+        eventType.UPDATED,
+        'Action plan updated',
+        oldHistory,
+      );
     } else {
       updatedHistory = this.getUpdatedHistory(
         userName,
@@ -357,30 +371,35 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   addPermanent(data, userName, onSuccess, onError) {
-    this._checkSin(null, data.sin, () => {
-      const newHistory = this.getUpdatedHistory(
-        userName,
-        eventType.CREATED,
-        'Participant record created',
-        data.history,
-      );
-      let document = {
-        ...data,
-        status: status.PENDING,
-        createdAt: moment.utc().format(),
-        history: newHistory,
-      };
-      this._updateCaseInsensitiveFields(document);
+    this._checkSin(
+      null,
+      data.sin,
+      () => {
+        const newHistory = this.getUpdatedHistory(
+          userName,
+          eventType.CREATED,
+          'Participant record created',
+          data.history,
+        );
+        let document = {
+          ...data,
+          status: status.PENDING,
+          createdAt: moment.utc().format(),
+          history: newHistory,
+        };
+        this._updateCaseInsensitiveFields(document);
 
-      this.permanentRef
-        .add(document)
-        .then((docRef) => {
-          if (onSuccess) {
-            onSuccess(docRef.id);
-          }
-        })
-        .catch(onError);
-    }, onError);
+        this.permanentRef
+          .add(document)
+          .then((docRef) => {
+            if (onSuccess) {
+              onSuccess(docRef.id);
+            }
+          })
+          .catch(onError);
+      },
+      onError,
+    );
   }
 
   /**
@@ -413,9 +432,14 @@ export default class DatabaseManager {
    *  Callback function when fail
    */
   updatePermanent(oldData, newData, userName, onSuccess, onError) {
-    this._checkSin(oldData.id, newData.sin, () => {
-      this._updateDocument(this.permanentRef, oldData, newData, userName, onSuccess, onError);
-    }, onError);
+    this._checkSin(
+      oldData.id,
+      newData.sin,
+      () => {
+        this._updateDocument(this.permanentRef, oldData, newData, userName, onSuccess, onError);
+      },
+      onError,
+    );
   }
 
   /**
@@ -505,46 +529,50 @@ export default class DatabaseManager {
    */
   moveToPermanent(data, userName, onSuccess, onError) {
     const { id: docId, history: oldHistory, sin } = data;
-    this._checkSin(null, sin, () => {
-      const updatedHistory = this.getUpdatedHistory(
-        userName,
-        eventType.MOVED,
-        'Participant record saved to database',
-        oldHistory,
-      );
+    this._checkSin(
+      null,
+      sin,
+      () => {
+        const updatedHistory = this.getUpdatedHistory(
+          userName,
+          eventType.MOVED,
+          'Participant record saved to database',
+          oldHistory,
+        );
 
-      let oldDocRef = this.newRef.doc(docId);
-      let newDocRef = this.permanentRef.doc(docId);
-      let updateFunction = (transaction) => {
-        return transaction.get(oldDocRef).then((docSnap) => {
-          let doc = docSnap.data();
-          if (!doc) {
-            throw new Error('Document does not exist');
-          }
+        let oldDocRef = this.newRef.doc(docId);
+        let newDocRef = this.permanentRef.doc(docId);
+        let updateFunction = (transaction) => {
+          return transaction.get(oldDocRef).then((docSnap) => {
+            let doc = docSnap.data();
+            if (!doc) {
+              throw new Error('Document does not exist');
+            }
 
-          doc.status = status.PENDING;
-          doc.history = updatedHistory;
+            doc.status = status.PENDING;
+            doc.history = updatedHistory;
 
-          // Copy the document to permanent collection, delete the old document, and descrease the
-          // count in one transaction
-          transaction.set(newDocRef, doc);
-          transaction.delete(oldDocRef);
-          transaction.update(
-            this.statRef.doc('participant'),
-            { numOfNew: FieldValue.increment(-1)
+            // Copy the document to permanent collection, delete the old document, and descrease the
+            // count in one transaction
+            transaction.set(newDocRef, doc);
+            transaction.delete(oldDocRef);
+            transaction.update(this.statRef.doc('participant'), {
+              numOfNew: FieldValue.increment(-1),
+            });
           });
-        });
-      };
+        };
 
-      this.db
-        .runTransaction(updateFunction)
-        .then(() => {
-          if (onSuccess) {
-            onSuccess(newDocRef.id);
-          }
-        })
-        .catch(onError);
-    }, onError);
+        this.db
+          .runTransaction(updateFunction)
+          .then(() => {
+            if (onSuccess) {
+              onSuccess(newDocRef.id);
+            }
+          })
+          .catch(onError);
+      },
+      onError,
+    );
   }
 
   /**

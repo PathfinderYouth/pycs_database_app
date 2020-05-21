@@ -40,6 +40,7 @@ export const Database = inject(
       setNavigationDrawerOpen,
       setRecordSearchBoxActive,
       setCurrentSearchText,
+      setDatabaseActive,
     } = uiStore;
     const {
       participants,
@@ -82,7 +83,7 @@ export const Database = inject(
     };
 
     /**
-     * Resets the staff list view 
+     * Resets the staff list view
      */
     const handleStaffViewChanged = () => {
       // Reset user-collection query to default state
@@ -183,7 +184,7 @@ export const Database = inject(
     };
 
     /**
-     * Gets content of main page view (participant detail, list (staff or participants), or statistics) 
+     * Gets content of main page view (participant detail, list (staff or participants), or statistics)
      * depending on the currently-set view mode in the UIStore
      */
     const getContent = () => {
@@ -208,6 +209,7 @@ export const Database = inject(
       if (!currentUser) {
         navigate('/sign-in');
       } else {
+        setDatabaseActive(true);
         updateCurrentUser(currentUser.email);
       }
     });
