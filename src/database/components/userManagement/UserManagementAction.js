@@ -9,6 +9,11 @@ import { UserDeleteDialog } from './UserDeleteDialog';
 import { UserEditDialog } from './UserEditDialog';
 import { UserResetPasswordDialog } from './UserResetPasswordDialog';
 
+/**
+ * component of user management actions
+ * @param {Object} row
+ * a user record from user collection
+ */
 export const UserManagementAction = ({ row }) => {
   const { currentUser } = useContext(AuthContext);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -31,7 +36,7 @@ export const UserManagementAction = ({ row }) => {
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
             <IconButton size="small" onClick={() => setDeleteDialogOpen(true)}>
-              <DeleteIcon color="error"/>
+              <DeleteIcon color="error" />
             </IconButton>
           </Tooltip>
         </>

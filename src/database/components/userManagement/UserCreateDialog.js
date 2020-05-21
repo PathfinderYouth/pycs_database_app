@@ -20,6 +20,9 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
   const [errorEmailEmpty, setErrorEmailEmpty] = useState(false);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
 
+  /**
+   * handle adding new user action
+   */
   const handleAddNewUser = () => {
     if (email === '' || name === '') {
       setErrorEmailEmpty(email === '');
@@ -43,13 +46,15 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
       },
     );
   };
+
   return (
     <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Create User</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          In order to finish account creation, the new user must log in using the email address just provided. The 
-          password they enter the first time they log in will be the password associated with their account.
+          In order to finish account creation, the new user must log in using the email address just
+          provided. The password they enter the first time they log in will be the password
+          associated with their account.
         </DialogContentText>
         <TextField
           autoFocus

@@ -53,7 +53,6 @@ export default class AuthenticationManager {
 
   /**
    * sign up an account with provided email and password
-   * admin privillege
    * @param {email: string}
    * new user's email
    * @param {password: string}
@@ -103,7 +102,7 @@ export default class AuthenticationManager {
   }
 
   /**
-   * get current user
+   * get the user of current session
    */
   getCurrentUser() {
     return this.authen.currentUser;

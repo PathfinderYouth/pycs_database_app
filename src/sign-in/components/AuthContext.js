@@ -7,7 +7,7 @@ import './AuthContext.css';
 // get firebase authentication service
 const authService = service.getAuthentication();
 
-// create authcontext to poplute data into React component tree
+// create authcontext to pass current user state into React component tree
 export const AuthContext = React.createContext();
 
 /**
@@ -22,6 +22,10 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [pending, setPending] = useState(true);
 
+  /**
+   * use Firebase authentication onAuthStateChanged real time listener
+   * as an observer on Auth object to get current user
+   */
   useEffect(() => {
     authService.authen.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -33,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     return (
       <div className="auth-context-progress">
         <img className="auth-context-logo" src={Logo} alt="Pathfinder Youth Centre Society logo" />
-        <CircularProgress color="primary"/>
+        <CircularProgress color="primary" />
       </div>
     );
   }

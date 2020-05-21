@@ -18,6 +18,9 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
   const [role, setRole] = useState(record.role);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
 
+  /**
+   * handle editing user action
+   */
   const handleEditUser = () => {
     if (name === '') {
       setErrorNameStatus(name === '');

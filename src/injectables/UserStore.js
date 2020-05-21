@@ -33,6 +33,12 @@ class UserStore {
 
   _isInit = false;
 
+  /**
+   * synchronize firebase authentication current user profile if information of a user
+   * in user collection is updated
+   * @param {email: string}
+   * email of the user gets information updated.
+   */
   updateCurrentUser = (email) => {
     if (!this._isInit) {
       userService.getUser(
@@ -43,9 +49,9 @@ class UserStore {
             return;
           }
           this._currentSignedInUser = user;
-          let cUser = authService.getCurrentUser();
-          if (cUser.displayName !== user.name) {
-            cUser.updateProfile({
+          let authUser = authService.getCurrentUser();
+          if (!!authUser && authUser.displayName !== user.name) {
+            authUser.updateProfile({
               displayName: user.name,
             });
           }
@@ -83,6 +89,9 @@ class UserStore {
       newList.length > 0 ? this._controller.endId === newList[newList.length - 1].id : true;
   };
 
+  /**
+   * An autorun function for making a new query when there are changes in UI.
+   */
   _updateList = autorun(
     () => {
       if (this._controller) {

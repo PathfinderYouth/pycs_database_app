@@ -29,6 +29,9 @@ export const LogIn = () => {
     password: yup.string().required('Password is required'),
   });
 
+  /**
+   * navigate to database ui if current authentication state is persisted.
+   */
   useEffect(() => {
     if (authService.getCurrentUser()) {
       window.location.href = './database';
