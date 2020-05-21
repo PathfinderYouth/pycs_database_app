@@ -37,9 +37,15 @@ class ParticipantStore {
   isListLoading = false;
 
   constructor() {
-    db.getNumOfNew((doc) => {
-      this._statistics = doc;
-    });
+    db.getNumOfNew(
+      (doc) => {
+        this._statistics = doc;
+      },
+      () => {
+        /* Do nothing. This is to catch the Firestore permissions console warning on
+         * the login page. It will try again to get this number once it's logged in. */
+      },
+    );
   }
 
   /**
