@@ -63,7 +63,7 @@ export const ListContainer = inject(
         setCurrentListViewOrder,
         setCurrentListViewOrderBy,
         setCurrentParticipantDetailViewMode,
-        setCurrentParticipantDetailStep
+        setCurrentParticipantDetailStep,
       } = uiStore;
 
       const pageTitle =
@@ -74,7 +74,7 @@ export const ListContainer = inject(
           : 'Staff';
 
       const handleClickNew = () => {
-        setCurrentParticipantDetailStep(0)
+        setCurrentParticipantDetailStep(0);
         setCurrentViewMode(viewModes.PARTICIPANT_DETAIL);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
       };
@@ -204,7 +204,8 @@ export const ListContainer = inject(
               />
             )}
           </Paper>
-          {collection !== collectionType.NEW && (
+          {(currentViewMode === viewModes.PARTICIPANT_LIST ||
+            currentViewMode === viewModes.STAFF_LIST) && (
             <Tooltip
               title={
                 currentViewMode === viewModes.PARTICIPANT_LIST
