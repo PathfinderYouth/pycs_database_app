@@ -12,7 +12,7 @@ const config = {
   cast: {
     object: (value) => {
       return JSON.stringify(value)
-        .replace(/["\[\]{}]/g, '')
+        .replace(/["[\]{}]/g, '')
         .replace(/[\t\n:]|\\n/g, ' ')
         .replace(/,\b/g, '. ');
     },
