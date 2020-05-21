@@ -159,7 +159,7 @@ export const ParticipantDetailView = ({
                 Undo
               </Button>
             ),
-            autoHideDuration: 3000,
+            autoHideDuration: 60000,
           });
           handleClickChangeView();
         },
