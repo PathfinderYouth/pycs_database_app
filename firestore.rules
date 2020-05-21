@@ -54,7 +54,7 @@ service cloud.firestore {
       allow create: if hasRequiredFields();
     }
     match /user/{user} {
-      allow read: if isSignedIn();
+      allow read;
       allow create, update: if isAdmin() && hasEmail();
       allow delete: if isAdmin();
     }
