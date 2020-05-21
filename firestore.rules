@@ -7,6 +7,9 @@ service cloud.firestore {
     function isAdmin() {
     	return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
+    function updateOwnUID() {
+    	return request.resource.data.uid == request.auth.uid;
+    }
     function isValidSin() {
     	return request.resource.data.sin is string &&
       request.resource.data.sin.matches('[0-9]{9}');
@@ -55,7 +58,8 @@ service cloud.firestore {
     }
     match /user/{user} {
       allow read;
-      allow create, update: if isAdmin() && hasEmail();
+      allow update: if (updateOwnUid() || isAdmin()) && hasEmail();
+      allow create: if isAdmin() && hasEmail();
       allow delete: if isAdmin();
     }
     match /admins/{admin} {
