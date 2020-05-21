@@ -134,23 +134,24 @@ export default class UserListManager {
     // Update fields used for case-insensitive search and sort.
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-
-    this.checkEmailNotExist(
-      docId,
-      data.emailLower,
-      () => {
+    this.userRef
+      .doc(docId)
+      .get()
+      .then((doc) => {
+        const user = doc.data();
+        console.log(user);
         let batch = this.db.batch();
-        data.role === 'staff'
-          ? batch.delete(this.adminRef.doc(data.uid))
-          : batch.set(this.adminRef.doc(data.uid), { isAdmin: true });
+        if (!!user && !!user.uid) {
+          data.role === 'staff'
+            ? batch.delete(this.adminRef.doc(user.uid))
+            : batch.set(this.adminRef.doc(user.uid), { isAdmin: true });
+        }
         batch.update(this.userRef.doc(docId), data);
         batch
           .commit()
           .then(onSuccess)
           .catch((error) => console.log(error));
-      },
-      onError,
-    );
+      });
   }
 
   /**
@@ -203,7 +204,7 @@ export default class UserListManager {
    */
   deleteUser(user, onSuccess, onError) {
     let batch = this.db.batch();
-    if (user.role === 'admin') {
+    if (!!user.uid && user.role === 'admin') {
       batch.delete(this.adminRef.doc(user.uid));
     }
     batch.delete(this.userRef.doc(user.id));
