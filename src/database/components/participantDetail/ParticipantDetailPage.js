@@ -7,6 +7,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { ParticipantDetailCreate } from './ParticipantDetailCreate';
 import { ParticipantDetailEdit } from './ParticipantDetailEdit';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
+import { ParticipantDetailActionPlan } from './ParticipantDetailActionPlan';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
 import { ParticipantDetailView } from './ParticipantDetailView';
 import { DetailButton } from './DetailButton';
@@ -40,7 +41,8 @@ export const ParticipantDetailPage = inject(
       userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email;
     }
     const stepsLength = participantDetailSteps.length;
-    const notesStep = stepsLength - 2;
+    const notesStep = stepsLength - 3;
+    const actionPlanStep = stepsLength - 2;
     const historyStep = stepsLength - 1;
 
     /**
@@ -69,6 +71,8 @@ export const ParticipantDetailPage = inject(
     const getParticipantDetailContents = () => {
       if (currentParticipantDetailStep === notesStep) {
         return <ParticipantDetailNotes user={userID} />;
+      } else if (currentParticipantDetailStep === actionPlanStep) {
+        return <ParticipantDetailActionPlan user={userID} />;
       } else if (currentParticipantDetailStep === historyStep) {
         return <ParticipantDetailHistory participant={currentParticipant} />;
       } else {

@@ -127,6 +127,8 @@ export default class DatabaseManager {
   getUpdatedFields(oldData, newData) {
     if (oldData.notes !== newData.notes) {
       return 'notes';
+    } else if (oldData.actionPlan !== newData.actionPlan) {
+      return 'actionPlan';
     } else {
       let updatedFields = [];
       Object.entries(newData).forEach(([key, value]) => {
@@ -271,16 +273,20 @@ export default class DatabaseManager {
   _updateDocument(ref, oldData, newData, userName, onSuccess, onError) {
     const { id: docId, history: oldHistory } = oldData;
     const updatedFields = this.getUpdatedFields(oldData, newData);
-    const updatedHistory =
-      updatedFields === 'notes'
-        ? this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added', oldHistory)
-        : this.getUpdatedHistory(
-            userName,
-            eventType.UPDATED,
-            'Participant record updated',
-            oldHistory,
-            updatedFields,
-          );
+    let updatedHistory = oldHistory;
+    if (updatedFields === 'notes') {
+      updatedHistory = this.getUpdatedHistory(userName, eventType.UPDATED, 'Note added', oldHistory)
+    } else if (updatedFields === 'actionPlan') {
+      updatedHistory = this.getUpdatedHistory(userName, eventType.UPDATED, 'Action plan updated', oldHistory)
+    } else {
+      updatedHistory = this.getUpdatedHistory(
+        userName,
+        eventType.UPDATED,
+        'Participant record updated',
+        oldHistory,
+        updatedFields,
+      );
+    }
 
     const participant = {
       ...newData,
