@@ -145,9 +145,15 @@ export default class UserListManager {
           data.role === 'staff'
             ? batch.delete(this.adminRef.doc(user.uid))
             : batch.set(this.adminRef.doc(user.uid), { isAdmin: true });
+          batch.update(this.userRef.doc(docId), data);
+          batch
+            .commit()
+            .then(onSuccess)
+            .catch((error) => {
+              console.log(error);
+              onError();
+            });
         }
-        batch.update(this.userRef.doc(docId), data);
-        batch.commit().then(onSuccess).catch(onError);
       });
   }
 

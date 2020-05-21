@@ -119,7 +119,7 @@ export const LogIn = () => {
             handleSignIn(email, password, setSubmitting);
           },
           () => {
-            // if the current environment doesn't support session presistence
+            // if the current environment doesn't support session persistence
             // allow login with a warning
             alert(
               'Remember to log out when you finish your current session.\r\n' +

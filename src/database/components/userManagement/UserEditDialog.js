@@ -36,7 +36,7 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
         });
         setEditDialogOpen(false);
       },
-      (error) => {
+      () => {
         enqueueSnackbar('Failed to update user information.', {
           variant: 'error',
         });

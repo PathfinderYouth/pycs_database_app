@@ -40,7 +40,7 @@ export default class AuthenticationManager {
       .then((userCred) => {
         if (onSuccess) {
           let authObj = {
-            type: userCred.opertionType,
+            type: userCred.operationType,
             additional: userCred.additionalUserInfo,
             userName: userCred.user.displayName,
             email: userCred.email,
