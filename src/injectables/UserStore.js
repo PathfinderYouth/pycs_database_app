@@ -56,7 +56,7 @@ class UserStore {
             });
           }
         },
-        (error) => {},
+        () => {},
       );
       this._isInit = true;
     }
