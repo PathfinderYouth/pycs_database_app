@@ -29,7 +29,7 @@ const sinValidation = (sinString) => {
 export const calculateAge = (dateString) => {
   const today = new moment();
   if (dateString !== '') {
-    return today.diff(moment(dateString), 'years')
+    return today.diff(moment(dateString), 'years');
   }
 };
 
@@ -43,10 +43,29 @@ const ageValidation = (dateString) => {
   return age >= 15 && age <= 30;
 };
 
+/**
+ * Validates that the number string (if not empty) is a positive value
+ * @param {string} numberString numerical string
+ */
+const positiveNumberValidation = (numberString) => {
+  if (!!numberString) {
+    const number = parseInt(numberString);
+    return number > -1;
+  } else {
+    return true; // bypass validation if field is empty
+  }
+};
+
 // Validation schema object shared between the intake form and the participant edit & create page forms
 const commonValidationSchema = {
   nameGiven: yup.string().required('Given name is required'),
   nameLast: yup.string().required('Last name is required'),
+  addressPostalCode: yup
+    .string()
+    .matches(
+      /^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/,
+      'Invalid postal code, must be in the format A1A 1A1',
+    ),
   phoneHome: yup
     .string()
     .length(10, 'Must be 10 digits long')
@@ -77,6 +96,12 @@ const commonValidationSchema = {
     .required('SIN is required')
     .length(9, 'Must be 9 digits long')
     .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
+  rent: yup
+    .string()
+    .test('positive-test', 'Must be a positive numerical value', (value) => positiveNumberValidation(value)),
+  numDependants: yup
+    .string()
+    .test('positive-test', 'Must be a positive numerical value', (value) => positiveNumberValidation(value)),
 };
 
 // Validation schema used by the intake form
@@ -84,9 +109,6 @@ export const validationSchema = yup.object().shape(
   {
     ...commonValidationSchema,
     programAppliedFor: yup.string().required('Must select an option'),
-    addressPostalCode: yup
-      .string()
-      .matches(/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/, 'Invalid postal code'),
     emergencyContact1PhoneHome: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneWork: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact1PhoneCell: yup.string().length(10, 'Must be 10 digits long'),
@@ -101,10 +123,10 @@ export const validationSchema = yup.object().shape(
     levelOfEducation: yup.string().required('Please select an option'),
     bcCareCardNumber: yup
       .string()
+      .required('BC care card number is required')
       .test('phn-format', 'Invalid care card number', (value) =>
         value !== undefined ? value.charAt(0) === '9' : false,
       )
-      .required('BC care card number is required')
       .length(10, 'Must be 10 digits long'),
     whyApplied: yup.string().required('Please enter the reason you applied to Pathfinder'),
     whyShouldBeAccepted: yup
