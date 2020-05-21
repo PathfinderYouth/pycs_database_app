@@ -135,6 +135,13 @@ class ParticipantStore {
     if (checkEqual(filter, this._filter)) {
       return;
     }
+
+    let { status: oldStatus, ...oldFilter } = this._filter;
+    let { status: newStatus, ...newFilter } = filter;
+    if (!Object.values(oldFilter)[0] && !Object.values(newFilter)[0]) {
+      return;
+    }
+
     this._filter = filter;
   };
 
