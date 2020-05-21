@@ -8,7 +8,9 @@ service cloud.firestore {
     	return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
     function updateOwnUID() {
-    	return request.resource.data.uid == request.auth.uid;
+    	return isSignedIn() &&
+      request.resource.data.keys().hasAll(['uid']) &&
+      request.resource.data.uid == request.auth.uid;
     }
     function isValidSin() {
     	return request.resource.data.sin is string &&
@@ -24,8 +26,9 @@ service cloud.firestore {
     	return str.matches('[0-9]{10}');
     }
     function hasEmail() {
-    	return request.resource.data.email is string &&
-      request.resource.data.email.size() > 0;
+    	return (request.resource.data.email is string &&
+      request.resource.data.email.size() > 0) ||
+      resource.data.email is string;
     }
     function hasContactInfo() {
     	return (request.resource.data.phoneHome is string &&
@@ -58,12 +61,12 @@ service cloud.firestore {
     }
     match /user/{user} {
       allow read;
-      allow update: if (updateOwnUid() || isAdmin()) && hasEmail();
+      allow update: if updateOwnUID() || isAdmin();
       allow create: if isAdmin() && hasEmail();
       allow delete: if isAdmin();
     }
     match /admins/{admin} {
-    	allow read, write: if isAdmin();
+    	allow read, write;
     }
     match /statistics/{statistic} {
       allow read: if isSignedIn();
