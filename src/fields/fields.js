@@ -239,7 +239,7 @@ export const formSteps = [
       },
       {
         name: 'hopeToGainFromProgram',
-        prettyName: 'Home to gain from program',
+        prettyName: 'Hope to gain from program',
         type: 'text',
         size: 12,
         description: 'What do you hope to gain from our program when you graduate?',

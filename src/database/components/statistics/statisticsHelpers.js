@@ -283,16 +283,17 @@ export const updateStatistics = (callback) => {
   });
 };
 
+
 /**
  * Writes updated statistics to the database
  * @param callback
  */
-const writeStats = (callback) => {
+const writeStats = (participantsList, callback) => {
   db.addStatsCounts(
     totalCounts,
     statisticsGroups,
     () => {
-      callback();
+      callback(participantsList);
     },
     () => {},
   );
@@ -345,5 +346,5 @@ const calculateStats = (participantsList, callback) => {
       }
     });
   });
-  writeStats(callback);
+  writeStats(participantsList, callback);
 };
