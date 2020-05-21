@@ -278,12 +278,12 @@ export const updateStatistics = (callback) => {
   });
 };
 
-const writeStats = (callback) => {
+const writeStats = (participantsList, callback) => {
   db.addStatsCounts(
     totalCounts,
     statisticsGroups,
     () => {
-      callback();
+      callback(participantsList);
     },
     () => {
       console.log('failed');
@@ -332,5 +332,5 @@ const calculateStats = (participantsList, callback) => {
       }
     });
   });
-  writeStats(callback);
+  writeStats(participantsList, callback);
 };
