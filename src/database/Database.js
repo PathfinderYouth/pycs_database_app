@@ -262,7 +262,7 @@ export const Database = inject(
           onActive={() => onActive()}
           onIdle={() => onIdle()}
           debounce={250}
-          timeout={6000} //10 minutes
+          timeout={600000} //10 minutes
         />
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
