@@ -8,11 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
-import service from '../../facade/service';
-import { participantStore, uiStore } from '../../injectables';
 import './style/TopNavBar.css';
-
-const authService = service.getAuthentication();
 
 const drawerWidth = 240;
 
@@ -42,19 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const TopNavBar = ({ drawerState, handleDrawerOpen }) => {
+export const TopNavBar = ({ drawerState, handleDrawerOpen, onLogoutClicked }) => {
   const classes = useStyles();
   const title = 'Pathfinder Youth Centre Society Participant Database';
-
-  /**
-   * Signs the user out and clears the data from the participant store
-   */
-  const handleSignOut = () => {
-    authService.signOut(() => {
-      participantStore.clearStore();
-      uiStore.setDatabaseActive(false);
-    });
-  };
 
   return (
     <AppBar
@@ -79,7 +65,7 @@ export const TopNavBar = ({ drawerState, handleDrawerOpen }) => {
         </Typography>
 
         <Tooltip title="Sign out" aria-label="create" placement="bottom">
-          <IconButton color="inherit" aria-label="log out" onClick={handleSignOut}>
+          <IconButton color="inherit" aria-label="log out" onClick={onLogoutClicked}>
             <ExitToAppIcon />
           </IconButton>
         </Tooltip>

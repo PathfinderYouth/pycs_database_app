@@ -73,25 +73,35 @@ export const Database = inject(
       setLimit: setUserLimit,
     } = userStore;
 
-    const onActive = (e) => {
-      setIdleDialogOpen(false);
-      idleTimer.reset();
-    };
-
-    const onIdle = (e) => {
-      if (idleDialogOpen) {
-        handleTimeout();
-      } else {
-        setIdleDialogOpen(true);
-        idleTimer.reset();
-      }
-    };
-
-    const handleTimeout = () => {
+    /**
+     * Signs the user out and clears the data from the participant store
+     */
+    const logout = () => {
       authService.signOut(() => {
         participantStore.clearStore();
         uiStore.setDatabaseActive(false);
       });
+    };
+
+    /**
+     * When the user is active after being idle, clear dialog and reset timer
+     */
+    const onActive = () => {
+      setIdleDialogOpen(false);
+      idleTimer.reset();
+    };
+
+    /**
+     * When user is idle for 10 minutes, open idle dialog. After 10 more minutes, log out
+     * @param e
+     */
+    const onIdle = () => {
+      if (idleDialogOpen) {
+        logout();
+      } else {
+        setIdleDialogOpen(true);
+        idleTimer.reset();
+      }
     };
 
     /**
@@ -252,22 +262,19 @@ export const Database = inject(
           onActive={() => onActive()}
           onIdle={() => onIdle()}
           debounce={250}
-          timeout={600000} //10 minutes
+          timeout={6000} //10 minutes
         />
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
           drawerState={navigationDrawerOpen}
+          onLogoutClicked={logout}
         />
         <NavDrawer handleDrawerClose={handleDrawerClose} drawerState={navigationDrawerOpen}>
           {getNavDrawerContents()}
         </NavDrawer>
 
         <div className={`${classes.content} database-content`}>{getContent()}</div>
-        <IdleDialog
-          isOpen={idleDialogOpen}
-          setIdleDialogOpen={setIdleDialogOpen}
-          handleTimeout={handleTimeout}
-        />
+        <IdleDialog isOpen={idleDialogOpen} setIdleDialogOpen={setIdleDialogOpen} />
       </div>
     );
   }),
