@@ -12,7 +12,7 @@ import { ParticipantTabs } from './ParticipantTabs';
 import '../style/NavDrawer.css';
 
 /**
- * List view drawer for participant detail tabs
+ * Detail view drawer for participant detail tab pages
  */
 export const DetailViewDrawer = inject(
   'participantStore',
@@ -31,7 +31,7 @@ export const DetailViewDrawer = inject(
     } = uiStore;
 
     /**
-     * Resets the participant detail page
+     * Resets a participant detail tab page
      */
     const handleResetPage = () => {
       setCurrentViewMode(currentListViewMode);
