@@ -8,7 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { AuthContext } from '../../../sign-in/components';
+import { AuthContext } from '../../../sign-in';
 import '../style/NavDrawer.css';
 
 const drawerWidth = 240;
