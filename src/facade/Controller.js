@@ -6,7 +6,7 @@ export default class Controller {
     this._query = query;
 
     // This is an array used for storing the first document and last documents of each page.
-    // It makes the process of paging through the collection possible using Firestore. 
+    // It makes the process of paging through the collection possible using Firestore.
     this._checkPoints = [];
 
     this._limit = limit;
@@ -47,7 +47,7 @@ export default class Controller {
   }
 
   /**
-   * Private helper method for subcribing to real-time changes on the last document of the query.
+   * Private helper method for subscribing to real-time changes on the last document of the query.
    */
   _subscribeToEnd() {
     return this._query.limitToLast(1).onSnapshot({
@@ -60,7 +60,7 @@ export default class Controller {
   }
 
   /**
-   * Unsubcribe all real-time listeners for the query.
+   * Unsubscribe all real-time listeners for the query.
    */
   unsubscribe() {
     this._unsubEnd();
@@ -84,7 +84,7 @@ export default class Controller {
       query = query.startAt(this._checkPoints[this._currentPage]);
     }
 
-    // Unsubcribe previous listeners and start a new query
+    // Unsubscribe previous listeners and start a new query
     this.unsubscribe();
     if (onDirecting) {
       onDirecting();
@@ -108,7 +108,7 @@ export default class Controller {
     let query = this._query;
     query = query.startAfter(this._checkPoints[++this._currentPage]);
 
-    // Unsubcribe previous listeners and start a new query
+    // Unsubscribe previous listeners and start a new query
     this.unsubscribe();
     if (onDirecting) {
       onDirecting();

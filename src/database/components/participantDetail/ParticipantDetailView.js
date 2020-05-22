@@ -18,7 +18,7 @@ import '../style/ParticipantDetailView.css';
  * @param {int} currentStep index of the current step in participantDetailSteps
  * @param {user} string userID (display name or email) of the currently-logged-in user
  * @param {function} handleClickChangeMode toggle function that switches between view and edit mode in UIStore
- * @param {function} handleClickChangeView function that changes the view mode from 'detail' to 'list' 
+ * @param {function} handleClickChangeView function that changes the view mode from 'detail' to 'list'
  */
 export const ParticipantDetailView = ({
   participant,
@@ -95,13 +95,13 @@ export const ParticipantDetailView = ({
     db.moveToPermanent(
       participant,
       user,
-      (updatedParticipant) => {
+      () => {
         enqueueSnackbar('Participant record saved to database.', {
           variant: 'success',
         });
         handleClickChangeView();
       },
-      (error) => {
+      () => {
         enqueueSnackbar('There was a problem saving the participant record.', {
           variant: 'error',
         });
@@ -123,11 +123,11 @@ export const ParticipantDetailView = ({
     if (participantStatus === status.NEW) {
       db.deleteNew(
         docID,
-        (success) => {
+        () => {
           enqueueSnackbar('Submission deleted.');
           handleClickChangeView();
         },
-        (error) => {
+        () => {
           enqueueSnackbar('There was a problem deleting the submission.', {
             variant: 'error',
           });
@@ -137,11 +137,11 @@ export const ParticipantDetailView = ({
     } else if (participantStatus === status.ARCHIVED) {
       db.deletePermanent(
         docID,
-        (success) => {
+        () => {
           enqueueSnackbar('Participant record deleted.');
           handleClickChangeView();
         },
-        (error) => {
+        () => {
           enqueueSnackbar('There was a problem archiving the participant record.', {
             variant: 'error',
           });
@@ -152,10 +152,13 @@ export const ParticipantDetailView = ({
       db.archivePermanent(
         participant,
         user,
-        (updatedParticpant) => {
+        (updatedParticipant) => {
           enqueueSnackbar('Participant record archived.', {
             action: (
-              <Button color="secondary" onClick={() => handleClickRestore(updatedParticpant, user)}>
+              <Button
+                color="secondary"
+                onClick={() => handleClickRestore(updatedParticipant, user)}
+              >
                 Undo
               </Button>
             ),
@@ -163,7 +166,7 @@ export const ParticipantDetailView = ({
           });
           handleClickChangeView();
         },
-        (error) => {
+        () => {
           enqueueSnackbar('There was a problem archiving the participant record.', {
             variant: 'error',
           });
@@ -183,11 +186,11 @@ export const ParticipantDetailView = ({
     db.restorePermanent(
       participant,
       user,
-      (success) => {
+      () => {
         enqueueSnackbar('Participant record restored.', { variant: 'success' });
         handleClickChangeView();
       },
-      (error) => {
+      () => {
         enqueueSnackbar('There was a problem restoring the participant record.', {
           variant: 'error',
         });
@@ -206,11 +209,11 @@ export const ParticipantDetailView = ({
       participant,
       user,
       confirmationNumber,
-      (success) => {
+      () => {
         enqueueSnackbar('Participant approved.', { variant: 'success' });
         handleClickChangeView();
       },
-      (error) => {
+      () => {
         enqueueSnackbar('There was a problem approving the participant.', {
           variant: 'error',
         });
@@ -228,11 +231,11 @@ export const ParticipantDetailView = ({
     db.declinePending(
       participant,
       user,
-      (success) => {
+      () => {
         enqueueSnackbar('Participant declined.');
         handleClickChangeView();
       },
-      (error) => {
+      () => {
         enqueueSnackbar('There was a problem declining the participant.', {
           variant: 'error',
         });

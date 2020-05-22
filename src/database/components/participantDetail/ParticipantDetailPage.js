@@ -13,7 +13,7 @@ import { ParticipantDetailView } from './ParticipantDetailView';
 import { DetailButton } from './DetailButton';
 import { participantStore, uiStore } from '../../../injectables';
 import { participantDetailViewModes, viewModes } from '../../../constants';
-import { participantDetailSteps, getStepIndexFromStepName } from '../../../fields';
+import { getStepIndexFromStepName, participantDetailSteps } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailPage.css';
 

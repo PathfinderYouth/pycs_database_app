@@ -22,7 +22,13 @@ import '../style/UserManagement.css';
  * @param {function} setOpen open dialog handler function
  * @param {string} mode edit or create mode
  */
-export const UserDialog = ({ user = undefined, isCurrentUser = undefined, open, setOpen, mode = 'edit' }) => {
+export const UserDialog = ({
+  user = undefined,
+  isCurrentUser = undefined,
+  open,
+  setOpen,
+  mode = 'edit',
+}) => {
   let db = service.getUserList();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -39,7 +45,7 @@ export const UserDialog = ({ user = undefined, isCurrentUser = undefined, open, 
       .string()
       .email('Invalid email address')
       .required('Please enter a valid email address'),
-    name: yup.string().required('Display name is required')
+    name: yup.string().required('Display name is required'),
   });
 
   /**
@@ -58,7 +64,7 @@ export const UserDialog = ({ user = undefined, isCurrentUser = undefined, open, 
         setOpen(false);
         resetForm();
       },
-      (error) => {
+      () => {
         enqueueSnackbar('There was a problem creating a new user.', {
           variant: 'error',
         });

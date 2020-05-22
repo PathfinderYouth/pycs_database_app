@@ -202,7 +202,7 @@ class ParticipantStore {
 
   /**
    * Setter for collection
-   * @param {string} collection collection type - new | permanenent
+   * @param {string} collection collection type - new | permanent
    */
   setCollection = (collection) => {
     this._collection = collection;

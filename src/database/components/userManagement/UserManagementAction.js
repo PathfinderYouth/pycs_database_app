@@ -19,7 +19,7 @@ export const UserManagementAction = ({ row }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
-  const isCurrentUser = !!currentUser && row.email === currentUser.email
+  const isCurrentUser = !!currentUser && row.email === currentUser.email;
 
   return (
     <>

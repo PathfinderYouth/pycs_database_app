@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +16,7 @@ import { StatisticsCard } from './StatisticsCard';
 import { statisticsGroups, updateStatistics } from './statisticsHelpers';
 import service from '../../../facade/service';
 import '../style/StatisticsView.css';
-import { exportParticipants } from './exportHelpers'
+import { exportParticipants } from './exportHelpers';
 
 const percent = (amount, total) => {
   return total === 0 ? '' : Math.round((amount / total) * 100) + '%';
@@ -171,7 +171,7 @@ export const StatisticsView = inject('participantStore')(
                 )
               ) {
                 setLoaded(false);
-                updateStatistics(participantsList => {
+                updateStatistics((participantsList) => {
                   if (window.confirm('Do you want to save a local copy of the database?')) {
                     exportParticipants(participantsList);
                   }

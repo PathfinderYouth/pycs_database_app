@@ -1,11 +1,11 @@
 import React from 'react';
 import ListItemText from '@material-ui/core/ListItemText';
 import { collectionType, participantDetailViewModes } from '../../../constants';
-import { participantDetailStepNames, stepNames, getStepIndexFromStepName } from '../../../fields';
+import { getStepIndexFromStepName, participantDetailStepNames, stepNames } from '../../../fields';
 import { StyledListItem } from '../StyledListItem';
 
 /**
- * 
+ *
  * @param {function} handleClick tab click handler
  * @param {string} viewMode participant detail view mode - view | edit | create
  * @param {int} stepIndex index of the current step being viewed

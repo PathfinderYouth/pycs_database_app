@@ -98,10 +98,14 @@ const commonValidationSchema = {
     .test('sin-valid', 'Invalid SIN', (value) => sinValidation(value)),
   rent: yup
     .string()
-    .test('positive-test', 'Must be a positive numerical value', (value) => positiveNumberValidation(value)),
+    .test('positive-test', 'Must be a positive numerical value', (value) =>
+      positiveNumberValidation(value),
+    ),
   numDependants: yup
     .string()
-    .test('positive-test', 'Must be a positive numerical value', (value) => positiveNumberValidation(value)),
+    .test('positive-test', 'Must be a positive numerical value', (value) =>
+      positiveNumberValidation(value),
+    ),
 };
 
 // Validation schema used by the intake form

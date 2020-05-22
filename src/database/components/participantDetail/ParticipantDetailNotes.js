@@ -45,7 +45,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
 
     /**
      * OnChange handler for note field
-     * @param {Object} event 
+     * @param {Object} event
      */
     const handleChange = ({ target: { value } }) => {
       if (value !== '') {
@@ -73,7 +73,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               setNewNoteFieldValue('');
               setSubmitting(false);
             },
-            (error) => {
+            () => {
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
@@ -92,7 +92,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
               setNewNoteFieldValue('');
               setSubmitting(false);
             },
-            (error) => {
+            () => {
               enqueueSnackbar('There was a problem adding the note.', {
                 variant: 'error',
               });
@@ -102,7 +102,7 @@ export const ParticipantDetailNotes = inject('participantStore')(
     };
 
     /**
-     * Creates a note object. If the notes field is empty, show an error message, if not, create a notes 
+     * Creates a note object. If the notes field is empty, show an error message, if not, create a notes
      * object with the note text, timestamp, and username.
      */
     const addNote = () => {

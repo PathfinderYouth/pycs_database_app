@@ -7,7 +7,7 @@ import { masks } from '../constants';
  * @param {component} inputRef input component associated with this NumberMask component
  * @param {function} onChange onChange handler function
  * @param {string} name field name
- * @param {Object} other other props passed in from the parent component 
+ * @param {Object} other other props passed in from the parent component
  */
 export const NumberMask = ({ inputRef, onChange, name, ...other }) => {
   return (

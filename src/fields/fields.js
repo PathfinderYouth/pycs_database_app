@@ -135,7 +135,7 @@ export const formSteps = [
       },
       {
         name: 'birthDate',
-        prettyName: 'Birthdate',
+        prettyName: 'Birth date',
         label: 'Date of Birth',
         type: 'date',
         size: 6,
@@ -1016,8 +1016,8 @@ export const actionPlanField = {
 // Action plan step for the participant detail view
 export const actionPlanStep = {
   stepName: 'Action Plan',
-  fields: [actionPlanField]
-}
+  fields: [actionPlanField],
+};
 
 // Special field type for history
 export const historyField = {
@@ -1075,6 +1075,6 @@ export const belongsToStepIndex = (fieldName) => {
  * @return int step index
  */
 export const getStepIndexFromStepName = (stepName) => {
-  const step = participantDetailSteps.find(step => step.stepName === stepName);
+  const step = participantDetailSteps.find((step) => step.stepName === stepName);
   return participantDetailSteps.indexOf(step);
-}
+};
