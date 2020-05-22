@@ -277,7 +277,7 @@ export default class DatabaseManager {
   _updateDocument(ref, oldData, newData, userName, onSuccess, onError) {
     const { id: docId, history: oldHistory } = oldData;
     const updatedFields = this.getUpdatedFields(oldData, newData);
-    let updatedHistory = oldHistory;
+    let updatedHistory;
     if (updatedFields === 'notes') {
       updatedHistory = this.getUpdatedHistory(
         userName,
@@ -552,7 +552,7 @@ export default class DatabaseManager {
             doc.status = status.PENDING;
             doc.history = updatedHistory;
 
-            // Copy the document to permanent collection, delete the old document, and descrease the
+            // Copy the document to permanent collection, delete the old document, and decrease the
             // count in one transaction
             transaction.set(newDocRef, doc);
             transaction.delete(oldDocRef);

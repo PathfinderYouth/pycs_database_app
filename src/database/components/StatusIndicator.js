@@ -6,7 +6,7 @@ import './style/StatusIndicator.css';
 // colour styles for status indicators mapped to the status name
 const useStyles = makeStyles((theme) => ({
   root: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.contrastText,
   },
   approved: {
     backgroundColor: theme.palette.success.main,
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 /**
  * Coloured status indicator component
- * @param {string} status approved | archived | declined | deleted | new | pending 
+ * @param {string} status approved | archived | declined | deleted | new | pending
  */
 export const StatusIndicator = ({ status }) => {
   const classes = useStyles();

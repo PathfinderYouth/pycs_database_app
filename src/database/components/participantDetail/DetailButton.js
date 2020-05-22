@@ -10,7 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
  * @param {confirm} confirm confirm message
  * @param {icon} icon Material-UI Icon component
  * @param {string} color color of the icon, if different from default
- * @param {string} size Material-UI icon size prop 
+ * @param {string} size Material-UI icon size prop
  */
 export const DetailButton = ({ ariaLabel, tooltip, onClick, confirm, icon: Icon, color, size }) => (
   <Tooltip title={tooltip} aria-label={ariaLabel}>

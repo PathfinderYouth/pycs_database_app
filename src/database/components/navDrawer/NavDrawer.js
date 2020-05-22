@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
@@ -8,7 +8,7 @@ import Hidden from '@material-ui/core/Hidden';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { AuthContext } from '../../../sign-in/components/AuthContext';
+import { AuthContext } from '../../../sign-in';
 import '../style/NavDrawer.css';
 
 const drawerWidth = 240;
@@ -65,7 +65,7 @@ export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) 
     if (currentUser) {
       setUserName(!!currentUser.displayName ? currentUser.displayName : currentUser.email);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const drawer = (

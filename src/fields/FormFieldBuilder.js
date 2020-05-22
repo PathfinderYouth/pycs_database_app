@@ -40,7 +40,7 @@ const isFieldDisabled = (field, values) => {
  */
 export const FormFieldBuilder = ({ form, field }) => {
   const { name, type, size } = field;
-  let newField = null;
+  let newField;
   switch (type) {
     case 'select':
       newField = <FormSelect key={name} form={form} field={field} />;

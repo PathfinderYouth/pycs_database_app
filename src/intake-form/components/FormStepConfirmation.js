@@ -5,7 +5,7 @@ import Link from '@material-ui/core/Link';
 import './style/IntakeForm.css';
 
 /**
- * Final step of the intake form, shown after the form data is sucessfully posted to the Firestore database
+ * Final step of the intake form, shown after the form data is successfully posted to the Firestore database
  */
 export const FormStepConfirmation = () => {
   return (

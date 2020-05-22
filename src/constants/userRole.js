@@ -1,4 +1,4 @@
 export const userRole = {
-  ADMIN: "admin",
-  STAFF: "staff",
+  ADMIN: 'admin',
+  STAFF: 'staff',
 };

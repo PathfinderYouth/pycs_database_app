@@ -16,7 +16,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode, us
   const step = participantDetailSteps[currentStep];
 
   /**
-   * OnSubmit handler function. Initiate a connection to the database to add a new participant record to the 
+   * OnSubmit handler function. Initiate a connection to the database to add a new participant record to the
    * permanent collection in Firestore. Displays a success or failure snackbar once complete.
    * @param {Object} values form values object
    * @param {function} setSubmitting Formik function to set submitting status
@@ -26,7 +26,7 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode, us
     db.addPermanent(
       values,
       user,
-      (newParticipant) => {
+      () => {
         setSubmitting(false);
         enqueueSnackbar('Participant record created.', {
           variant: 'success',
@@ -34,9 +34,10 @@ export const ParticipantDetailCreate = ({ currentStep, handleClickChangeMode, us
         handleClickChangeMode();
       },
       (error) => {
-        let message = error.name === 'DuplicateError'
-          ? 'Unable to save participant record, record with that SIN already exists'
-          : 'There was a problem saving the participant record.';
+        let message =
+          error.name === 'DuplicateError'
+            ? 'Unable to save participant record, record with that SIN already exists'
+            : 'There was a problem saving the participant record.';
         enqueueSnackbar(message, {
           variant: 'error',
         });

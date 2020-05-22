@@ -283,7 +283,6 @@ export const updateStatistics = (callback) => {
   });
 };
 
-
 /**
  * Writes updated statistics to the database
  * @param callback

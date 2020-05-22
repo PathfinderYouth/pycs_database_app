@@ -26,8 +26,8 @@ export const ParticipantDetailEdit = ({
   const participantStatus = !!participant ? participant.status : undefined;
 
   /**
-   * OnSubmit handler function. If changes were made (participant data has different values than the form), 
-   * initiate a connection to the database to push the changes. Displays a success or failure snackbar once 
+   * OnSubmit handler function. If changes were made (participant data has different values than the form),
+   * initiate a connection to the database to push the changes. Displays a success or failure snackbar once
    * complete. If no changes were made, snackbar informing the user.
    * @param {Object} values form values object
    * @param {function} setSubmitting Formik function to set submitting status
@@ -49,7 +49,7 @@ export const ParticipantDetailEdit = ({
               onSuccessfulEdit(updatedParticipant);
               handleClickChangeMode();
             },
-            (error) => {
+            () => {
               enqueueSnackbar('There was a problem updating the participant record.', {
                 variant: 'error',
               });

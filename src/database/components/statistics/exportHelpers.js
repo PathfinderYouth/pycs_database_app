@@ -68,7 +68,7 @@ const config = {
     },
     {
       key: 'birthDate',
-      header: 'Birthdate',
+      header: 'Birth date',
     },
     {
       key: 'emergencyContact1Name',
@@ -375,7 +375,7 @@ const config = {
       header: 'Employment goals',
     },
   ],
-}
+};
 
 /**
  * This class is used for export participant list into a csv file.
@@ -390,16 +390,16 @@ export const exportParticipants = (participants) => {
   // Create a stream for parsing participant record into a row in csv file
   const stringifier = csvStringify(config);
 
-  stringifier.on('readable', async function(){
+  stringifier.on('readable', async function () {
     // Write each row into csv file
     let row = stringifier.read();
     return !!row ? await writer.write(row) : writer.close();
-  })
+  });
 
   for (const participant of participants) {
     // Parse each participant into a row in csv file
     stringifier.write(participant);
-  };
+  }
 
   stringifier.end();
-}
+};

@@ -17,8 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { RecordSearchBar } from './RecordSearchBar';
 import { SortingTableHead } from './SortingTableHead';
 import { StatusIndicator } from '../StatusIndicator';
-import { uiStore, participantStore, userStore } from '../../../injectables';
-import { viewModes, participantDetailViewModes, collectionType } from '../../../constants';
+import { participantStore, uiStore, userStore } from '../../../injectables';
+import { collectionType, participantDetailViewModes, viewModes } from '../../../constants';
 import { UserDialog, UserManagementAction } from '../userManagement';
 import '../style/ListContainer.css';
 
@@ -39,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
 /**
  * Generic list container used for both participant records and user list
  * @param {array} records list of objects to populate table with
- * @param {function} onRowClicked handler function for row clickes
- * @param {function} onPrevButtonClicked handler functionfor next backward table pagination
- * @param {function} onNextButtonClicked handler functionfor next forward table pagination
+ * @param {function} onRowClicked handler function for row clicks
+ * @param {function} onPrevButtonClicked handler function for next backward table pagination
+ * @param {function} onNextButtonClicked handler function for next forward table pagination
  * @param {boolean} nextButtonDisabled flag to disable next button
  * @param {function} onOrderChanged handler function for sorting events
  * @param {function} onSearchClicked handler function for searching events
@@ -97,9 +97,9 @@ export const ListContainer = inject(
       };
 
       /**
-       * Sets the object represented by the table row to the currently-selected user or participant in the 
+       * Sets the object represented by the table row to the currently-selected user or participant in the
        * respective store
-       * @param {Object} clickedRow 
+       * @param {Object} clickedRow
        */
       const handleParticipantRowClicked = (clickedRow) => {
         onRowClicked(clickedRow);
@@ -149,7 +149,7 @@ export const ListContainer = inject(
 
       /**
        * Handler for changing number of rows in the table
-       * @param {Event} event 
+       * @param {Event} event
        */
       const handleChangeRowsPerPage = (event) => {
         // Go back to the first page whenever the user changes the number of rows per page
@@ -160,7 +160,7 @@ export const ListContainer = inject(
       /**
        * Renders cell data
        * @param {Object} data row data
-       * @param {string} column header name 
+       * @param {string} column header name
        */
       const ListCell = ({ data, column }) => {
         const isDate = ['birthDate', 'createdAt'].includes(column);
@@ -200,7 +200,9 @@ export const ListContainer = inject(
                     {records.map((row) => (
                       <TableRow
                         hover
-                        classes={currentViewMode === viewModes.PARTICIPANT_LIST && { root: classes.root }}
+                        classes={
+                          currentViewMode === viewModes.PARTICIPANT_LIST && { root: classes.root }
+                        }
                         key={row.id}
                         onClick={() =>
                           currentViewMode === viewModes.PARTICIPANT_LIST &&

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Typography from '@material-ui/core/Typography';
@@ -221,7 +221,7 @@ export const IntakeFormPage = inject('uiStore')(
           </div>
         )}
 
-        {/* Current form stap page */}
+        {/* Current form step page */}
         <div className="intake-form-container" ref={(ref) => (formContainerDiv = ref)}>
           <div className="intake-form-step">{getFormStep(form, currentIntakeFormStep)}</div>
         </div>

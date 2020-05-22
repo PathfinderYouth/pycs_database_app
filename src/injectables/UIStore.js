@@ -143,7 +143,7 @@ class UIStore {
       : this.currentParticipantSearchField;
   }
 
-  // sets currentSearch text depending on currentSearchBalue
+  // sets currentSearch text depending on currentSearchValue
   get currentSearchText() {
     return this.currentSearchValue;
   }

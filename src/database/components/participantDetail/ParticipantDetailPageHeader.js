@@ -187,7 +187,7 @@ export const ParticipantDetailPageHeader = ({
   ];
 
   /**
-   * Renders buttons depenting on the current viewing mode. If in 'view' mode, render buttons based on the 
+   * Renders buttons depending on the current viewing mode. If in 'view' mode, render buttons based on the
    * participant status. If in 'edit' or 'create' mode, render buttons according to the mode.
    */
   const getButtons = () => {

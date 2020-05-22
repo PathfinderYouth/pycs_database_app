@@ -56,7 +56,7 @@ export const ParticipantDetailActionPlan = inject('participantStore')(
               setSubmitting(false);
               setEditState(false);
             },
-            (error) => {
+            () => {
               enqueueSnackbar('There was a problem updating the action plan.', {
                 variant: 'error',
               });
@@ -75,7 +75,7 @@ export const ParticipantDetailActionPlan = inject('participantStore')(
               setSubmitting(false);
               setEditState(false);
             },
-            (error) => {
+            () => {
               enqueueSnackbar('There was a problem updating the action plan.', {
                 variant: 'error',
               });

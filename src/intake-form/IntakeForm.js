@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import moment from 'moment';
 import service from '../facade/service';
 import { IntakeFormPage } from './components';
-import { initialValues, formSteps, validationSchema } from '../fields';
+import { formSteps, initialValues, validationSchema } from '../fields';
 import { uiStore } from '../injectables';
 
 /**
@@ -22,7 +22,7 @@ export const IntakeForm = () => {
         service.getDatabase().addNew(
           // formats the birth date field into UTC
           { ...values, birthDate: moment(values.birthDate).utc().format() },
-          (docId) => {
+          () => {
             setSubmitting(false);
             enqueueSnackbar('Application successfully submitted.', {
               variant: 'success',

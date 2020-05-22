@@ -24,7 +24,6 @@ export const ParticipantDetailHistory = ({ participant }) => {
     events = !!history ? history : [];
     participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
   }
-  
 
   /**
    * Formats cell data depending on if is a string, array, or date string
@@ -37,12 +36,12 @@ export const ParticipantDetailHistory = ({ participant }) => {
     if (header === 'name') {
       return fieldNames[data];
     } else {
-      let value
-      // if the fieldName is birthdate, format the date string using moment
+      let value;
+      // if the fieldName is birth date, format the date string using moment
       if (fieldName === 'birthDate') {
-        value = data !== '' ? moment(data).format('MMM D, YYYY') : ''
+        value = data !== '' ? moment(data).format('MMM D, YYYY') : '';
       } else {
-        // if the fieldName is any other field, format it with commas if it is an array, otherwise just  
+        // if the fieldName is any other field, format it with commas if it is an array, otherwise just
         // return the field data
         value = Array.isArray(data) ? data.join(', ') : data;
       }
@@ -52,7 +51,7 @@ export const ParticipantDetailHistory = ({ participant }) => {
   };
 
   /**
-   * For history events that contain a list of changed fields, render the changed fields into a table 
+   * For history events that contain a list of changed fields, render the changed fields into a table
    * component
    * @param {array} fields list of changed fields
    */
