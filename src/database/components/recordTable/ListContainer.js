@@ -137,7 +137,7 @@ export const ListContainer = inject(
        * Table pagination handler
        * @param {int} newPage page index
        */
-      const handleChangePage = (newPage) => {
+      const handleChangePage = (event, newPage) => {
         // Checking the direction when moving from one page to another
         if (newPage < page) {
           onPrevButtonClicked();

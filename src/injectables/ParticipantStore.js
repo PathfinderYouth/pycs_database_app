@@ -212,14 +212,20 @@ class ParticipantStore {
    * Backward page change handler function
    */
   goToPreviousPage = () => {
-    this._controller.back(() => (this._participants = []));
+    this._controller.back(() => {
+      this.isListLoading = true;
+      this._participants = [];
+    });
   };
 
   /**
    * Forward page change handler function
    */
   goToNextPage = () => {
-    this._controller.next(() => (this._participants = []));
+    this._controller.next(() => {
+      this.isListLoading = true;
+      this._participants = [];
+    });
   };
 
   /**
