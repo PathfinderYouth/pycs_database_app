@@ -19,6 +19,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-recaptcha": "^2.0.1",
+    "react-idle-timer": "^4.2.12",
     "react-number-format": "^4.4.1",
     "react-scripts": "3.4.1",
     "streamsaver": "^2.0.4",

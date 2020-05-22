@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
+import IdleTimer from 'react-idle-timer';
 import { navigate } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
+  IdleDialog,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
@@ -15,6 +17,9 @@ import { AuthContext } from '../sign-in';
 import { viewModes } from '../constants';
 import { participantStore, uiStore, userStore } from '../injectables';
 import './Database.css';
+import service from '../facade/service';
+
+const authService = service.getAuthentication();
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -34,6 +39,8 @@ export const Database = inject(
   observer(() => {
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
+    const [idleTimer, setIdleTimer] = useState(null);
+    const [idleDialogOpen, setIdleDialogOpen] = useState(false);
     const {
       currentViewMode,
       navigationDrawerOpen,
@@ -65,6 +72,37 @@ export const Database = inject(
       setSorter: setUserSorter,
       setLimit: setUserLimit,
     } = userStore;
+
+    /**
+     * Signs the user out and clears the data from the participant store
+     */
+    const logout = () => {
+      authService.signOut(() => {
+        participantStore.clearStore();
+        uiStore.setDatabaseActive(false);
+      });
+    };
+
+    /**
+     * When the user is active after being idle, clear dialog and reset timer
+     */
+    const onActive = () => {
+      setIdleDialogOpen(false);
+      idleTimer.reset();
+    };
+
+    /**
+     * When user is idle for 10 minutes, open idle dialog. After 10 more minutes, log out
+     * @param e
+     */
+    const onIdle = () => {
+      if (idleDialogOpen) {
+        logout();
+      } else {
+        setIdleDialogOpen(true);
+        idleTimer.reset();
+      }
+    };
 
     /**
      * Changes the participant list view depending on the collection, status, and search text
@@ -216,15 +254,27 @@ export const Database = inject(
 
     return (
       <div className={`${classes.root} database-root`}>
+        <IdleTimer
+          ref={(ref) => {
+            setIdleTimer(ref);
+          }}
+          element={document}
+          onActive={() => onActive()}
+          onIdle={() => onIdle()}
+          debounce={250}
+          timeout={600000} //10 minutes
+        />
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
           drawerState={navigationDrawerOpen}
+          onLogoutClicked={logout}
         />
         <NavDrawer handleDrawerClose={handleDrawerClose} drawerState={navigationDrawerOpen}>
           {getNavDrawerContents()}
         </NavDrawer>
 
         <div className={`${classes.content} database-content`}>{getContent()}</div>
+        <IdleDialog isOpen={idleDialogOpen} setIdleDialogOpen={setIdleDialogOpen} />
       </div>
     );
   }),
