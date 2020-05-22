@@ -56,7 +56,7 @@ export const ListViewDrawer = inject(
 
     /**
      * Observes if participants list is expanded and
-     * switchs bwteen expand-less and expand-more modes
+     * switches between expand-less and expand-more modes
      */
     const expandClick = (event) => {
       event.stopPropagation();
