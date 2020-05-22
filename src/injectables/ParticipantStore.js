@@ -148,7 +148,7 @@ class ParticipantStore {
 
     let { status: oldStatus, ...oldFilter } = this._filter;
     let { status: newStatus, ...newFilter } = filter;
-    if (!Object.values(oldFilter)[0] && !Object.values(newFilter)[0]) {
+    if (oldStatus === newStatus && !Object.values(oldFilter)[0] && !Object.values(newFilter)[0]) {
       return;
     }
 
