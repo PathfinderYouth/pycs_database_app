@@ -171,11 +171,17 @@ class ParticipantStore {
   };
 
   goToPreviousPage = () => {
-    this._controller.back(() => (this._participants = []));
+    this._controller.back(() => {
+      this.isListLoading = true;
+      this._participants = [];
+    });
   };
 
   goToNextPage = () => {
-    this._controller.next(() => (this._participants = []));
+    this._controller.next(() => {
+      this.isListLoading = true;
+      this._participants = [];
+    });
   };
 
   setIsListLoading = (isLoading) => {
