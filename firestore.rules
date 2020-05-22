@@ -1,17 +1,79 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+    	return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function updateOwnUID() {
+    	return isSignedIn() &&
+      request.resource.data.keys().hasAll(['uid']) &&
+      request.resource.data.uid == request.auth.uid;
+    }
+    function isValidSin() {
+    	return request.resource.data.sin is string &&
+      request.resource.data.sin.matches('[0-9]{9}');
+    }
+    function hasName() {
+    	return request.resource.data.nameLast is string &&
+      request.resource.data.nameLast.size() > 0 &&
+      request.resource.data.nameGiven is string &&
+      request.resource.data.nameGiven.size() > 0;
+    }
+    function isValidPhone(str) {
+    	return str.matches('[0-9]{10}');
+    }
+    function hasEmail() {
+    	return (request.resource.data.email is string &&
+      request.resource.data.email.size() > 0) ||
+      resource.data.email is string;
+    }
+    function hasContactInfo() {
+    	return (request.resource.data.phoneHome is string &&
+      isValidPhone(request.resource.data.phoneHome)) ||
+      (request.resource.data.phoneCell is string &&
+      isValidPhone(request.resource.data.phoneCell)) ||
+      hasEmail();
+    }
+    function hasBirthdate() {
+    	return request.resource.data.birthDate is string &&
+      request.resource.data.birthDate.size() > 0;
+    }
+    function hasRequiredFields() {
+    	return isValidSin() && hasName() &&
+      hasContactInfo() && hasBirthdate();
+    }
+    function isArchived() {
+    	return resource.data.status == 'archived';
+    }
 
-    // This rule allows anyone on the internet to view, edit, and delete
-    // all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // your app will lose access to your Firestore database
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2020, 5, 27);
+    match /permanent/{participant} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && hasRequiredFields();
+      allow delete: if isSignedIn() && isArchived();
+    }
+    match /new/{participant} {
+      allow read, delete: if isSignedIn();
+      allow update: if isSignedIn() && hasRequiredFields();
+      allow create: if hasRequiredFields();
+    }
+    match /user/{user} {
+      allow read;
+      allow update: if updateOwnUID() || isAdmin();
+      allow create: if isAdmin() && hasEmail();
+      allow delete: if isAdmin();
+    }
+    match /admins/{admin} {
+    	allow read, write;
+    }
+    match /statistics/{statistic} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+    match /statistics/participant {
+      allow read, update, create;
     }
   }
 }

@@ -239,7 +239,7 @@ export const formSteps = [
       },
       {
         name: 'hopeToGainFromProgram',
-        prettyName: 'Home to gain from program',
+        prettyName: 'Hope to gain from program',
         type: 'text',
         size: 12,
         description: 'What do you hope to gain from our program when you graduate?',
@@ -569,7 +569,6 @@ export const formSteps = [
         description:
           'How much do you pay for rent per month? (Please put $0 if you are not required to pay rent at your place of residence or where you are staying)',
         adornment: '$',
-        mask: 'rent',
       },
       {
         name: 'hasBankAccount',
@@ -1046,19 +1045,6 @@ export const initialValues = formSteps.reduce((values, step) => {
   });
   return values;
 }, {});
-
-// Required fields of the form extracted from formSteps, used to determine which fields to validate when progressing through steps
-export const requiredFields = formSteps.reduce((reqs, step) => {
-  const fields = step.fields;
-  let stepReqs = [];
-  fields.forEach((field) => {
-    if (field.required) {
-      stepReqs.push(field.name);
-    }
-  });
-  reqs.push(stepReqs);
-  return reqs;
-}, []);
 
 /**
  * Determines which step a field belongs to using its name and returns the step index

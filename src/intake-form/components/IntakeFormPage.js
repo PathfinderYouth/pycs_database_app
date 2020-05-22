@@ -13,7 +13,7 @@ import { FormStepStart } from './FormStepStart';
 import { FormStepConfirmation } from './FormStepConfirmation';
 import { FormStep } from './FormStep';
 import { uiStore } from '../../injectables';
-import { formSteps, requiredFields } from '../../fields';
+import { formSteps } from '../../fields';
 import './style/IntakeForm.css';
 
 /**
@@ -67,9 +67,10 @@ export const IntakeFormPage = inject('uiStore')(
       const { errors, setFieldTouched } = form;
       let hasErrors = false;
       if (currentIntakeFormStep > -1) {
-        requiredFields[currentIntakeFormStep].forEach((field) => {
-          setFieldTouched(field);
-          if (!!errors[field]) {
+        formSteps[currentIntakeFormStep].fields.forEach((field) => {
+          const { name: fieldName } = field;
+          setFieldTouched(fieldName);
+          if (!!errors[fieldName]) {
             hasErrors = true;
           }
         });

@@ -16,6 +16,7 @@ import { StatisticsCard } from './StatisticsCard';
 import { statisticsGroups, updateStatistics } from './statisticsHelpers';
 import service from '../../../facade/service';
 import '../style/StatisticsView.css';
+import { exportParticipants } from './exportHelpers'
 
 const percent = (amount, total) => {
   return total === 0 ? '' : Math.round((amount / total) * 100) + '%';
@@ -50,6 +51,9 @@ export const StatisticsView = inject('participantStore')(
       return { id: group.id, label: group.label };
     });
 
+    /**
+     * Gets current statistics counts from the database
+     */
     const readStats = () => {
       db.getAllStatistics((statistics) => {
         setTotalCounts(statistics.totalCounts);
@@ -58,6 +62,7 @@ export const StatisticsView = inject('participantStore')(
     };
 
     useEffect(() => {
+      //read stats from DB when page loads
       readStats();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -69,6 +74,7 @@ export const StatisticsView = inject('participantStore')(
         !!statsGroupCounts &&
         !!totalCounts
       ) {
+        //Clears loading circle and updates the "last updated" info on the refresh button
         setLoaded(true);
         setLastUpdated(
           'Last updated: ' + moment(statsGroupCounts.createdAt).format('ddd, MMM D YYYY, h:mm a'),
@@ -165,7 +171,10 @@ export const StatisticsView = inject('participantStore')(
                 )
               ) {
                 setLoaded(false);
-                updateStatistics(() => {
+                updateStatistics(participantsList => {
+                  if (window.confirm('Do you want to save a local copy of the database?')) {
+                    exportParticipants(participantsList);
+                  }
                   readStats();
                 });
               }

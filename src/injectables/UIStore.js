@@ -63,6 +63,8 @@ class UIStore {
 
   navigationDrawerOpen = false;
 
+  databaseActive = false;
+
   get headers() {
     return this.currentViewMode === viewModes.STAFF_LIST
       ? this.staffHeaders
@@ -117,7 +119,7 @@ class UIStore {
 
   setCurrentIntakeFormStep = (stepIndex) => {
     this.currentIntakeFormStep = stepIndex;
-  }
+  };
 
   setCurrentViewMode = (viewMode) => {
     this.currentViewMode = viewMode;
@@ -166,6 +168,10 @@ class UIStore {
       this.currentParticipantViewOrderBy = orderBy;
     }
   };
+
+  setDatabaseActive = (isActive) => {
+    this.databaseActive = isActive;
+  };
 }
 
 decorate(UIStore, {
@@ -183,6 +189,7 @@ decorate(UIStore, {
   visitedIntakeFormSteps: observable,
   currentSearchValue: observable,
   recordSearchBoxActive: observable,
+  databaseActive: observable,
   headers: computed,
   filters: computed,
   currentDetailViewMode: computed,
@@ -202,6 +209,7 @@ decorate(UIStore, {
   setNavigationDrawerOpen: action,
   setCurrentListViewOrder: action,
   setCurrentListViewOrderBy: action,
+  setDatabaseActive: action,
 });
 
 let participantStore = new UIStore();

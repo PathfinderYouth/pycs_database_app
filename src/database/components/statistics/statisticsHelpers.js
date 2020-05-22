@@ -264,7 +264,12 @@ export const statisticsGroups = [
   },
 ];
 
+/**
+ * Resets statistics counts and gets data from the database
+ * @param callback
+ */
 export const updateStatistics = (callback) => {
+  // Reset counts
   totalCounts.forEach((item) => (item.count = 0));
   statisticsGroups.forEach((group) => {
     group.subcategories.forEach((sub) => {
@@ -278,19 +283,28 @@ export const updateStatistics = (callback) => {
   });
 };
 
-const writeStats = (callback) => {
+
+/**
+ * Writes updated statistics to the database
+ * @param callback
+ */
+const writeStats = (participantsList, callback) => {
   db.addStatsCounts(
     totalCounts,
     statisticsGroups,
     () => {
-      callback();
+      callback(participantsList);
     },
-    () => {
-      console.log('failed');
-    },
+    () => {},
   );
 };
 
+/**
+ * Counts the number of participants that apply for each of the
+ * demographics we do statistics on
+ * @param participantsList
+ * @param callback
+ */
 const calculateStats = (participantsList, callback) => {
   const monthStart = moment().startOf('month');
   const yearStart = moment().startOf('year');
@@ -332,5 +346,5 @@ const calculateStats = (participantsList, callback) => {
       }
     });
   });
-  writeStats(callback);
+  writeStats(participantsList, callback);
 };
