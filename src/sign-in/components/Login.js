@@ -46,13 +46,12 @@ export const LogIn = () => {
    */
   const handleSignUp = (userEmail, userPassword) => {
     authService.signUp(userEmail, userPassword, (user) => {
-      
       userService.updateFirstTimeUser(user.email, user.uid, (doc) => {
         let newUser = authService.getCurrentUser();
         newUser.updateProfile({ displayName: doc.name }).then(() => {
           window.location.href = './database';
         });
-      }, (error)=>{alert(error)},);
+      });
     });
   };
 
