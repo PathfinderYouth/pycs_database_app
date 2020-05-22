@@ -17,7 +17,7 @@ import { formSteps } from '../../fields';
 import './style/IntakeForm.css';
 
 /**
- * Container component for the Intake Form. Displays different form pages depending on the current intake 
+ * Container component for the Intake Form. Displays different form pages depending on the current intake
  * form step set in the UIStore
  * @param {Object} form Formik object
  */
@@ -32,6 +32,22 @@ export const IntakeFormPage = inject('uiStore')(
     const theme = useTheme();
     const isFullSize = useMediaQuery(theme.breakpoints.up('md'));
     let formContainerDiv; // reference to form container div
+    let vh; // reference to the viewport height
+
+    /**
+     * Get viewport height on mobile and set --vh variable for css use.
+     */
+    const setViewportHeight = () => {
+      vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setViewportHeight();
+
+    // listen to the resize event
+    window.addEventListener('resize', () => {
+      setViewportHeight();
+    });
 
     /**
      * Validates form on initial load, generating errors that must be cleared in order to proceed
