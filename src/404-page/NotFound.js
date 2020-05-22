@@ -5,6 +5,9 @@ import Card from '@material-ui/core/Card';
 import { Link } from '@reach/router';
 import './style/NotFound.css';
 
+/**
+ * 404-not found component that appears when the user enters an invalid value in the url
+ */
 export const NotFound = () => {
   return (
     <div className="root">

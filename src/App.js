@@ -11,6 +11,9 @@ import { participantStore, uiStore, userStore } from './injectables';
 import { theme } from './ui';
 import './App.css';
 
+/**
+ * Entry point of the app and routing components
+ */
 const App = () => (
   <ThemeProvider theme={theme}>
     <AuthProvider>

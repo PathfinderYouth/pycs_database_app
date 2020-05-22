@@ -45,6 +45,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Generic navigation drawer component
+ * @param {Object} window global window object
+ * @param {Component} children child components
+ * @param {boolean} drawerState open/close state of the drawer
+ * @param {function} handleDrawerClose drawer open handler for when the drawer hides on narrow views
+ */
 export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) => {
   const classes = useStyles();
   const theme = useTheme();

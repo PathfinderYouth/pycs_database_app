@@ -5,10 +5,18 @@ import { uiStore } from '../injectables';
 
 const db = service.getDatabase();
 
+/**
+ * Object equality function
+ * @param {Object} obj1
+ * @param {Object} obj2
+ */
 const checkEqual = (obj1, obj2) => {
   return Object.entries(obj1).sort().toString() === Object.entries(obj2).sort().toString();
 };
 
+/**
+ * MobX state management store for the participant data
+ */
 class ParticipantStore {
   documentType = {
     ADDED: 'added',
@@ -16,24 +24,34 @@ class ParticipantStore {
     REMOVED: 'removed',
   };
 
+  // current filter
   _filter = { status: null };
 
+  // current sorter
   _sorter = { createdAt: 'desc' };
 
+  // number of results allowed per page
   _limit = 20;
 
+  // list of participants fetched from Firestore
   _participants = [];
 
+  // currently-selected participant
   _currentParticipant = null;
 
+  // current collection being fetched - new | permanent
   _collection = collectionType.PERMANENT;
 
+  // Controller object for filtering/sorting/listening
   _controller = null;
 
+  // isLastPage flag
   _isLastPage = true;
 
+  // statistics fetched from the database
   _statistics = null;
 
+  // isListLoading flag
   isListLoading = false;
 
   constructor() {
@@ -137,10 +155,18 @@ class ParticipantStore {
     { delay: 500 },
   );
 
+  /**
+   * Setter for currentParticipant
+   * @param {Object} participant participant data object
+   */
   setCurrentParticipant = (participant) => {
     this._currentParticipant = participant;
   };
 
+  /**
+   * Setter for filter
+   * @param {Object} filter filter object
+   */
   setFilter = (filter) => {
     if (checkEqual(filter, this._filter)) {
       return;
@@ -155,6 +181,10 @@ class ParticipantStore {
     this._filter = filter;
   };
 
+  /**
+   * Setter for sorter
+   * @param {Object} sorter sorter object
+   */
   setSorter = (sorter) => {
     if (checkEqual(sorter, this._sorter)) {
       return;
@@ -162,41 +192,68 @@ class ParticipantStore {
     this._sorter = sorter;
   };
 
+  /**
+   * Setter for limit
+   * @param {int} limit page limit
+   */
   setLimit = (limit) => {
     this._limit = limit;
   };
 
+  /**
+   * Setter for collection
+   * @param {string} collection collection type - new | permanenent
+   */
   setCollection = (collection) => {
     this._collection = collection;
   };
 
+  /**
+   * Backward page change handler function
+   */
   goToPreviousPage = () => {
     this._controller.back(() => (this._participants = []));
   };
 
+  /**
+   * Forward page change handler function
+   */
   goToNextPage = () => {
     this._controller.next(() => (this._participants = []));
   };
 
+  /**
+   * Setter for isLoading flag
+   * @param {boolean} isLoading isLoading flag
+   */
   setIsListLoading = (isLoading) => {
     this.isListLoading = isLoading;
   };
 
+  /**
+   * Getter for participants
+   */
   get participants() {
     return this._participants;
   }
 
+  /**
+   * Getter for collection
+   */
   get collection() {
     return this._collection;
   }
 
   /**
-   * Gets the currently-selected participant
+   * Getter for currentParticipant
    */
   get currentParticipant() {
     return this._currentParticipant;
   }
 
+  /**
+   * Getter for numOfNew. Returns 0 if statistics is not defined
+   */
   get numOfNewParticipants() {
     if (this._statistics && this._statistics.numOfNew) {
       return this._statistics.numOfNew;
@@ -204,6 +261,9 @@ class ParticipantStore {
     return 0;
   }
 
+  /**
+   * Getter for statisticsGroupCounts (if defined)
+   */
   get statisticsCounts() {
     if (this._statisticsGroupCounts) {
       return this._statisticsGroupCounts;
@@ -211,14 +271,23 @@ class ParticipantStore {
     return null;
   }
 
+  /**
+   * Getter for isLastPage
+   */
   get isLastPage() {
     return this._isLastPage;
   }
 
+  /**
+   * Getter for limit
+   */
   get limit() {
     return this._limit;
   }
 
+  /**
+   * Clear store function that resets all observables to initial values and clears participant data
+   */
   clearStore = () => {
     this._filter = { status: null };
     this._sorter = { createdAt: 'desc' };

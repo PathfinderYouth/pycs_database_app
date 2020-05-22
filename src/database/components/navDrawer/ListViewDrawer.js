@@ -33,6 +33,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Nav drawer component for list views (participant list & staff list)
+ * @param {int} numNew number of new participants for the notification badge
+ * @param {function} onParticipantViewChanged handler for changing the participant list view with new filters/
+ * sorting
+ * @param {function} onStaffViewChanged handler for chaning the staff list view with new filters/sorting
+ * @param {function} handleDrawerClose drawer open handler for when the drawer hides on narrow views
+ */
 export const ListViewDrawer = inject(
   'uiStore',
   'participantStore',
@@ -51,11 +59,18 @@ export const ListViewDrawer = inject(
       { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> },
     ];
 
+    /**
+     * Handler for expanding the list of participant filters
+     * @param {Event} event 
+     */
     const expandClick = (event) => {
       event.stopPropagation();
       setParticipantsListExpanded(!participantsListExpanded);
     };
 
+    /**
+     * Handler for clicking on list items in the sidebar
+     */
     const handleListItemClick = () => {
       setCurrentViewMode(viewModes.PARTICIPANT_LIST);
       handleDrawerClose();
