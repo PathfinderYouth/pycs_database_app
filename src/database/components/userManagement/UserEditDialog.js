@@ -10,20 +10,23 @@ import { userRole } from '../../../constants';
 import service from '../../../facade/service';
 import { MenuItem } from '@material-ui/core';
 
-export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) => {
+export const UserEditDialog = ({ record, currentUser, editDialogOpen, setEditDialogOpen }) => {
   let db = service.getUserList();
   const { enqueueSnackbar } = useSnackbar();
   let userEmail = record.email;
   const [name, setName] = useState(record.name);
   const [role, setRole] = useState(record.role);
   const [errorNameStatus, setErrorNameStatus] = useState(false);
-
+  const [errorRoleStatus, setErrorRoleStatus] = useState(false);
   /**
    * handle editing user action
    */
   const handleEditUser = () => {
-    if (name === '') {
+    let isSelfDemote = !!currentUser && userEmail === currentUser.email && role !== userRole.ADMIN;
+    if (name === '' || isSelfDemote === true) {
       setErrorNameStatus(name === '');
+      // prevent an admin self-demoting
+      setErrorRoleStatus(isSelfDemote === true);
       return;
     }
     let data = { email: userEmail, name: name, role: role };
@@ -50,6 +53,7 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
     setName(record.name);
     setRole(record.role);
     setErrorNameStatus(false);
+    setErrorRoleStatus(false);
     setEditDialogOpen(false);
   };
   return (
@@ -94,6 +98,8 @@ export const UserEditDialog = ({ record, editDialogOpen, setEditDialogOpen }) =>
           label="Role"
           variant="outlined"
           value={role}
+          error={errorRoleStatus}
+          helperText={errorRoleStatus && 'You cannot change your role by yourself'}
           onChange={(event) => {
             setRole(event.target.value);
           }}

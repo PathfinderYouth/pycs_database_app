@@ -48,6 +48,7 @@ export const UserManagementAction = ({ row }) => {
       />
       <UserEditDialog
         record={row}
+        currentUser={currentUser}
         editDialogOpen={editDialogOpen}
         setEditDialogOpen={setEditDialogOpen}
       />
