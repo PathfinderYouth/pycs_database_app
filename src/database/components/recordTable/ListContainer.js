@@ -112,7 +112,7 @@ export const ListContainer = inject(
        * @param {string} property header to sort by
        * @param {string} queryProperty current sort
        */
-      const handleRequestSort = (property, queryProperty) => {
+      const handleRequestSort = (event, property, queryProperty) => {
         // Go back to the first page whenever there is an update on the sort field
         setPage(0);
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
