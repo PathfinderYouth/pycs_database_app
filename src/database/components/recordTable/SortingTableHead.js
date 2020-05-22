@@ -7,9 +7,22 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { uiStore } from '../../../injectables';
 import '../style/SortingTableHead.css';
 
+/**
+ * Sorting table header component
+ * @param {string} order previous order, asc or desc
+ * @param {orderBy} orderBy header to order by
+ * @param {function} onRequestSort sorting change handler function
+ * @param {array} headerCells list of header cells
+ */
 export const SortingTableHead = inject('uiStore')(
   observer(({ order, orderBy, onRequestSort, headerCells }) => {
     const { currentSearchField, recordSearchBoxActive } = uiStore;
+
+    /**
+     * Sort handler function
+     * @param {string} property previous sort
+     * @param {string} queryProperty new sort
+     */
     const createSortHandler = (property, queryProperty) => (event) => {
       onRequestSort(event, property, queryProperty);
     };

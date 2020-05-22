@@ -17,6 +17,12 @@ const useStyles = makeStyles((theme) => ({
   button: { marginLeft: theme.spacing(1) },
 }));
 
+/**
+ * Search bar with dropdown select component
+ * @param {function} handleChange onChange handler function
+ * @param {string} searchField search field value
+ * @param {array} options list of select options
+ */
 const SearchSelect = ({ handleChange, searchField, options }) => {
   return (
     <Select className="formControl" onChange={handleChange} value={searchField} disableUnderline>
@@ -32,8 +38,13 @@ const SearchSelect = ({ handleChange, searchField, options }) => {
   );
 };
 
+/**
+ * Wrapper component for SearchSelect including a page title
+ * @param {string} title title of the table
+ * @param {function} onSearchClicked click event to initiate searches
+ */
 export const RecordSearchBar = inject('uiStore')(
-  observer((props) => {
+  observer(({ title, onSearchClicked }) => {
     const {
       filters,
       currentSearchField,
@@ -42,22 +53,36 @@ export const RecordSearchBar = inject('uiStore')(
       setCurrentSearchText,
     } = uiStore;
     const classes = useStyles();
-    const { title, onSearchClicked } = props;
 
+    /**
+     * OnChange event handler
+     * @param {Event} event onChange event
+     */
     const handleChange = (event) => {
       setCurrentSearchField(event.target.value);
     };
 
+    /**
+     * Handler to get search text from search bar on click
+     * @param {Event} event onClick event
+     */
     const getSearchText = (event) => {
       setCurrentSearchText(event.target.value);
     };
 
+    /**
+     * KeyPressed event handler
+     * @param {Event} event onKeyPressed event
+     */
     const onKeyPressed = (event) => {
       if (event.key === 'Enter') {
         onSubmit();
       }
     };
 
+    /**
+     * Submit handler for the search bar
+     */
     const onSubmit = () => {
       onSearchClicked(currentSearchField, currentSearchText.toLowerCase());
     };

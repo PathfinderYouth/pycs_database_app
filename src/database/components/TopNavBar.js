@@ -38,6 +38,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Top navbar component
+ * @param {boolean} drawerState drawer open/close state
+ * @param {function} handleDrawerOpen drawer open/close handler function
+ * @param {function} onLogoutClicked OnClick handler function for logout button
+ */
 export const TopNavBar = ({ drawerState, handleDrawerOpen, onLogoutClicked }) => {
   const classes = useStyles();
   const title = 'Pathfinder Youth Centre Society Participant Database';

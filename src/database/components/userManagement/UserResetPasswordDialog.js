@@ -8,6 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSnackbar } from 'notistack';
 import service from '../../../facade/service';
 
+/**
+ * User reset password confirmation dialog component
+ * @param {Object} record user data object
+ * @param {boolean} resetPasswordDialogOpen dialog open/close state
+ * @param {function} setResetPasswordDialogOpen open/close handler function
+ */
 export const UserResetPasswordDialog = ({
   record,
   resetPasswordDialogOpen,

@@ -8,6 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSnackbar } from 'notistack';
 import service from '../../../facade/service';
 
+/**
+ * User delete confirmation dialog component
+ * @param {Object} record user data object
+ * @param {boolean} deleteDialogOpen dialog open/close state
+ * @param {function} setDeleteDialogOpen open/close handler function
+ */
 export const UserDeleteDialog = ({ record, deleteDialogOpen, setDeleteDialogOpen }) => {
   let db = service.getUserList();
   let userName = record.name;

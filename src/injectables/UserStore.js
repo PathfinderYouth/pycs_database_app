@@ -5,10 +5,18 @@ import { uiStore } from './index';
 const userService = service.getUserList();
 const authService = service.getAuthentication();
 
+/**
+ * Object equality function
+ * @param {Object} obj1
+ * @param {Object} obj2
+ */
 const checkEqual = (obj1, obj2) => {
   return Object.entries(obj1).sort().toString() === Object.entries(obj2).sort().toString();
 };
 
+/**
+ * MobX state management store for the user account data
+ */
 class UserStore {
   documentType = {
     ADDED: 'added',
@@ -16,22 +24,31 @@ class UserStore {
     REMOVED: 'removed',
   };
 
+  // current filter
   _filter = {};
 
+  // current sorter
   _sorter = { nameLower: 'asc' };
 
+  // list of users
   _users = [];
 
+  // currently-signed in user
   _currentSignedInUser = {};
 
+  // currently-selected user
   _selectedUser = null;
 
+  // Controller object for filtering/sorting/listening
   _controller = null;
 
+  // isLastPage flag
   _isLastPage = true;
 
+  // number of results allowed per page
   _limit = 20;
 
+  // isInit flag
   _isInit = false;
 
   /**
@@ -63,6 +80,19 @@ class UserStore {
     }
   };
 
+  /**
+   * A function acts as an event listener/handler for when any document in the current query
+   * changes. Firestore will send the event, and this method will handle it. Reference:
+   * https://firebase.google.com/docs/reference/js/firebase.firestore.DocumentChange
+   * @param {doc: Object}
+   *  The participant data/document
+   * @param {newIndex: number}
+   *  The new index of the document
+   * @param {oldIndex: number}
+   *  The old index of the document
+   * @param {type: string}
+   *  Type of document change. Can be either 'added', 'modified', or 'removed'
+   */
   _onChildNext = (doc, newIndex, oldIndex, type) => {
     let newList = this._users.slice();
 
@@ -114,10 +144,18 @@ class UserStore {
     { delay: 500 },
   );
 
+  /**
+   * Setter for selectedUser
+   * @param {Object} user user data object
+   */
   setSelectedUser = (user) => {
     this._selectedUser = user;
   };
 
+  /**
+   * Setter for filter
+   * @param {Object} filter filter object
+   */
   setFilter = (filter) => {
     if (checkEqual(filter, this._filter)) {
       return;
@@ -125,6 +163,10 @@ class UserStore {
     this._filter = filter;
   };
 
+  /**
+   * Setter for sorter
+   * @param {Object} sorter sorter object
+   */
   setSorter = (sorter) => {
     if (checkEqual(sorter, this._sorter)) {
       return;
@@ -132,30 +174,52 @@ class UserStore {
     this._sorter = sorter;
   };
 
+  /**
+   * Setter for limit
+   * @param {int} limit page limit
+   */
   setLimit = (limit) => {
     this._limit = limit;
   };
 
+  /**
+   * Backward page change handler function
+   */
   goToPreviousPage = () => {
     this._controller.back(() => (this._users = []));
   };
 
+  /**
+   * Backward page change handler function
+   */
   goToNextPage = () => {
     this._controller.next(() => (this._users = []));
   };
 
+  /**
+   * Getter for users
+   */
   get users() {
     return this._users;
   }
 
+  /**
+   * Getter for isLastPage flag
+   */
   get isLastPage() {
     return this._isLastPage;
   }
 
+  /**
+   * Getter for limit
+   */
   get limit() {
     return this._limit;
   }
 
+  /**
+   * Getter for currentSignedInUser
+   */
   get currentSignedInUser() {
     return this._currentSignedInUser;
   }

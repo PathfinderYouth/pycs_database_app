@@ -11,6 +11,10 @@ import { StyledListItem } from '../StyledListItem';
 import { ParticipantTabs } from './ParticipantTabs';
 import '../style/NavDrawer.css';
 
+/**
+ * Nav drawer component for Participant detail views
+ * @param {function} handleDrawerClose drawer open handler for when the drawer hides on narrow views
+ */
 export const DetailViewDrawer = inject(
   'participantStore',
   'uiStore',
@@ -27,6 +31,9 @@ export const DetailViewDrawer = inject(
       setCurrentParticipantDetailViewMode,
     } = uiStore;
 
+    /**
+     * Resets the page back to initial settings when the user navigates away
+     */
     const handleResetPage = () => {
       setCurrentViewMode(currentListViewMode);
       setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
@@ -34,6 +41,9 @@ export const DetailViewDrawer = inject(
       handleDrawerClose();
     };
 
+    /**
+     * Handler for clicking the back button
+     */
     const handleClickBack = () => {
       if (
         currentParticipantDetailViewMode !== participantDetailViewModes.VIEW &&

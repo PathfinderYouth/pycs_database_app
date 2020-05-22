@@ -2,7 +2,9 @@ import React from 'react';
 import { LogIn, NavBar } from './components';
 import './SignIn.css';
 
-// container that holds all sign in page UI objects
+/**
+ * Entry point for the Sign-In interface
+ */
 export const SignIn = () => (
   <div className="sign-in-container">
     <NavBar />

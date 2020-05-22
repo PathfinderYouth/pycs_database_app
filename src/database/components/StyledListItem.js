@@ -18,6 +18,10 @@ const useStyles = makeStyles((theme) => ({
   selected: {},
 }));
 
+/**
+ * Styled list item component
+ * @param {Object} props component props
+ */
 export const StyledListItem = (props) => {
   const classes = useStyles();
   return <ListItem classes={classes} {...props} />;
