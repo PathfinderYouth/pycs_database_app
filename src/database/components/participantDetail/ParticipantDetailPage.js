@@ -13,7 +13,7 @@ import { ParticipantDetailView } from './ParticipantDetailView';
 import { DetailButton } from './DetailButton';
 import { participantStore, uiStore } from '../../../injectables';
 import { participantDetailViewModes, viewModes } from '../../../constants';
-import { participantDetailSteps } from '../../../fields';
+import { participantDetailSteps, getStepIndexFromStepName } from '../../../fields';
 import { AuthContext } from '../../../sign-in';
 import '../style/ParticipantDetailPage.css';
 
@@ -41,9 +41,6 @@ export const ParticipantDetailPage = inject(
       userID = !!currentUser.displayName ? currentUser.displayName : currentUser.email;
     }
     const stepsLength = participantDetailSteps.length;
-    const notesStep = stepsLength - 3;
-    const actionPlanStep = stepsLength - 2;
-    const historyStep = stepsLength - 1;
 
     /**
      * Steps the detail view back one step
@@ -69,11 +66,11 @@ export const ParticipantDetailPage = inject(
      * currentParticipantDetailView mode set in UIStore
      */
     const getParticipantDetailContents = () => {
-      if (currentParticipantDetailStep === notesStep) {
+      if (currentParticipantDetailStep === getStepIndexFromStepName('Notes')) {
         return <ParticipantDetailNotes user={userID} />;
-      } else if (currentParticipantDetailStep === actionPlanStep) {
+      } else if (currentParticipantDetailStep === getStepIndexFromStepName('Action Plan')) {
         return <ParticipantDetailActionPlan user={userID} />;
-      } else if (currentParticipantDetailStep === historyStep) {
+      } else if (currentParticipantDetailStep === getStepIndexFromStepName('History')) {
         return <ParticipantDetailHistory participant={currentParticipant} />;
       } else {
         if (currentParticipantDetailViewMode === participantDetailViewModes.EDIT) {

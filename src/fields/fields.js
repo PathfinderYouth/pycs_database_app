@@ -1046,16 +1046,6 @@ export const initialValues = formSteps.reduce((values, step) => {
   return values;
 }, {});
 
-/**
- * Determines which step a field belongs to using its name and returns the step index
- * @param {string} fieldName
- * @return int step index
- */
-export const belongsToStepIndex = (fieldName) => {
-  const step = formSteps.find((step) => step.fields.find((field) => field.name === fieldName));
-  return formSteps.indexOf(step);
-};
-
 // lists of step names
 export const stepNames = formSteps.map((step) => step.stepName);
 export const participantDetailStepNames = participantDetailSteps.map((step) => step.stepName);
@@ -1068,3 +1058,23 @@ export const fieldNames = formSteps.reduce((values, step) => {
   });
   return values;
 }, {});
+
+/**
+ * Determines which step a field belongs to using its name and returns the step index
+ * @param {string} fieldName
+ * @return int step index
+ */
+export const belongsToStepIndex = (fieldName) => {
+  const step = formSteps.find((step) => step.fields.find((field) => field.name === fieldName));
+  return formSteps.indexOf(step);
+};
+
+/**
+ * Determines the index of a step to using its name
+ * @param {string} stepName
+ * @return int step index
+ */
+export const getStepIndexFromStepName = (stepName) => {
+  const step = participantDetailSteps.find(step => step.stepName === stepName);
+  return participantDetailSteps.indexOf(step);
+}
