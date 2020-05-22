@@ -5,44 +5,49 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
 import { ArrowBack } from '@material-ui/icons';
-import { uiStore } from '../../../injectables';
+import { participantStore, uiStore } from '../../../injectables';
 import { participantDetailViewModes, viewModes } from '../../../constants';
 import { StyledListItem } from '../StyledListItem';
 import { ParticipantTabs } from './ParticipantTabs';
 import '../style/NavDrawer.css';
 
-export const DetailViewDrawer = inject('uiStore')(
-  observer(({handleDrawerClose}) => {
+export const DetailViewDrawer = inject(
+  'participantStore',
+  'uiStore',
+)(
+  observer(({ handleDrawerClose }) => {
+    const { collection } = participantStore;
     const {
       setCurrentViewMode,
       currentListViewMode,
       currentDetailViewMode,
+      currentParticipantDetailStep,
       currentParticipantDetailViewMode,
       setCurrentParticipantDetailStep,
       setCurrentParticipantDetailViewMode,
     } = uiStore;
 
     const handleResetPage = () => {
-        setCurrentViewMode(currentListViewMode);
-        setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
-        setCurrentParticipantDetailStep(0);
-        handleDrawerClose()
-    }
+      setCurrentViewMode(currentListViewMode);
+      setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
+      setCurrentParticipantDetailStep(0);
+      handleDrawerClose();
+    };
 
     const handleClickBack = () => {
       if (
         currentParticipantDetailViewMode !== participantDetailViewModes.VIEW &&
         window.confirm('Leave this page? Any unsaved changes will be lost.')
       ) {
-        handleResetPage()
+        handleResetPage();
       } else {
-        handleResetPage()
+        handleResetPage();
       }
     };
 
     const handleChangeParticipantTab = (tabIndex) => {
       setCurrentParticipantDetailStep(tabIndex);
-      handleDrawerClose()
+      handleDrawerClose();
     };
 
     return (
@@ -51,11 +56,16 @@ export const DetailViewDrawer = inject('uiStore')(
           <ListItemIcon>
             <ArrowBack />
           </ListItemIcon>
-          <ListItemText primary={'Back'} />
+          <ListItemText primary="Back" />
         </StyledListItem>
         <Divider />
         {currentDetailViewMode === viewModes.PARTICIPANT_DETAIL && (
-          <ParticipantTabs handleClick={handleChangeParticipantTab} />
+          <ParticipantTabs
+            handleClick={handleChangeParticipantTab}
+            viewMode={currentParticipantDetailViewMode}
+            stepIndex={currentParticipantDetailStep}
+            collection={collection}
+          />
         )}
       </List>
     );
