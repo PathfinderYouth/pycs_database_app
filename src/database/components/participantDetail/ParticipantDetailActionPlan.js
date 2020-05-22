@@ -76,7 +76,6 @@ export const ParticipantDetailActionPlan = inject('participantStore')(
               setEditState(false);
             },
             (error) => {
-              console.log(error);
               enqueueSnackbar('There was a problem updating the action plan.', {
                 variant: 'error',
               });

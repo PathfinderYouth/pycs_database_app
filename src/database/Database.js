@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   DetailViewDrawer,
+  IdleDialog,
   ListContainer,
   ListViewDrawer,
   NavDrawer,
@@ -16,6 +17,9 @@ import { AuthContext } from '../sign-in';
 import { viewModes } from '../constants';
 import { participantStore, uiStore, userStore } from '../injectables';
 import './Database.css';
+import service from '../facade/service';
+
+const authService = service.getAuthentication();
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -36,6 +40,7 @@ export const Database = inject(
     const classes = useStyles();
     const [currentStatus, setCurrentStatus] = useState(null);
     const [idleTimer, setIdleTimer] = useState(null);
+    const [idleDialogOpen, setIdleDialogOpen] = useState(false);
     const {
       currentViewMode,
       navigationDrawerOpen,
@@ -68,20 +73,25 @@ export const Database = inject(
       setLimit: setUserLimit,
     } = userStore;
 
-    useEffect(() => {});
-
-    const onAction = (e) => {
-      console.log('user did something', e);
-    };
-
     const onActive = (e) => {
-      console.log('user is active', e);
-      console.log('time remaining', idleTimer.getRemainingTime());
+      setIdleDialogOpen(false);
+      idleTimer.reset();
     };
 
     const onIdle = (e) => {
-      console.log('user is idle', e);
-      console.log('last active', idleTimer.getLastActiveTime());
+      if (idleDialogOpen) {
+        handleTimeout();
+      } else {
+        setIdleDialogOpen(true);
+        idleTimer.reset();
+      }
+    };
+
+    const handleTimeout = () => {
+      authService.signOut(() => {
+        participantStore.clearStore();
+        uiStore.setDatabaseActive(false);
+      });
     };
 
     /**
@@ -241,8 +251,8 @@ export const Database = inject(
           element={document}
           onActive={() => onActive()}
           onIdle={() => onIdle()}
-          onAction={() => onAction()}
-          timeout={10000}
+          debounce={250}
+          timeout={600000} //10 minutes
         />
         <TopNavBar
           handleDrawerOpen={() => setNavigationDrawerOpen(true)}
@@ -253,6 +263,11 @@ export const Database = inject(
         </NavDrawer>
 
         <div className={`${classes.content} database-content`}>{getContent()}</div>
+        <IdleDialog
+          isOpen={idleDialogOpen}
+          setIdleDialogOpen={setIdleDialogOpen}
+          handleTimeout={handleTimeout}
+        />
       </div>
     );
   }),
