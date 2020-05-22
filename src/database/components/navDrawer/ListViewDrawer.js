@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * List view drawer for different statuses of applications in the participants list
+ */
 export const ListViewDrawer = inject(
   'uiStore',
   'participantStore',
@@ -51,11 +54,18 @@ export const ListViewDrawer = inject(
       { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> },
     ];
 
+    /**
+     * Observes if participants list is expanded and
+     * switchs bwteen expand-less and expand-more modes
+     */
     const expandClick = (event) => {
       event.stopPropagation();
       setParticipantsListExpanded(!participantsListExpanded);
     };
 
+    /**
+     * Handles selecting and filtering different statuses of applications
+     */
     const handleListItemClick = () => {
       setCurrentViewMode(viewModes.PARTICIPANT_LIST);
       handleDrawerClose();

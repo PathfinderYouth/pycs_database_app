@@ -11,6 +11,9 @@ import { StyledListItem } from '../StyledListItem';
 import { ParticipantTabs } from './ParticipantTabs';
 import '../style/NavDrawer.css';
 
+/**
+ * List view drawer for participant detail tabs
+ */
 export const DetailViewDrawer = inject(
   'participantStore',
   'uiStore',
@@ -27,6 +30,9 @@ export const DetailViewDrawer = inject(
       setCurrentParticipantDetailViewMode,
     } = uiStore;
 
+    /**
+     * Resets the participant detail page
+     */
     const handleResetPage = () => {
       setCurrentViewMode(currentListViewMode);
       setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
@@ -34,6 +40,9 @@ export const DetailViewDrawer = inject(
       handleDrawerClose();
     };
 
+    /**
+     * Handles returning to participant list when back button is clicked
+     */
     const handleClickBack = () => {
       if (
         currentParticipantDetailViewMode !== participantDetailViewModes.VIEW &&
@@ -45,6 +54,10 @@ export const DetailViewDrawer = inject(
       }
     };
 
+    /**
+     * Handles switching between participant detail tabs
+     * @param {int} tabIndex
+     */
     const handleChangeParticipantTab = (tabIndex) => {
       setCurrentParticipantDetailStep(tabIndex);
       handleDrawerClose();

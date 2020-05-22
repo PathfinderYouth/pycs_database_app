@@ -45,6 +45,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Navigation drawer of database UI
+ * @param {Object} window
+ * @param {Object} children
+ * @param {boolean} drawerState
+ * @param {function} handleDrawerClose
+ *
+ */
 export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -54,11 +62,15 @@ export const NavDrawer = ({ window, children, drawerState, handleDrawerClose }) 
 
   const [userName, setUserName] = useState('');
   const { currentUser } = useContext(AuthContext);
+
+  /**
+   * Performs dynamic profile update of the current user
+   */
   useEffect(() => {
     if (currentUser) {
       setUserName(!!currentUser.displayName ? currentUser.displayName : currentUser.email);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const drawer = (
