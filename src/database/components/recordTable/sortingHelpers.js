@@ -19,11 +19,11 @@ function descendingComparator(a, b, orderBy) {
  * @param {string} order current order - asc or desc
  * @param {string} orderBy header to order by
  */
-export const  getComparator = (order, orderBy) => {
+export const getComparator = (order, orderBy) => {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-}
+};
 
 /**
  * Sorting function
@@ -38,4 +38,4 @@ export const stableSort = (array, comparator) => {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
+};

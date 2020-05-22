@@ -3,5 +3,5 @@ export const status = {
   ARCHIVED: 'archived',
   DECLINED: 'declined',
   PENDING: 'pending',
-  NEW: 'new'
+  NEW: 'new',
 };

@@ -9,5 +9,5 @@ export const viewModes = {
 export const participantDetailViewModes = {
   VIEW: 'view',
   EDIT: 'edit',
-  CREATE: 'create'
-}
+  CREATE: 'create',
+};

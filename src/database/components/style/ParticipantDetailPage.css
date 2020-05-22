@@ -14,7 +14,7 @@
 }
 
 .participant-detail-header-text {
-  max-width: 60%
+  max-width: 60%;
 }
 
 .participant-detail-controls {
@@ -29,7 +29,6 @@
 .participant-detail-buttons-indicator {
   display: flex;
   flex-direction: column;
-  
 }
 
 .participant-detail-status {
