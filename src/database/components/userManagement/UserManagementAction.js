@@ -6,8 +6,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { UserDeleteDialog } from './UserDeleteDialog';
-import { UserEditDialog } from './UserEditDialog';
 import { UserResetPasswordDialog } from './UserResetPasswordDialog';
+import { UserDialog } from './UserDialog';
 
 /**
  * component of user management actions
@@ -19,6 +19,7 @@ export const UserManagementAction = ({ row }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
+  const isCurrentUser = !!currentUser && row.email === currentUser.email
 
   return (
     <>
@@ -32,7 +33,7 @@ export const UserManagementAction = ({ row }) => {
           <VpnKeyIcon />
         </IconButton>
       </Tooltip>
-      {currentUser !== null && row.email !== currentUser.email && (
+      {!isCurrentUser && (
         <>
           <Tooltip title="Delete user" aria-label="delete" placement="bottom">
             <IconButton size="small" onClick={() => setDeleteDialogOpen(true)}>
@@ -46,11 +47,11 @@ export const UserManagementAction = ({ row }) => {
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
       />
-      <UserEditDialog
-        record={row}
-        currentUser={currentUser}
-        editDialogOpen={editDialogOpen}
-        setEditDialogOpen={setEditDialogOpen}
+      <UserDialog
+        user={row}
+        isCurrentUser={isCurrentUser}
+        open={editDialogOpen}
+        setOpen={setEditDialogOpen}
       />
       <UserResetPasswordDialog
         record={row}

@@ -14,8 +14,15 @@ import { userRole } from '../../../constants';
 import service from '../../../facade/service';
 import '../style/UserManagement.css';
 
-
-export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
+/**
+ * User editing and creating dialog
+ * @param {Object} user object
+ * @param {boolean} isCurrentUser flag if the user clicked on is the current user
+ * @param {boolean} open open state of the dialog
+ * @param {function} setOpen open dialog handler function
+ * @param {string} mode edit or create mode
+ */
+export const UserDialog = ({ user = undefined, isCurrentUser = undefined, open, setOpen, mode = 'edit' }) => {
   let db = service.getUserList();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,8 +39,7 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
       .string()
       .email('Invalid email address')
       .required('Please enter a valid email address'),
-    name: yup.string().required('Display name is required'),
-    role: yup.string().required('Must select a role'),
+    name: yup.string().required('Display name is required')
   });
 
   /**
@@ -49,7 +55,7 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
         enqueueSnackbar('New user successfully created.', {
           variant: 'success',
         });
-        setAddStaffOpen(false);
+        setOpen(false);
         resetForm();
       },
       (error) => {
@@ -60,24 +66,56 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
     );
   };
 
+  /**
+   * Formats user data and initiates a connection to the Firestore database to update the user, showing a
+   * snackbar on success or on error
+   * @param {Object} values key value paired form values object
+   */
+  const handleEditUser = (values) => {
+    const docID = values.id;
+    let data = { ...values };
+    delete data.id;
+    delete data.uid;
+    db.updateUser(
+      docID,
+      data,
+      () => {
+        enqueueSnackbar('User information successfully updated.', {
+          variant: 'success',
+        });
+        setOpen(false);
+      },
+      () => {
+        enqueueSnackbar('There was a problem updating user information.', {
+          variant: 'error',
+        });
+        setOpen(false);
+      },
+    );
+  };
+
   return (
-    <Dialog open={addStaffOpen} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Create User</DialogTitle>
+    <Dialog open={open} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth>
+      <DialogTitle id="form-dialog-title">
+        {mode === 'edit' ? 'Edit User Account' : 'Create User Account'}
+      </DialogTitle>
       <Formik
-        initialValues={initialValues}
+        initialValues={mode === 'edit' ? user : initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
-          handleAddNewUser(values, resetForm);
+          mode === 'edit' ? handleEditUser(values) : handleAddNewUser(values, resetForm);
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, submitForm }) => (
           <>
             <DialogContent>
-              <DialogContentText gutterBottom>
-                In order to finish account creation, the new user must log in using the email
-                address just provided. The password they enter the first time they log in will be
-                the password associated with their account.
-              </DialogContentText>
+              {mode === 'create' && (
+                <DialogContentText gutterBottom>
+                  In order to finish account creation, the new user must log in using the email
+                  address just provided. The password they enter the first time they log in will be
+                  the password associated with their account.
+                </DialogContentText>
+              )}
               <div className="user-management-new-user-field">
                 <TextField
                   required
@@ -116,6 +154,8 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
                   value={values.role}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled={isCurrentUser}
+                  helperText={isCurrentUser && 'Unable to change own role'}
                   fullWidth
                   select
                 >
@@ -125,11 +165,11 @@ export const UserCreateDialog = ({ users, addStaffOpen, setAddStaffOpen }) => {
               </div>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setAddStaffOpen(false)} color="primary">
+              <Button onClick={() => setOpen(false)} color="primary">
                 Cancel
               </Button>
               <Button onClick={() => submitForm()} variant="contained" color="primary">
-                Create
+                {mode === 'edit' ? 'Update' : 'Create'}
               </Button>
             </DialogActions>
           </>
