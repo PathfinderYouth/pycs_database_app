@@ -1,6 +1,7 @@
 import { action, autorun, computed, decorate, observable } from 'mobx';
 import { collectionType } from '../constants';
 import service from '../facade/service';
+import { uiStore } from '../injectables';
 
 const db = service.getDatabase();
 
@@ -36,9 +37,15 @@ class ParticipantStore {
   isListLoading = false;
 
   constructor() {
-    db.getNumOfNew((doc) => {
-      this._statistics = doc;
-    });
+    db.getNumOfNew(
+      (doc) => {
+        this._statistics = doc;
+      },
+      () => {
+        /* Do nothing. This is to catch the Firestore permissions console warning on
+         * the login page. It will try again to get this number once it's logged in. */
+      },
+    );
   }
 
   /**
@@ -88,39 +95,42 @@ class ParticipantStore {
    */
   _updateList = autorun(
     () => {
-      // Run this whenever type of collection, filter, or sorter changes
-      this.setIsListLoading(true);
+      // Don't run if not on database view (i.e., login or intake form)
+      if (uiStore.databaseActive) {
+        // Run this whenever type of collection, filter, or sorter changes
+        this.setIsListLoading(true);
 
-      // Unsubscribe to previous real-time listener and reset list to empty
-      if (this._controller) {
-        this._isLastPage = true;
-        this._participants = [];
-        this._controller.unsubscribe();
-      }
+        // Unsubscribe to previous real-time listener and reset list to empty
+        if (this._controller) {
+          this._isLastPage = true;
+          this._participants = [];
+          this._controller.unsubscribe();
+        }
 
-      switch (this._collection) {
-        case collectionType.NEW:
-          this._controller = db.getNewList(
-            this._filter,
-            this._sorter,
-            this._limit,
-            this._onChildNext,
-            this.setIsListLoading
-          );
-          break;
+        switch (this._collection) {
+          case collectionType.NEW:
+            this._controller = db.getNewList(
+              this._filter,
+              this._sorter,
+              this._limit,
+              this._onChildNext,
+              this.setIsListLoading,
+            );
+            break;
 
-        case collectionType.PERMANENT:
-          this._controller = db.getPermanentList(
-            this._filter,
-            this._sorter,
-            this._limit,
-            this._onChildNext,
-            this.setIsListLoading
-          );
-          break;
+          case collectionType.PERMANENT:
+            this._controller = db.getPermanentList(
+              this._filter,
+              this._sorter,
+              this._limit,
+              this._onChildNext,
+              this.setIsListLoading,
+            );
+            break;
 
-        default:
-        // Do nothing
+          default:
+          // Do nothing
+        }
       }
     },
     // Setting delay so we don't make too many queries in a short amount of time
@@ -220,7 +230,7 @@ class ParticipantStore {
     this._isLastPage = true;
     this._statistics = null;
     this.isListLoading = false;
-  }
+  };
 }
 
 decorate(ParticipantStore, {
@@ -245,7 +255,7 @@ decorate(ParticipantStore, {
   numOfNewParticipants: computed,
   isLastPage: computed,
   limit: computed,
-  clearStore: action
+  clearStore: action,
 });
 
 let participantStore = new ParticipantStore();

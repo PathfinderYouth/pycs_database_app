@@ -89,7 +89,7 @@ const commonValidationSchema = {
     }),
   birthDate: yup
     .date()
-    .required('Birthdate is required')
+    .required('Birth date is required')
     .test('age-test', 'Must be between 15 and 30 years old', (value) => ageValidation(value)),
   sin: yup
     .string()

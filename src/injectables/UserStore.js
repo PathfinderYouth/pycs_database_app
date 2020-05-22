@@ -1,5 +1,6 @@
 import { action, autorun, computed, decorate, observable } from 'mobx';
 import service from '../facade/service';
+import { uiStore } from './index';
 
 const userService = service.getUserList();
 const authService = service.getAuthentication();
@@ -56,7 +57,7 @@ class UserStore {
             });
           }
         },
-        (error) => {},
+        () => {},
       );
       this._isInit = true;
     }
@@ -94,18 +95,21 @@ class UserStore {
    */
   _updateList = autorun(
     () => {
-      if (this._controller) {
-        this._isLastPage = true;
-        this._users = [];
-        this._controller.unsubscribe();
-      }
+      // Don't run if not on database view (i.e., login or intake form)
+      if (uiStore.databaseActive) {
+        if (this._controller) {
+          this._isLastPage = true;
+          this._users = [];
+          this._controller.unsubscribe();
+        }
 
-      this._controller = userService.getAllList(
-        this._filter,
-        this._sorter,
-        this._limit,
-        this._onChildNext,
-      );
+        this._controller = userService.getAllList(
+          this._filter,
+          this._sorter,
+          this._limit,
+          this._onChildNext,
+        );
+      }
     },
     { delay: 500 },
   );

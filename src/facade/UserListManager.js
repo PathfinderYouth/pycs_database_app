@@ -27,6 +27,7 @@ export default class UserListManager {
 
     this.db = firebase.firestore();
     this.userRef = this.db.collection('user');
+    this.adminRef = this.db.collection('admins');
   }
 
   checkEmailNotExist(docId, emailLower, onSuccess, onError) {
@@ -68,7 +69,7 @@ export default class UserListManager {
    *  Callback function when fail
    */
   addUser(user, onSuccess, onError) {
-    // Update fields used for case-insensitive search and sort. 
+    // Update fields used for case-insensitive search and sort.
     user = {
       ...user,
       nameLower: user.name.toLowerCase(),
@@ -130,26 +131,32 @@ export default class UserListManager {
    *  Callback function when fail
    */
   updateUser(docId, data, onSuccess, onError) {
-    // Update fields used for case-insensitive search and sort. 
+    // Update fields used for case-insensitive search and sort.
     data.nameLower = data.name ? data.name.toLowerCase() : '';
     data.emailLower = data.email ? data.email.toLowerCase() : '';
-
-    this.checkEmailNotExist(
-      docId,
-      data.emailLower,
-      () => {
-        this.userRef.doc(docId).update(data).then(onSuccess).catch(onError);
-      },
-      onError,
-    );
+    this.userRef
+      .doc(docId)
+      .get()
+      .then((doc) => {
+        const user = doc.data();
+        let batch = this.db.batch();
+        if (!!user && !!user.uid) {
+          // add/remove user to/from admin collection for security rules
+          data.role === 'staff'
+            ? batch.delete(this.adminRef.doc(user.uid))
+            : batch.set(this.adminRef.doc(user.uid), { isAdmin: true });
+        }
+        batch.update(this.userRef.doc(docId), data);
+        batch.commit().then(onSuccess).catch(onError);
+      });
   }
 
   /**
-   * Update a document in user collection when user do inital sign-in.
+   * Update a document in user collection when user does initial sign-in.
    * @param {email: string}
-   *  Email of the user who does inital sign-in
+   *  Email of the user who does initial sign-in
    * @param {uid: string}
-   *  Firebase uid of the user who does inital sign-in
+   *  Firebase uid of the user who does initial sign-in
    * @param {onSuccess?: (doc: Object) => void}
    *  Callback function when success
    * @param {onError?: (error: Error) => void}
@@ -167,8 +174,15 @@ export default class UserListManager {
 
         // Found the document
         let doc = querySnap.docs[0];
-        doc.ref
-          .update({ uid: uid })
+        let batch = this.db.batch();
+
+        if (doc.data().role === 'admin') {
+          // Add UID to admins collection
+          batch.set(this.adminRef.doc(uid), { isAdmin: true });
+        }
+        batch.update(doc.ref, { uid: uid });
+        batch
+          .commit()
           .then(() => {
             onSuccess(doc.data());
           })
@@ -186,8 +200,14 @@ export default class UserListManager {
    * @param {onError?: (error: Error) => void}
    *  Callback function when fail
    */
-  deleteUser(docId, onSuccess, onError) {
-    this.userRef.doc(docId).delete().then(onSuccess).catch(onError);
+  deleteUser(user, onSuccess, onError) {
+    let batch = this.db.batch();
+    if (!!user.uid && user.role === 'admin') {
+      //remove from admins collection
+      batch.delete(this.adminRef.doc(user.uid));
+    }
+    batch.delete(this.userRef.doc(user.id));
+    batch.commit().then(onSuccess).catch(onError);
   }
 
   /**
