@@ -49,7 +49,7 @@ class UIStore {
 
   currentStaffViewOrder = 'asc';
 
-  currentStaffViewOrderBy = this.staffHeaders[0].id;
+  currentStaffViewOrderBy = 'name';
 
   currentParticipantSearchField = this.participantSearchFilters[0].queryId;
 
