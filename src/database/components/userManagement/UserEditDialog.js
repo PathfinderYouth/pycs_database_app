@@ -53,6 +53,7 @@ export const UserEditDialog = ({ record, currentUser, editDialogOpen, setEditDia
     setName(record.name);
     setRole(record.role);
     setErrorNameStatus(false);
+    setErrorRoleStatus(false);
     setEditDialogOpen(false);
   };
   return (
