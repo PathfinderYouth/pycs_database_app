@@ -19,7 +19,7 @@ import { SortingTableHead } from './SortingTableHead';
 import { StatusIndicator } from '../StatusIndicator';
 import { uiStore, participantStore, userStore } from '../../../injectables';
 import { viewModes, participantDetailViewModes, collectionType } from '../../../constants';
-import { UserCreateDialog, UserManagementAction } from '../userManagement';
+import { UserDialog, UserManagementAction } from '../userManagement';
 import '../style/ListContainer.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,8 +31,21 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(4),
     right: theme.spacing(4),
   },
+  root: {
+    cursor: 'pointer',
+  },
 }));
 
+/**
+ * Generic list container used for both participant records and user list
+ * @param {array} records list of objects to populate table with
+ * @param {function} onRowClicked handler function for row clickes
+ * @param {function} onPrevButtonClicked handler functionfor next backward table pagination
+ * @param {function} onNextButtonClicked handler functionfor next forward table pagination
+ * @param {boolean} nextButtonDisabled flag to disable next button
+ * @param {function} onOrderChanged handler function for sorting events
+ * @param {function} onSearchClicked handler function for searching events
+ */
 export const ListContainer = inject(
   'uiStore',
   'participantStore',
@@ -51,8 +64,9 @@ export const ListContainer = inject(
     }) => {
       const classes = useStyles();
       const [page, setPage] = useState(0);
+      const [addStaffOpen, setAddStaffOpen] = useState(false);
       const { collection, limit: participantLimit, isListLoading } = participantStore;
-      const { users, limit: userLimit } = userStore;
+      const { limit: userLimit } = userStore;
       const {
         headers,
         setCurrentViewMode,
@@ -73,19 +87,32 @@ export const ListContainer = inject(
             : 'Participants'
           : 'Staff';
 
+      /**
+       * Handler for row click events
+       */
       const handleClickNew = () => {
         setCurrentParticipantDetailStep(0);
         setCurrentViewMode(viewModes.PARTICIPANT_DETAIL);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.CREATE);
       };
 
+      /**
+       * Sets the object represented by the table row to the currently-selected user or participant in the 
+       * respective store
+       * @param {Object} clickedRow 
+       */
       const handleParticipantRowClicked = (clickedRow) => {
         onRowClicked(clickedRow);
         setCurrentViewMode(currentDetailViewMode);
         setCurrentParticipantDetailViewMode(participantDetailViewModes.VIEW);
       };
 
-      const handleRequestSort = (event, property, queryProperty) => {
+      /**
+       * Handler for changing header to sort by
+       * @param {string} property header to sort by
+       * @param {string} queryProperty current sort
+       */
+      const handleRequestSort = (property, queryProperty) => {
         // Go back to the first page whenever there is an update on the sort field
         setPage(0);
         const isAsc = currentListViewOrderBy === property && currentListViewOrder === 'asc';
@@ -95,13 +122,22 @@ export const ListContainer = inject(
         onOrderChanged(queryProperty, order);
       };
 
+      /**
+       * Handler for changing search by and search text
+       * @param {string} searchBy header to search
+       * @param {string} searchText text to perform search with
+       */
       const handleSearchClicked = (searchBy, searchText) => {
         // Go back to the first page whenever the user perform a search
         setPage(0);
         onSearchClicked(searchBy, searchText);
       };
 
-      const handleChangePage = (event, newPage) => {
+      /**
+       * Table pagination handler
+       * @param {int} newPage page index
+       */
+      const handleChangePage = (newPage) => {
         // Checking the direction when moving from one page to another
         if (newPage < page) {
           onPrevButtonClicked();
@@ -111,13 +147,21 @@ export const ListContainer = inject(
         setPage(newPage);
       };
 
+      /**
+       * Handler for changing number of rows in the table
+       * @param {Event} event 
+       */
       const handleChangeRowsPerPage = (event) => {
         // Go back to the first page whenever the user changes the number of rows per page
         setPage(0);
         onChangeRowsPerPage(event.target.value);
       };
 
-      const [addStaffOpen, setAddStaffOpen] = useState(false);
+      /**
+       * Renders cell data
+       * @param {Object} data row data
+       * @param {string} column header name 
+       */
       const ListCell = ({ data, column }) => {
         const isDate = ['birthDate', 'createdAt'].includes(column);
         let cellData = data[column];
@@ -139,13 +183,12 @@ export const ListContainer = inject(
       };
 
       return (
-        <div className={`${classes.root} maxWidth list-container`}>
+        <div className="maxWidth list-container">
           <Paper className={`${classes.paper} maxWidth`}>
             <RecordSearchBar title={pageTitle} onSearchClicked={handleSearchClicked} />
             <TableContainer>
               <Table className={classes.table} size="medium">
                 <SortingTableHead
-                  classes={classes}
                   order={currentListViewOrder}
                   orderBy={currentListViewOrderBy}
                   onRequestSort={handleRequestSort}
@@ -157,6 +200,7 @@ export const ListContainer = inject(
                     {records.map((row) => (
                       <TableRow
                         hover
+                        classes={currentViewMode === viewModes.PARTICIPANT_LIST && { root: classes.root }}
                         key={row.id}
                         onClick={() =>
                           currentViewMode === viewModes.PARTICIPANT_LIST &&
@@ -228,11 +272,7 @@ export const ListContainer = inject(
               </Fab>
             </Tooltip>
           )}
-          <UserCreateDialog
-            users={users}
-            addStaffOpen={addStaffOpen}
-            setAddStaffOpen={setAddStaffOpen}
-          />
+          <UserDialog open={addStaffOpen} setOpen={setAddStaffOpen} mode="create" />
         </div>
       );
     },
