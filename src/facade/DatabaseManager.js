@@ -105,6 +105,8 @@ export default class DatabaseManager {
               if (queryDocSnap.id !== docId && onError) {
                 let error = new Error('SIN already exists');
                 error.name = 'DuplicateError';
+                error.existingDocId = queryDocSnap.id;
+                error.existingDoc = queryDocSnap.data();
                 throw error;
               }
             });
