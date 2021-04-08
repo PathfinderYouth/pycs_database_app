@@ -108,13 +108,13 @@ export const Database = inject(
      * Changes the participant list view depending on the collection, status, and search text
      * @param {string} collection collection name - new | permanent
      * @param {string} status status to filter the participant list by - initially set to null
+     * @param {string} location program to filter the participant list by
      */
-    const handleParticipantViewChanged = (collection, status) => {
+    const handleParticipantViewChanged = (collection, status, location) => {
       // Reset participant-collection query to default state
       setCurrentStatus(status);
       setCollection(collection);
-      setParticipantFilter({ status: status });
-
+      setParticipantFilter({ status: status, location: location });
       // Reset searchbar
       setCurrentSearchText('');
       setRecordSearchBoxActive(false);
