@@ -18,9 +18,11 @@ import {
   Person,
   PieChart,
   Work,
+  LocationCity,
+  LocalCafe
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
-import { collectionType, status, viewModes } from '../../../constants';
+import { collectionType, status, location, viewModes } from '../../../constants';
 import { StyledListItem } from '../StyledListItem';
 import '../style/NavDrawer.css';
 
@@ -49,6 +51,7 @@ export const ListViewDrawer = inject(
   observer(({ numNew, onParticipantViewChanged, onStaffViewChanged, handleDrawerClose }) => {
     const classes = useStyles();
     const [participantsListExpanded, setParticipantsListExpanded] = useState(false);
+    const [newListExpanded, setNewListExpanded] = useState(false);
     const { currentViewMode, setCurrentViewMode } = uiStore;
     const { collection } = participantStore;
     const { currentSignedInUser } = userStore;
@@ -56,17 +59,31 @@ export const ListViewDrawer = inject(
       { id: status.PENDING, name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: status.APPROVED, name: 'Approved', icon: <Check /> },
       { id: status.DECLINED, name: 'Declined', icon: <Clear /> },
-      { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> },
+      { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> }
+    ];
+    
+    const locations = [
+      { id: location.NEB, name: 'New Employment Beginnings', icon: <LocationCity/>},
+      { id: location.BEAN, name: 'Bean Around Books', icon: <LocalCafe/>}
     ];
 
     /**
      * Handler for expanding the list of participant filters
      * @param {Event} event
      */
-    const expandClick = (event) => {
+    const expandParticipantClick = (event) => {
       event.stopPropagation();
       setParticipantsListExpanded(!participantsListExpanded);
     };
+
+    /**
+     * Handler for expanding the list of new application filters
+     * @param {Event} event 
+     */
+    const expandNewClick = (event) => {
+      event.stopPropagation();
+      setNewListExpanded(!newListExpanded);
+    }
 
     /**
      * Handler for clicking on list items in the sidebar
@@ -86,7 +103,7 @@ export const ListViewDrawer = inject(
               collection === collectionType.PERMANENT
             }
             onClick={() => {
-              onParticipantViewChanged(collectionType.PERMANENT, null);
+              onParticipantViewChanged(collectionType.PERMANENT, null, null);
               handleListItemClick();
             }}
           >
@@ -94,7 +111,7 @@ export const ListViewDrawer = inject(
               <Person />
             </ListItemIcon>
             <ListItemText primary="Participants" />
-            <div className="expandButton" onClick={expandClick}>
+            <div className="expandButton" onClick={expandParticipantClick}>
               {participantsListExpanded ? <ExpandLess /> : <ExpandMore />}
             </div>
           </StyledListItem>
@@ -106,12 +123,26 @@ export const ListViewDrawer = inject(
                   key={status.id}
                   className={classes.nested}
                   onClick={() => {
-                    onParticipantViewChanged(collectionType.PERMANENT, status.id);
+                    onParticipantViewChanged(collectionType.PERMANENT, status.id, null);
                     handleListItemClick();
                   }}
                 >
                   <ListItemIcon>{status.icon}</ListItemIcon>
                   <ListItemText primary={status.name} />
+                </StyledListItem>
+              ))}
+              {locations.map((location)=>(
+                <StyledListItem
+                  button
+                  key = {location.id}
+                  className={classes.nested}
+                  onClick={()=> {
+                    onParticipantViewChanged(collectionType.PERMANENT, null, location.id);
+                    handleListItemClick();
+                  }}
+                >
+                  <ListItemIcon>{location.icon}</ListItemIcon>
+                  <ListItemText primary={location.name} />
                 </StyledListItem>
               ))}
             </List>
@@ -123,7 +154,7 @@ export const ListViewDrawer = inject(
               currentViewMode === viewModes.PARTICIPANT_LIST && collection === collectionType.NEW
             }
             onClick={() => {
-              onParticipantViewChanged(collectionType.NEW, null);
+              onParticipantViewChanged(collectionType.NEW, null, null);
               handleListItemClick();
             }}
           >
@@ -133,7 +164,28 @@ export const ListViewDrawer = inject(
               </Badge>
             </ListItemIcon>
             <ListItemText primary="New Applications" />
+            <div className="expandButton" onClick={expandNewClick}>
+              {newListExpanded ? <ExpandLess /> : <ExpandMore />}
+            </div>
           </StyledListItem>
+          <Collapse in={newListExpanded} timeout="auto">
+            <List component="div" disablePadding>
+            {locations.map((location)=>(
+                <StyledListItem
+                  button
+                  key = {location.id}
+                  className={classes.nested}
+                  onClick={()=> {
+                    onParticipantViewChanged(collectionType.NEW, null, location.id);
+                    handleListItemClick();
+                  }}
+                >
+                  <ListItemIcon>{location.icon}</ListItemIcon>
+                  <ListItemText primary={location.name} />
+                </StyledListItem>
+              ))}
+            </List>
+          </Collapse>
           <Divider />
           <StyledListItem
             button

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "pycs-database-app"
+    "default": "pycs-database-app",
+    "development": "pycs-development-project"
   }
 }

@@ -6,10 +6,12 @@
   "hosting": {
     "site": "pathfinderyouthsociety",
     "public": "build",
-    "rewrites": [ {
-      "source": "**",
-      "destination": "/index.html"
-     }],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -21,10 +23,16 @@
   },
   "emulators": {
     "firestore": {
-      "port": 8080
+      "port": 8082
     },
     "hosting": {
       "port": 5000
+    },
+    "auth": {
+      "port": 9099
+    },
+    "ui": {
+      "enabled": true
     }
   }
 }
