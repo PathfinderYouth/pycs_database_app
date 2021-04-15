@@ -120,6 +120,7 @@ export const validationSchema = yup.object().shape(
     emergencyContact2PhoneWork: yup.string().length(10, 'Must be 10 digits long'),
     emergencyContact2PhoneCell: yup.string().length(10, 'Must be 10 digits long'),
     gender: yup.string().required('Please select an option'),
+    citizenshipStatus: yup.string().required('Please select an option'),
     memberOfAVisibleMinority: yup.string().required('Please select an option'),
     personWithDisability: yup.string().required('Please select an option'),
     indigenousGroup: yup.string().required('Please select an option'),
