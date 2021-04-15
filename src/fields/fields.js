@@ -363,15 +363,6 @@ export const formSteps = [
         options: ['Male', 'Female', 'Other', 'Decline to answer'],
       },
       {
-        name: 'citizenship',
-        prettyName: 'Citizenship Status',
-        label: 'Citizenship Status',
-        type: 'radio',
-        required: true,
-        size: 12,
-        options: ['Canadian Citizen', 'Permanent Resident(PR)', 'Refugee'],
-      },
-      {
         name: 'memberOfAVisibleMinority',
         prettyName: 'Member of a visible minority',
         label: 'Member of a visible minority',
