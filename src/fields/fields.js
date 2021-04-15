@@ -363,15 +363,6 @@ export const formSteps = [
         options: ['Male', 'Female', 'Other', 'Decline to answer'],
       },
       {
-        name: 'citizenship',
-        prettyName: 'Citizenship Status',
-        label: 'Citizenship Status',
-        type: 'radio',
-        required: true,
-        size: 12,
-        options: ['Canadian Citizen', 'Permanent Resident(PR)', 'Refugee'],
-      },
-      {
         name: 'memberOfAVisibleMinority',
         prettyName: 'Member of a visible minority',
         label: 'Member of a visible minority',
@@ -724,8 +715,9 @@ export const formSteps = [
         prettyName: 'Citizenship status',
         label: 'Citizenship status',
         type: 'radio',
-        size: 6,
-        options: ['Canadian citizen', 'Permanent resident', 'Native Canadian'],
+        required: true,
+        size: 8,
+        options: ['Canadian citizen', 'Permanent resident', 'Native Canadian', 'Refugee'],
       },
       {
         name: 'isEntitledToWorkInCanada',
