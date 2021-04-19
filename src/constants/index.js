@@ -5,3 +5,4 @@ export * from './masks';
 export * from './viewModes';
 export * from './queryFields';
 export * from './userRole';
+export * from './location';

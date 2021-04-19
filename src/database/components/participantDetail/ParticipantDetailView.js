@@ -86,6 +86,25 @@ export const ParticipantDetailView = ({
   };
 
   /**
+   * 
+   */
+  const handleDuplicateError = (errorObj) => {
+    const db = service.getDatabase();
+    if(window.confirm("Participant with this SIN number already exists. (" + errorObj.existingDoc.nameGiven + " " + errorObj.existingDoc.nameLast + ")\nReplace existing participant with this one?")){
+      db.deletePermanent(
+        errorObj.existingDocId,
+        handleClickMove(),
+        (error) => {
+          enqueueSnackbar('There was a problem removing the participant record.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        }
+        );
+    }
+  };
+
+  /**
    * Initiates a connection to the database to move a participant record from the new collection to the
    * permanent collection in Firestore
    * Once complete, shows a snackbar indicating success or fail
@@ -101,11 +120,16 @@ export const ParticipantDetailView = ({
         });
         handleClickChangeView();
       },
-      () => {
-        enqueueSnackbar('There was a problem saving the participant record.', {
-          variant: 'error',
-        });
-        handleClickChangeView();
+      (error) => {
+        if(error.name === 'DuplicateError'){
+          handleDuplicateError(error);
+        } else {
+          enqueueSnackbar('There was a problem saving the participant record.', {
+            variant: 'error',
+          });
+          handleClickChangeView();
+        }
+        
       },
     );
   };

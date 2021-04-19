@@ -715,8 +715,9 @@ export const formSteps = [
         prettyName: 'Citizenship status',
         label: 'Citizenship status',
         type: 'radio',
-        size: 6,
-        options: ['Canadian citizen', 'Permanent resident', 'Native Canadian'],
+        required: true,
+        size: 8,
+        options: ['Canadian citizen', 'Permanent resident', 'Native Canadian', 'Refugee'],
       },
       {
         name: 'isEntitledToWorkInCanada',

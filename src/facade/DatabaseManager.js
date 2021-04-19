@@ -105,6 +105,8 @@ export default class DatabaseManager {
               if (queryDocSnap.id !== docId && onError) {
                 let error = new Error('SIN already exists');
                 error.name = 'DuplicateError';
+                error.existingDocId = queryDocSnap.id;
+                error.existingDoc = queryDocSnap.data();
                 throw error;
               }
             });
@@ -681,8 +683,12 @@ export default class DatabaseManager {
    */
   getNewList(filter, sorter, limit, onChildNext, onSuccess, onError) {
     // Remove the status property from filter object before building a query
-    let { status, ...newFilter } = filter;
+    let { status, location, ...newFilter } = filter;
     let query = this._buildQuery(this.newRef, newFilter, sorter);
+
+    if (location) {
+      query = query.where('programAppliedFor', '==', location)
+    }
     return new Controller(query, limit, onChildNext, onSuccess, onError);
   }
 
@@ -705,12 +711,14 @@ export default class DatabaseManager {
    *  A controller object
    */
   getPermanentList(filter, sorter, limit, onChildNext, onSuccess, onError) {
-    let { status: participantStatus, ...newFilter } = filter;
+    let { status: participantStatus, location: participantLocation, ...newFilter } = filter;
     let query = this._buildQuery(this.permanentRef, newFilter, sorter);
-
     // Filter documents by status field
     if (participantStatus) {
+      console.log("Filter status");
       query = query.where('status', '==', participantStatus);
+    } else if (participantLocation) {
+      query = query.where('programAppliedFor', '==', participantLocation);
     } else {
       // Ignore 'Archived' status by default
       query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED, status.HOLD]);

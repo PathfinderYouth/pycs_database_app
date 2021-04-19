@@ -25,7 +25,7 @@ class ParticipantStore {
   };
 
   // current filter
-  _filter = { status: null };
+  _filter = { status: null, location: null };
 
   // current sorter
   _sorter = { createdAt: 'desc' };
@@ -171,10 +171,11 @@ class ParticipantStore {
     if (checkEqual(filter, this._filter)) {
       return;
     }
+    
+    let { status: oldStatus, location: oldLocation, ...oldFilter } = this._filter;
+    let { status: newStatus, location: newLocation, ...newFilter } = filter;
 
-    let { status: oldStatus, ...oldFilter } = this._filter;
-    let { status: newStatus, ...newFilter } = filter;
-    if (oldStatus === newStatus && !Object.values(oldFilter)[0] && !Object.values(newFilter)[0]) {
+    if (oldStatus === newStatus && oldLocation === newLocation && !Object.values(oldFilter)[0] && !Object.values(newFilter)[0]) {
       return;
     }
 

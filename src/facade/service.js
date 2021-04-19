@@ -12,6 +12,15 @@ const testCONFIG = {
   appId: "1:92261316097:web:d3d19ee1406312d4f4f200"
 };
 
+const testCONFIG = {
+  apiKey: "AIzaSyBYrEGT3ocS4VIdd_YxC3raWQJ_vf2m2IQ",
+  authDomain: "pycs-development-project.firebaseapp.com",
+  projectId: "pycs-development-project",
+  storageBucket: "pycs-development-project.appspot.com",
+  messagingSenderId: "92261316097",
+  appId: "1:92261316097:web:d3d19ee1406312d4f4f200"
+};
+
 let initialized = false;
 
 /**
