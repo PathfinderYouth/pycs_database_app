@@ -11,6 +11,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import { DetailButton } from './DetailButton';
 import { StatusIndicator } from '../StatusIndicator';
 import { uiStore } from '../../../injectables';
@@ -31,6 +32,7 @@ import '../style/ParticipantDetailView.css';
  * @param {function} handleClickApprove database approve function
  * @param {function} handleClickDecline database decline function
  * @param {function} handleClickRestore database restore function
+ * @param {function} handleClickHold database hold function
  */
 export const ParticipantDetailPageHeader = ({
   children,
@@ -44,6 +46,7 @@ export const ParticipantDetailPageHeader = ({
   handleClickApprove = undefined,
   handleClickDecline = undefined,
   handleClickRestore = undefined,
+  handleClickHold = undefined,
 }) => {
   // if participant is defined, extract the name and status, otherwise leave undefined
   let participantName;
@@ -124,6 +127,13 @@ export const ParticipantDetailPageHeader = ({
       icon: DeleteIcon,
       color: 'error',
     },
+    hold: {
+      ariaLabel: 'on hold',
+      tooltip: 'Put participant on hold',
+      onClick: handleClickHold,
+      confirm: 'Are you sure you wish to put participant on hold? You will still be able to modify their status later.',
+      icon: PauseCircleFilledIcon,
+    },
     edit: {
       ariaLabel: 'edit',
       tooltip: 'Edit participant record',
@@ -167,10 +177,11 @@ export const ParticipantDetailPageHeader = ({
         confirm: 'Discard submission? This cannot be undone.',
       },
     ],
-    pending: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.archive],
-    approved: [buttonsMap.edit, buttonsMap.decline, buttonsMap.archive],
-    declined: [buttonsMap.edit, buttonsMap.approve, buttonsMap.archive],
+    pending: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.hold, buttonsMap.archive],
+    approved: [buttonsMap.edit, buttonsMap.decline, buttonsMap.hold, buttonsMap.archive],
+    declined: [buttonsMap.edit, buttonsMap.approve, buttonsMap.hold, buttonsMap.archive],
     archived: [buttonsMap.restore, buttonsMap.delete],
+    hold: [buttonsMap.edit, buttonsMap.approve, buttonsMap.decline, buttonsMap.archive],
   };
 
   // Button objects common to all statuses used in edit mode

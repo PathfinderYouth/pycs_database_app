@@ -56,6 +56,7 @@ export const ListViewDrawer = inject(
       { id: status.PENDING, name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: status.APPROVED, name: 'Approved', icon: <Check /> },
       { id: status.DECLINED, name: 'Declined', icon: <Clear /> },
+      { id: status.HOLD, name: 'Hold', icon: <Clear /> },
       { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> },
     ];
 

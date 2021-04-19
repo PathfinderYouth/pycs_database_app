@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import './style/StatusIndicator.css';
+import { purple } from '@material-ui/core/colors';
 
 // colour styles for status indicators mapped to the status name
 const useStyles = makeStyles((theme) => ({
@@ -17,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
   declined: {
     backgroundColor: theme.palette.error.main,
   },
+  hold: {
+    backgroundColor: theme.palette.text.hint,
+  },
   deleted: {
     backgroundColor: theme.palette.text.disabled,
   },
@@ -30,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 /**
  * Coloured status indicator component
- * @param {string} status approved | archived | declined | deleted | new | pending
+ * @param {string} status approved | archived | declined | deleted | new | pending | hold
  */
 export const StatusIndicator = ({ status }) => {
   const classes = useStyles();

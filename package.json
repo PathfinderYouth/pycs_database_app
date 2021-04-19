@@ -21,7 +21,7 @@
     "react-google-recaptcha": "^2.0.1",
     "react-idle-timer": "^4.2.12",
     "react-number-format": "^4.4.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^4.0.3",
     "streamsaver": "^2.0.4",
     "yup": "^0.28.4"
   },

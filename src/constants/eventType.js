@@ -6,4 +6,5 @@ export const eventType = {
   MOVED: 'moved',
   RESTORED: 'restored',
   UPDATED: 'updated',
+  HOLD: 'hold'
 };
