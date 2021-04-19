@@ -635,6 +635,34 @@ export default class DatabaseManager {
     this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
   }
 
+
+  /**
+   * Hold a pending document in permanent collection.
+   * @param {data: Object}
+   *  Object containing participant info
+   * @param {userName: string}
+   *  Username of the user performing the update action
+   * @param {onSuccess?: () => void}
+   *  Callback function when success
+   * @param {onError?: (error: Error) => void}
+   *  Callback function when fail
+   */
+  holdPending(data, userName, onSuccess, onError) {
+    const { id: docId, history: oldHistory } = data;
+    const updatedHistory = this.getUpdatedHistory(
+      userName,
+      eventType.HOLD,
+      'Participant put on hold',
+      oldHistory,
+    );
+    let document = {
+      status: status.HOLD,
+      history: updatedHistory,
+    };
+
+    this.permanentRef.doc(docId).update(document).then(onSuccess).catch(onError);
+  }
+
   /**
    * Get all participant documents from new collection.
    * @param {filter: Object}
@@ -693,7 +721,7 @@ export default class DatabaseManager {
       query = query.where('programAppliedFor', '==', participantLocation);
     } else {
       // Ignore 'Archived' status by default
-      query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED]);
+      query = query.where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED, status.HOLD]);
     }
     return new Controller(query, limit, onChildNext, onSuccess, onError);
   }
@@ -705,7 +733,7 @@ export default class DatabaseManager {
    */
   getAllPermanentParticipants(callback) {
     this.permanentRef
-      .where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED])
+      .where('status', 'in', [status.PENDING, status.APPROVED, status.DECLINED, status.HOLD])
       .get()
       .then(function (querySnapshot) {
         let participantsList = [];

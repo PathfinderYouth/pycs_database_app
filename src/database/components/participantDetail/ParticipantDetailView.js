@@ -268,6 +268,26 @@ export const ParticipantDetailView = ({
     );
   };
 
+  const handleClickHold = () => {
+    const db = service.getDatabase();
+    db.holdPending(
+      participant,
+      user,
+      () => {
+        enqueueSnackbar('Participant put on hold.');
+        handleClickChangeView();
+      },
+      () => {
+        enqueueSnackbar('There was a problem holding the participant.', {
+          variant: 'error',
+        });
+        handleClickChangeView();
+      },
+    );
+  };
+
+
+
   return (
     <>
       <ParticipantDetailPageHeader
@@ -280,6 +300,7 @@ export const ParticipantDetailView = ({
         handleClickDelete={handleClickDelete}
         handleClickApprove={() => setDialogOpen(true)}
         handleClickDecline={handleClickDecline}
+        handleClickHold={handleClickHold}
         handleClickRestore={() => handleClickRestore(participant, user)}
       >
         {step.fields.map((field) => {
