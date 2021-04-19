@@ -19,7 +19,8 @@ import {
   PieChart,
   Work,
   LocationCity,
-  LocalCafe
+  LocalCafe,
+  PauseCircleFilled
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
 import { collectionType, status, location, viewModes } from '../../../constants';
@@ -59,7 +60,7 @@ export const ListViewDrawer = inject(
       { id: status.PENDING, name: 'Pending', icon: <HourglassEmptyOutlined /> },
       { id: status.APPROVED, name: 'Approved', icon: <Check /> },
       { id: status.DECLINED, name: 'Declined', icon: <Clear /> },
-      { id: status.HOLD, name: 'Hold', icon: <Clear /> },
+      { id: status.HOLD, name: 'Hold', icon: <PauseCircleFilled /> },
       { id: status.ARCHIVED, name: 'Archived', icon: <ArchiveOutlined /> },
     ];
     
