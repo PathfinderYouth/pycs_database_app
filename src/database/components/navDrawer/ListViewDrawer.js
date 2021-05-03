@@ -20,7 +20,8 @@ import {
   Work,
   LocationCity,
   LocalCafe,
-  PauseCircleFilled
+  PauseCircleFilled,
+  School
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
 import { collectionType, status, location, viewModes } from '../../../constants';
@@ -66,7 +67,8 @@ export const ListViewDrawer = inject(
     
     const locations = [
       { id: location.NEB, name: 'New Employment Beginnings', icon: <LocationCity/>},
-      { id: location.BEAN, name: 'Bean Around Books', icon: <LocalCafe/>}
+      { id: location.BEAN, name: 'Bean Around Books', icon: <LocalCafe/>},
+      { id: location.MENTOR, name: 'Mentorship and School Districts', icon: <School/>}
     ];
 
     /**
