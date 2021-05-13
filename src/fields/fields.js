@@ -235,7 +235,7 @@ export const formSteps = [
         type: 'radio',
         required: true,
         size: 12,
-        options: ['New Employment Beginnings', 'Bean Around Books - Employment Experience'],
+        options: ['New Employment Beginnings', 'Bean Around Books - Employment Experience', 'Mentorship and School Districts'],
       },
       {
         name: 'hopeToGainFromProgram',
