@@ -9,6 +9,7 @@ import { ParticipantDetailEdit } from './ParticipantDetailEdit';
 import { ParticipantDetailNotes } from './ParticipantDetailNotes';
 import { ParticipantDetailActionPlan } from './ParticipantDetailActionPlan';
 import { ParticipantDetailHistory } from './ParticipantDetailHistory';
+import { ParticipantDetailFiles } from './ParticipantDetailFiles';
 import { ParticipantDetailView } from './ParticipantDetailView';
 import { DetailButton } from './DetailButton';
 import { participantStore, uiStore } from '../../../injectables';
@@ -72,6 +73,8 @@ export const ParticipantDetailPage = inject(
         return <ParticipantDetailActionPlan user={userID} />;
       } else if (currentParticipantDetailStep === getStepIndexFromStepName('History')) {
         return <ParticipantDetailHistory participant={currentParticipant} />;
+      } else if (currentParticipantDetailStep === getStepIndexFromStepName('Files')) {
+        return <ParticipantDetailFiles user={userID} />;
       } else {
         if (currentParticipantDetailViewMode === participantDetailViewModes.EDIT) {
           return (
