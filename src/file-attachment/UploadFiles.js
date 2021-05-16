@@ -160,8 +160,6 @@ const UploadFiles = () => {
             console.log("Error while deleting file: " + filename);
             console.log(error);
         })
-
-
     }
 
     /**

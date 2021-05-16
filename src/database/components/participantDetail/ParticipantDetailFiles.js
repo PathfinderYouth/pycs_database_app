@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
-import { fileField } from '../../../fields';
 import { participantStore } from '../../../injectables';
 import { status } from '../../../constants';
 import service from '../../../facade/service';
@@ -21,8 +20,8 @@ import '../style/ParticipantDetailPage.css';
 export const ParticipantDetailFiles = inject('participantStore')(
   observer(({ user }) => {
     const { currentParticipant, setCurrentParticipant } = participantStore;
-    const { label } = fileField;
-    const [newFileValue, setNewFileValue] = useState(null);
+    const [newFileName, setNewFileName] = useState('');
+    const [newFile, setNewFile] = useState(null);
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +29,8 @@ export const ParticipantDetailFiles = inject('participantStore')(
     // if currentParticipant is defined, extract the name, status, and files, else leave undefined
     let participantName;
     let participantStatus;
-    let files = [];
+    let fileNames = [];
+    let storagePath = `Application/${currentParticipant.id}`;
     if (!!currentParticipant) {
       const {
         nameLast,
@@ -40,18 +40,19 @@ export const ParticipantDetailFiles = inject('participantStore')(
       } = currentParticipant;
       participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
       participantStatus = currentParticipantStatus;
-      files = !!participantFiles ? participantFiles : [];
+      fileNames = !!participantFiles ? participantFiles : [];
     }
 
     /**
      * OnChange handler for file field
      * @param {Object} event
      */
-    const handleChange = ({ target: { value } }) => {
+    const handleChange = ({ target: { value, files } }) => {
       if (value !== '') {
         setError(false);
       }
-      setNewFileValue(value);
+      setNewFileName(value);
+      setNewFile(files);
     };
 
     /**
@@ -59,9 +60,16 @@ export const ParticipantDetailFiles = inject('participantStore')(
      * @param {Object} values form values object
      */
     const handleFileSubmit = (values) => {
+      console.log(values);
+      console.log(newFile[0]);
+      const storage = service.getStorage();
       const db = service.getDatabase();
-      participantStatus === status.NEW
-        ? db.updateNew(
+      
+      if (participantStatus === status.NEW){
+        storage.addFile(
+          storagePath,
+          newFile,
+          db.updateNew(
             currentParticipant,
             values,
             user,
@@ -70,7 +78,7 @@ export const ParticipantDetailFiles = inject('participantStore')(
                 variant: 'success',
               });
               setCurrentParticipant(updatedParticipant);
-              setNewFileValue(null);
+              setNewFileName('');
               setSubmitting(false);
             },
             () => {
@@ -79,8 +87,20 @@ export const ParticipantDetailFiles = inject('participantStore')(
               });
               setSubmitting(false);
             },
-          )
-        : db.updatePermanent(
+          ),
+          () => {
+            enqueueSnackbar('There was a problem adding the file.', {
+              variant: 'error',
+            });
+            setSubmitting(false);
+          }
+        );
+        
+      } else {
+        storage.addFile(
+          storagePath,
+          newFile,
+          db.updatePermanent(
             currentParticipant,
             values,
             user,
@@ -89,7 +109,7 @@ export const ParticipantDetailFiles = inject('participantStore')(
                 variant: 'success',
               });
               setCurrentParticipant(updatedParticipant);
-              setNewFileValue('');
+              setNewFileName('');
               setSubmitting(false);
             },
             () => {
@@ -98,36 +118,48 @@ export const ParticipantDetailFiles = inject('participantStore')(
               });
               setSubmitting(false);
             },
-          );
-    };
+          ),
+          () => {
+            enqueueSnackbar('There was a problem adding the file.', {
+              variant: 'error',
+            });
+            setSubmitting(false);
+          }
+        );
+      }
+    }
 
     /**
      * Creates a file object. If the files field is empty, show an error message, if not, create a files
      * object with the file text, timestamp, and username.
      */
     const addFile = () => {
-      if (newFileValue === null) {
+      if (newFileName === null) {
         setError(true);
       } else {
         const now = moment.utc().format();
         const file = {
-          text: newFileValue,
+          name: newFile[0].name,
           timeStamp: now,
           user: user,
         };
 
         // inserts the file as into front of the list of files
-        const newFiles = [file, ...files];
+        const newFileNames = [file.name, ...fileNames];
         if (window.confirm('Add new file?')) {
           const newValues = {
             ...currentParticipant,
-            files: newFiles,
+            files: newFileNames,
           };
           setSubmitting(true);
           handleFileSubmit(newValues);
         }
       }
     };
+
+    const getFileDownload = (file) => {
+
+    }
 
     /**
      * Formats the file into a more readable string
@@ -147,15 +179,13 @@ export const ParticipantDetailFiles = inject('participantStore')(
         </div>
         <FormControl component="fieldset" fullWidth>
           <div className="participant-detail-form-contents">
-            <TextField
-              variant="outlined"
-              label={label}
-              value={newFileValue}
+          <TextField
+              value={newFileName}
               onChange={handleChange}
+              type="file"
               error={error}
-              helperText={error && 'File cannot be blank'}
-              fullWidth
-              multiline
+              helperText={error && 'Note cannot be blank'}
+              InputProps={{disableUnderline:true}}
             />
             <div className="participant-files-ap-addButton">
               <Button
@@ -168,9 +198,9 @@ export const ParticipantDetailFiles = inject('participantStore')(
               </Button>
             </div>
             <div className="field-files-historyContainer">
-              {files.length > 0 ? (
-                files.map((file, index) => {
-                  const { timeStamp, text, user } = file;
+              {fileNames.length > 0 ? (
+                fileNames.map((file, index) => {
+                  const { timeStamp, user } = file;
                   return (
                     <div key={`file-${index}`}>
                       <div className="field-files-fileContainer">
@@ -179,10 +209,10 @@ export const ParticipantDetailFiles = inject('participantStore')(
                           <Typography>{user}</Typography>
                         </div>
                         <div className="field-files-fileBody">
-                          <Typography color="textSecondary">{text}</Typography>
+                          {getFileDownload(file)}
                         </div>
                       </div>
-                      {index !== files.length - 1 && <Divider />}
+                      {index !== fileNames.length - 1 && <Divider />}
                     </div>
                   );
                 })

@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 import DatabaseManager from './DatabaseManager';
 import AuthenticationManager from './AuthenticationManager';
 import UserListManager from './UserListManager';
+import StorageManager from './StorageManager';
 
 const CONFIG = {
   apiKey: "AIzaSyDDYYHzgfZh5XCBLgEaPSHaI1RnBYAanrw",
@@ -65,8 +66,19 @@ export function getUserList() {
   return UserListManager.getInstance();
 }
 
+/**
+ * Gets an instance of StorageManager
+ * @returns {StorageManager}
+ * Instance of StorageManager
+ */
+export function getStorage() {
+  init();
+  return StorageManager.getInstance();
+}
+
 export default {
   getDatabase: getDatabase,
   getAuthentication: getAuthentication,
   getUserList: getUserList,
+  getStorage: getStorage,
 };
