@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import moment from 'moment';
 import { inject, observer } from 'mobx-react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { DeleteForever } from '@material-ui/icons';
+import { IconButton, Link, Tooltip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import { participantStore } from '../../../injectables';
-import { status } from '../../../constants';
 import service from '../../../facade/service';
 import '../style/ParticipantDetailFiles.css';
 import '../style/ParticipantDetailPage.css';
+
 
 /**
  * Participant files page component that utilizes the specialized fileField
@@ -19,28 +21,24 @@ import '../style/ParticipantDetailPage.css';
  */
 export const ParticipantDetailFiles = inject('participantStore')(
   observer(({ user }) => {
-    const { currentParticipant, setCurrentParticipant } = participantStore;
+    const { currentParticipant } = participantStore;
     const [newFileName, setNewFileName] = useState('');
     const [newFile, setNewFile] = useState(null);
+    const [files, setFiles] = useState(null);
     const [isSubmitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
-    // if currentParticipant is defined, extract the name, status, and files, else leave undefined
+    // if currentParticipant is defined, extract the name, status, and get the storage path, else leave undefined
     let participantName;
-    let participantStatus;
-    let fileNames = [];
     let storagePath = `Application/${currentParticipant.id}`;
+
     if (!!currentParticipant) {
       const {
         nameLast,
-        nameGiven,
-        files: participantFiles,
-        status: currentParticipantStatus,
+        nameGiven
       } = currentParticipant;
       participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
-      participantStatus = currentParticipantStatus;
-      fileNames = !!participantFiles ? participantFiles : [];
     }
 
     /**
@@ -59,74 +57,27 @@ export const ParticipantDetailFiles = inject('participantStore')(
      * OnSubmit handler for file field
      * @param {Object} values form values object
      */
-    const handleFileSubmit = (values) => {
-      console.log(values);
-      console.log(newFile[0]);
+    const handleFileSubmit = () => {
       const storage = service.getStorage();
-      const db = service.getDatabase();
-      
-      if (participantStatus === status.NEW){
         storage.addFile(
           storagePath,
           newFile,
-          db.updateNew(
-            currentParticipant,
-            values,
-            user,
-            (updatedParticipant) => {
-              enqueueSnackbar('File added.', {
-                variant: 'success',
-              });
-              setCurrentParticipant(updatedParticipant);
-              setNewFileName('');
-              setSubmitting(false);
-            },
-            () => {
-              enqueueSnackbar('There was a problem adding the file.', {
-                variant: 'error',
-              });
-              setSubmitting(false);
-            },
-          ),
+          () => {
+            enqueueSnackbar('File added.', {
+              variant: 'success',
+            });
+            setNewFileName('');
+            setNewFile(null);
+            setSubmitting(false);
+            setFiles(null);
+          },
           () => {
             enqueueSnackbar('There was a problem adding the file.', {
               variant: 'error',
             });
             setSubmitting(false);
-          }
-        );
-        
-      } else {
-        storage.addFile(
-          storagePath,
-          newFile,
-          db.updatePermanent(
-            currentParticipant,
-            values,
-            user,
-            (updatedParticipant) => {
-              enqueueSnackbar('File added.', {
-                variant: 'success',
-              });
-              setCurrentParticipant(updatedParticipant);
-              setNewFileName('');
-              setSubmitting(false);
-            },
-            () => {
-              enqueueSnackbar('There was a problem adding the file.', {
-                variant: 'error',
-              });
-              setSubmitting(false);
-            },
-          ),
-          () => {
-            enqueueSnackbar('There was a problem adding the file.', {
-              variant: 'error',
-            });
-            setSubmitting(false);
-          }
-        );
-      }
+          },
+        )
     }
 
     /**
@@ -134,40 +85,48 @@ export const ParticipantDetailFiles = inject('participantStore')(
      * object with the file text, timestamp, and username.
      */
     const addFile = () => {
-      if (newFileName === null) {
+      if (newFileName === '') {
         setError(true);
       } else {
-        const now = moment.utc().format();
-        const file = {
-          name: newFile[0].name,
-          timeStamp: now,
-          user: user,
-        };
-
-        // inserts the file as into front of the list of files
-        const newFileNames = [file.name, ...fileNames];
         if (window.confirm('Add new file?')) {
-          const newValues = {
-            ...currentParticipant,
-            files: newFileNames,
-          };
           setSubmitting(true);
-          handleFileSubmit(newValues);
+          handleFileSubmit();
         }
       }
     };
 
-    const getFileDownload = (file) => {
-
+    const getFiles = (filepath) => {
+      const storage = service.getStorage();
+      storage.getListFiles(
+        filepath,
+        (list)=>{
+          setFiles(list);
+        },
+        () => {
+          enqueueSnackbar('There was a problem getting the files.', {
+            variant: 'error',
+          });
+          setFiles([]);
+        }
+      );
     }
 
-    /**
-     * Formats the file into a more readable string
-     * @param {string} timestamp UTC date string
-     */
-    const formatDate = (timestamp) => {
-      return moment(timestamp).format('ddd, MMM D YYYY, h:mm a');
-    };
+    const handleDelete = (filename, index) => {
+      const storage = service.getStorage();
+      if(window.confirm("Permanently delete this file?")){
+        storage.deleteFile(
+          `${storagePath}/${filename}`,
+          ()=>{
+            enqueueSnackbar("File deleted.", {
+              variant: 'success'
+            });
+            let newFiles = files;
+            newFiles.splice(index, 1);
+            setFiles([...newFiles]);
+          }
+        );
+      }
+    }
 
     return (
       <>
@@ -184,7 +143,7 @@ export const ParticipantDetailFiles = inject('participantStore')(
               onChange={handleChange}
               type="file"
               error={error}
-              helperText={error && 'Note cannot be blank'}
+              helperText={error && 'Please select a file'}
               InputProps={{disableUnderline:true}}
             />
             <div className="participant-files-ap-addButton">
@@ -197,30 +156,38 @@ export const ParticipantDetailFiles = inject('participantStore')(
                 Add File
               </Button>
             </div>
-            <div className="field-files-historyContainer">
-              {fileNames.length > 0 ? (
-                fileNames.map((file, index) => {
-                  const { timeStamp, user } = file;
-                  return (
-                    <div key={`file-${index}`}>
-                      <div className="field-files-fileContainer">
-                        <div className="field-files-fileHeader">
-                          <Typography>{formatDate(timeStamp)}</Typography>
-                          <Typography>{user}</Typography>
+              <div className="field-files-historyContainer">
+              {!!files ? (
+                files.length > 0 ?
+                  files.map((file, index) => {
+                    return (
+                      <div key={`file-${index}`}>
+                        <div className="field-files-fileContainer">
+                          <div className="field-files-fileBody">
+                            <Typography variant="body1">
+                              <Link href={file.href} download={file.name}>{file.name}</Link>
+                              <Tooltip title="Delete" aria-label="delete">
+                                <IconButton onClick={() => handleDelete(file.name, index)}>
+                                  <DeleteForever color="error"/>
+                                </IconButton>
+                              </Tooltip>
+                            </Typography>
+                          </div>
                         </div>
-                        <div className="field-files-fileBody">
-                          {getFileDownload(file)}
-                        </div>
-                      </div>
-                      {index !== fileNames.length - 1 && <Divider />}
+                      {index !== files.length - 1 && <Divider />}
                     </div>
-                  );
-                })
+                    );
+                  }) : (
+                    <div className="field-files-emptyHistory">
+                      <Typography variant="body2" color="textSecondary">
+                        No files to display
+                      </Typography>
+                    </div>
+                  )
               ) : (
-                <div className="field-files-emptyHistory">
-                  <Typography variant="body2" color="textSecondary">
-                    No files to display
-                  </Typography>
+                <div>
+                  <CircularProgress color="primary" />
+                  {getFiles(storagePath)}
                 </div>
               )}
             </div>

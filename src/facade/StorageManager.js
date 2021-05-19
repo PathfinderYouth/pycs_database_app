@@ -28,37 +28,82 @@ export default class StorageManager {
   }
 
   /**
-   * 
-   * @param {string} filepath The path to the file in the Cloud Storage. 
+   * Get a list of file names for the given participant
+   * @param {string} filepath 
    */
-  getDownload(filepath){
-    this.storage.ref().child(filepath).getDownloadURL().then((url) => {
-        let xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-            let blob = xhr.response;
-            return window.URL.createObjectURL(blob);
-        };
-        xhr.open('GET', url);
-        xhr.send();
-
+  getListFiles(filepath, onSuccess, onError){
+    // Find all the prefixes and items.
+    let promises = [];
+    this.storage.ref().child(filepath).listAll().then((res) => {
+      res.items.forEach(itemRef => {
+        promises.push(new Promise((res, rej) =>{
+          let fileItem = {};
+          fileItem.name = itemRef.name;
+          itemRef.getDownloadURL().then(url => {
+            let xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = (event) => {
+              fileItem.href = window.URL.createObjectURL(xhr.response);
+              res(fileItem);
+            }
+            xhr.open('GET', url);
+            xhr.send();
+          })
+        }));
+      });
+      Promise.all(promises).then((fileList)=>onSuccess(fileList),onError);
     }).catch((error) => {
-        console.log("Error occured while setting up download link");
-        console.log(error);
+        onError();
     });
+    
   }
 
   /**
-   * 
-   * @param {string} filepath 
-   * @param {FileList} files 
-   * @param {onSuccess?: () => void} onSuccess 
-   * @param {onError?: () => void} onError 
+   * Get a download URL for the specified file.
+   * @param {string} filepath The path to the file in the Cloud Storage. 
    */
-  addFile(filepath, files, onSuccess, onError){
-    for (let i = 0; i < files.length; i++) {
-      const fileRef = this.storage.ref().child(`${filepath}/${files[i].name}`);
-      fileRef.put(files[i]).then(onSuccess, onError);
+  getDownload(filepath, onSuccess, onError){
+    this.storage.ref().child(filepath).getDownloadURL().then((url) => {
+      console.log(url);
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+          onSuccess(window.URL.createObjectURL(xhr.response));
+      };
+      xhr.open('GET', url);
+      xhr.send();
+    }).catch((error) => {
+        onError();
+    });
+  }
+
+    /**
+     * 
+     * @param {string} filepath 
+     * @param {FileList} files 
+     * @param {onSuccess?: () => void} onSuccess 
+     * @param {onError?: () => void} onError 
+     */
+    addFile(filepath, files, onSuccess, onError){
+      for (let i = 0; i < files.length; i++) {
+        const fileRef = this.storage.ref().child(`${filepath}/${files[i].name}`);
+        fileRef.put(files[i]).then(onSuccess, onError);
+      }
     }
+
+    /**
+     * Delete the specified file
+     * @param {string} filepath Filepath of the file in the Cloud Storage
+     * @param {onSuccess?: () => void} onSuccess 
+     * @param {onError?: () => void} onError 
+     */
+  deleteFile = (filepath, onSuccess, onError) => {
+      let fileRef = this.storage.ref().child(filepath);
+
+      fileRef.delete().then(() => {
+        onSuccess();
+      }).catch((error) => {
+        onError();
+    })
   }
 }
