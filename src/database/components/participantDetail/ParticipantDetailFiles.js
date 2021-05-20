@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { DeleteForever } from '@material-ui/icons';
-import { IconButton, Link, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
@@ -21,7 +21,7 @@ import '../style/ParticipantDetailPage.css';
  */
 export const ParticipantDetailFiles = inject('participantStore')(
   observer(({ user }) => {
-    const { currentParticipant } = participantStore;
+    const { currentParticipant, setCurrentParticipant } = participantStore;
     const [newFileName, setNewFileName] = useState('');
     const [newFile, setNewFile] = useState(null);
     const [files, setFiles] = useState(null);
@@ -128,6 +128,11 @@ export const ParticipantDetailFiles = inject('participantStore')(
       }
     }
 
+    const downloadFile = (filename) => {
+      const storage = service.getStorage();
+      storage.downloadFile(storagePath, filename);
+    }
+
     return (
       <>
         <div className="participant-detail-header">
@@ -159,15 +164,19 @@ export const ParticipantDetailFiles = inject('participantStore')(
               <div className="field-files-historyContainer">
               {!!files ? (
                 files.length > 0 ?
-                  files.map((file, index) => {
+                  files.map((name, index) => {
                     return (
                       <div key={`file-${index}`}>
                         <div className="field-files-fileContainer">
                           <div className="field-files-fileBody">
                             <Typography variant="body1">
-                              <Link href={file.href} download={file.name}>{file.name}</Link>
+                                <Button size="large" onClick={()=>downloadFile(name)}>
+                                  <Typography color="primary" variant="body1">
+                                    {name}
+                                  </Typography>
+                                </Button>
                               <Tooltip title="Delete" aria-label="delete">
-                                <IconButton onClick={() => handleDelete(file.name, index)}>
+                                <IconButton onClick={() => handleDelete(name, index)}>
                                   <DeleteForever color="error"/>
                                 </IconButton>
                               </Tooltip>

@@ -33,25 +33,12 @@ export default class StorageManager {
    */
   getListFiles(filepath, onSuccess, onError){
     // Find all the prefixes and items.
-    let promises = [];
+    let fileList = [];
     this.storage.ref().child(filepath).listAll().then((res) => {
       res.items.forEach(itemRef => {
-        promises.push(new Promise((res, rej) =>{
-          let fileItem = {};
-          fileItem.name = itemRef.name;
-          itemRef.getDownloadURL().then(url => {
-            let xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            xhr.onload = (event) => {
-              fileItem.href = window.URL.createObjectURL(xhr.response);
-              res(fileItem);
-            }
-            xhr.open('GET', url);
-            xhr.send();
-          })
-        }));
+          fileList.push(itemRef.name);
       });
-      Promise.all(promises).then((fileList)=>onSuccess(fileList),onError);
+      onSuccess(fileList);
     }).catch((error) => {
         onError();
     });
@@ -62,19 +49,25 @@ export default class StorageManager {
    * Get a download URL for the specified file.
    * @param {string} filepath The path to the file in the Cloud Storage. 
    */
-  getDownload(filepath, onSuccess, onError){
-    this.storage.ref().child(filepath).getDownloadURL().then((url) => {
-      console.log(url);
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-          onSuccess(window.URL.createObjectURL(xhr.response));
-      };
-      xhr.open('GET', url);
-      xhr.send();
-    }).catch((error) => {
-        onError();
-    });
+  downloadFile(filepath, filename){
+    this.storage.ref().child(`${filepath}/${filename}`).getDownloadURL()
+            .then((url) => {
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                xhr.onload = (event) => {
+                    var blob = xhr.response;
+                    let a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.setAttribute('download', filename);
+                    a.click();
+                };
+                xhr.open('GET', url);
+                xhr.send();
+            })
+            .catch((error) => {
+                console.log("Error occured while setting up download link:");
+                console.log(error);
+            });
   }
 
     /**
