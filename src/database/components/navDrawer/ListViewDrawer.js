@@ -21,7 +21,9 @@ import {
   LocationCity,
   LocalCafe,
   PauseCircleFilled,
-  School
+  School,
+  FolderOpen,
+  Backup
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
 import { collectionType, status, location, viewModes } from '../../../constants';
@@ -109,6 +111,7 @@ export const ListViewDrawer = inject(
             onClick={() => {
               onParticipantViewChanged(collectionType.PERMANENT, null, null);
               handleListItemClick();
+              
             }}
           >
             <ListItemIcon>
@@ -222,8 +225,42 @@ export const ListViewDrawer = inject(
             </StyledListItem>
           )}
           <Divider />
-        </List>
+
+          <Divider />
+            {currentSignedInUser.role === 'admin' && (
+              <StyledListItem
+                button
+                selected={currentViewMode === viewModes.FILE_BACKUP}
+                onClick={() => {
+                  console.log("Backup pressed");
+
+                  // Here we invoke our download function upon the tab being clicked
+                  addFile();
+                  setCurrentViewMode(viewModes.FILE_BACKUP);
+                  onParticipantViewChanged(collectionType.PERMANENT, status.id, null);
+                  handleListItemClick();
+                
+                }}
+              >
+                <ListItemIcon>
+                  <Backup />
+                </ListItemIcon>
+                <ListItemText primary="Backup Files" />
+              </StyledListItem>
+            )}
+            <Divider />
+
+          </List>
       </div>
     );
   }),
 );
+
+
+const addFile = () => {
+  // warning window.confirm message. not ideal but i think it's a good start. 
+  // Here we need to invoke the mass download function inside of the [if] statement. if window confirm closes, nothing will happen and the window simply closes (expected)
+  if (window.confirm('WARNING\nClicking OK will download ALL files that have been uploaded.')) {
+    console.log("confirm for mass download pressed")
+  }
+};

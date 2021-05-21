@@ -177,6 +177,7 @@ export const Database = inject(
         // list modes
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
+        case viewModes.FILE_BACKUP:
         default:
           return (
             <ListViewDrawer
@@ -235,6 +236,7 @@ export const Database = inject(
 
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
+        case viewModes.FILE_BACKUP:
         default:
           return getListView();
       }
