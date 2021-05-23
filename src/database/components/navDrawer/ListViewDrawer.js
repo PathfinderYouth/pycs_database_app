@@ -224,7 +224,6 @@ export const ListViewDrawer = inject(
               <ListItemText primary="Staff Management" />
             </StyledListItem>
           )}
-          <Divider />
 
           <Divider />
             {currentSignedInUser.role === 'admin' && (
@@ -235,11 +234,9 @@ export const ListViewDrawer = inject(
                   console.log("Backup pressed");
 
                   // Here we invoke our download function upon the tab being clicked
-                  addFile();
+                  // addFile();
                   setCurrentViewMode(viewModes.FILE_BACKUP);
-                  onParticipantViewChanged(collectionType.PERMANENT, status.id, null);
-                  handleListItemClick();
-                
+                  handleDrawerClose();
                 }}
               >
                 <ListItemIcon>
