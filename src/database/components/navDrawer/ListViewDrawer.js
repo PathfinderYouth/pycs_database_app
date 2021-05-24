@@ -231,8 +231,6 @@ export const ListViewDrawer = inject(
                 button
                 selected={currentViewMode === viewModes.FILE_BACKUP}
                 onClick={() => {
-                  console.log("Backup pressed");
-
                   // Here we invoke our download function upon the tab being clicked
                   // addFile();
                   setCurrentViewMode(viewModes.FILE_BACKUP);

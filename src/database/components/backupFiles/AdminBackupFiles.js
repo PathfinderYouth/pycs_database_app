@@ -51,7 +51,7 @@ const AdminBackupFiles = () => {
 			
 			do {
 				mostRecentPage = await applicationsRef.list({
-					// Select the next 20 folders for the page
+					// Select the next 50 folders for the page
 					maxResults: 50,
 					pageToken: nextPageToken,
 				});
@@ -267,7 +267,11 @@ Description last edited: 2021_05_23
 				<h2>Please do not leave this page until the download has finished.</h2>
 				<p>
 					Inside this zip download will have all applications that have files attached to them in the format of <i style={{ color: 'blue' }}>LastName_FirstName_Email_ApplicationID</i><br></br>
-        			Each of these folders contains their respective uploaded files to be accessed .
+        			Each of these folders contains their respective uploaded files to be accessed.
+					<br></br><br></br>
+					**DISCLAIMER
+					<br></br>
+					The download will proceed even if you change pages/tabs, but it is advised to stay on this page while the download is still being processed.
       			</p>
 				<div className="participant-detail-form-contents">
 					<div className="participant-files-ap-addButton">
@@ -276,7 +280,8 @@ Description last edited: 2021_05_23
 							variant="contained"
 							disabled={isClicked}
 							onClick={() => {
-								zipDownload();
+								if (window.confirm('Backup all files?'))
+									zipDownload();
 							}} >
 							Backup Files
           				</Button>
