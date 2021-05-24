@@ -18,6 +18,7 @@ const AdminBackupFiles = () => {
 	const storage = firebase.storage();
 	const db = firebase.firestore();
 	const { enqueueSnackbar } = useSnackbar();
+	const [downloadCounter, setDownloadCounter] = useState('No Download In Process'); 
 
 	/**
 	 * Code for the Mass File Download feature below
@@ -27,7 +28,7 @@ const AdminBackupFiles = () => {
 		const rootFolderName = "Applications";
 		let storageRef = storage.ref();
 		let applicationsRef = storageRef.child(rootFolderName)
-
+		let isEmpty = true;
 
 		setClicked(true);
 		enqueueSnackbar('Your download is now being processed. Please do not leave this page while downloading.', {
@@ -44,10 +45,10 @@ const AdminBackupFiles = () => {
 		// Create the zip file
 		let zip = new JSZip();
 
-
 		// Putting all of the code in a function so that .then can be used on it after it's done
 		const downloadFiles = async () => {
-
+			let applicationsProcessed = 0;
+			
 			do {
 				mostRecentPage = await applicationsRef.list({
 					// Select the next 20 folders for the page
@@ -58,6 +59,7 @@ const AdminBackupFiles = () => {
 
 				// Next is to iterate over the
 				for (let i = 0; i < mostRecentPage.prefixes.length; i++) {
+
 					folderRef = storageRef.child(mostRecentPage.prefixes[i].fullPath);
 					// maxResults here indicates how many files you will grab from the folder
 					// It's currently set to 20 meaning only 20 files from an application will be read
@@ -67,22 +69,27 @@ const AdminBackupFiles = () => {
 					});
 
 
+
 					await returnApplicantData(db, folderPage.items[0].parent.name)
 						.then((arrData) => {
 							processFileList(folderPage.items, zip, arrData);
 						});
 
-					// This will print all the file names if uncommented. ENABLE LINE if you want to see files added to the database
-					//console.log(folderPage.items);
-				}
+					if (isEmpty === true) {
+						isEmpty = false;
+					}
 
+					setDownloadCounter('' + ++applicationsProcessed);
+				}
 
 				// Change the page token
 				nextPageToken = mostRecentPage.nextPageToken;
 
 			}
 			while (nextPageToken !== undefined)
+
 		}
+
 
 		downloadFiles()
 			.then(() => {
@@ -137,22 +144,31 @@ Author: @Brian D.
 Description last edited: 2021_05_23
                   `
 
-				//Download the file
-				zip.generateAsync({
-					type: "blob",
-					compression: "DEFLATE",
-					compressionOptions: {
-						level: 9
-					},
-					comment: zipFileComment
-				}).then(function (content) {
-					FileSaver.saveAs(content, fullDate + ".zip");
-					enqueueSnackbar('Download complete!', {
-						variant: 'success',
-					});
-					setClicked(false);
-				});
+				if (isEmpty === false) {
 
+					zip.file("README.txt", zipFileComment);
+
+					//Download the file
+					zip.generateAsync({
+						type: "blob",
+						compression: "DEFLATE",
+						compressionOptions: {
+							level: 9
+						},
+						comment: zipFileComment
+					}).then(function (content) {
+						FileSaver.saveAs(content, fullDate + ".zip");
+						enqueueSnackbar('Download complete!', {
+							variant: 'success',
+						});
+						
+					});
+				} else {
+					enqueueSnackbar('There are no applications with files attached to them. No download can be done.', {
+						variant: 'error',
+					});
+				}
+				setClicked(false);
 
 			});
 	}
@@ -181,10 +197,9 @@ Description last edited: 2021_05_23
 				applicantData = arrData;
 			})
 			.catch((err) => {
-				// console.log("Rejcted from \"" + collectionName + "\" collection:", err)
+				// This applicationID does not exist in the collection
 			});
 		return applicantData;
-
 	}
 
 	const getApplicantData = (doc) => {
@@ -193,6 +208,7 @@ Description last edited: 2021_05_23
 				const data = doc.data();
 				resolve([data.nameLast, data.nameGiven, data.email]);
 			} else {
+				// This document does not exist
 				reject("This document can not be found");
 			}
 		})
@@ -206,7 +222,7 @@ Description last edited: 2021_05_23
 		let storageRef = storage.ref();
 
 		if (applicantData === undefined) {
-			applicantData = ['[missing]', '[missing]','[missing]'];
+			applicantData = ['[missing]', '[missing]', '[missing]'];
 		} else {
 			for (let i = 0; i < 3; i++) {
 				if (applicantData[i] === undefined || applicantData[i].length == 0) {
@@ -218,15 +234,11 @@ Description last edited: 2021_05_23
 		listOfItems.forEach(async (itemRef) => {
 			const content = storageRef.child(itemRef.fullPath).getDownloadURL().then(downloadUrlAsPromise);
 			zip.folder(parentFolder + '/' + applicantData[0] + '_' + applicantData[1] + '_' + applicantData[2] + '_' + itemRef.parent.name).file(itemRef.name, content);
-			// console.log("ADDING FILE")
-			console.log("Now downloading files from applicationID:", itemRef.parent.name)
-
 		})
 	}
 
 
 	const downloadUrlAsPromise = (url) => {
-
 		return new Promise((resolve, reject) => {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', url);
@@ -236,7 +248,6 @@ Description last edited: 2021_05_23
 					if (xhr.status === 200) {
 						resolve(xhr.response);
 					} else {
-						// reject(new Error("Ajax error for " + url + ": " + xhr.status));
 						reject("Unable to complete get request. Ajax error: " + xhr.statusText)
 					}
 				}
@@ -268,8 +279,9 @@ Description last edited: 2021_05_23
 								zipDownload();
 							}} >
 							Backup Files
-          </Button>
+          				</Button>
 					</div>
+					<h4>Applications Processed: {downloadCounter}</h4>
 				</div>
 			</div>
 		</>
