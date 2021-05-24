@@ -28,8 +28,10 @@ export default class StorageManager {
   }
 
   /**
-   * Get a list of file names for the given participant
-   * @param {string} filepath 
+   * Get a list of file names for the given participant's filepath.
+   * @param {string} filepath The path to the applicant's folder in the Cloud Storage
+   * @param {onSuccess?: () => void} onSuccess The callback function to call when the files references are obtained.
+   * @param {onError?: () => void} onError The callback function for when an error occurs.
    */
   getListFiles(filepath, onSuccess, onError){
     // Find all the prefixes and items.
@@ -40,42 +42,47 @@ export default class StorageManager {
       });
       onSuccess(fileList);
     }).catch((error) => {
-        onError();
+      console.log(error);
+      onError();
     });
     
   }
 
   /**
-   * Get a download URL for the specified file.
-   * @param {string} filepath The path to the file in the Cloud Storage. 
+   * Download a file from Firebase. CORS must be setup for the Firebase.
+   * @param {string} filepath The path to the folder in the Cloud Storage.
+   * @param {string} filename The name of the file in the Cloud Storage.
    */
   downloadFile(filepath, filename){
+    //Get a download URL for the specified file.
     this.storage.ref().child(`${filepath}/${filename}`).getDownloadURL()
             .then((url) => {
-                var xhr = new XMLHttpRequest();
-                xhr.responseType = 'blob';
-                xhr.onload = (event) => {
-                    var blob = xhr.response;
-                    let a = document.createElement('a');
-                    a.href = window.URL.createObjectURL(blob);
-                    a.setAttribute('download', filename);
-                    a.click();
-                };
-                xhr.open('GET', url);
-                xhr.send();
+              //With the url, create an AJAX request.
+              var xhr = new XMLHttpRequest();
+              xhr.responseType = 'blob';
+              xhr.onload = (event) => {
+                //Once the file contents are obtained has finished, create an invisible download link and automatically click it to finish the download.
+                var blob = xhr.response;
+                let a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.setAttribute('download', filename);
+                a.click();
+              };
+              xhr.open('GET', url);
+              xhr.send();
             })
             .catch((error) => {
-                console.log("Error occured while setting up download link:");
-                console.log(error);
+              console.log("Error occured while setting up download link:");
+              console.log(error);
             });
   }
 
     /**
-     * 
-     * @param {string} filepath 
-     * @param {FileList} files 
-     * @param {onSuccess?: () => void} onSuccess 
-     * @param {onError?: () => void} onError 
+     * Add a file to an applicant's folder in the Cloud Storage.
+     * @param {string} filepath The path to the applicant's folder.
+     * @param {FileList} files The list of file objects to upload.
+     * @param {onSuccess?: () => void} onSuccess Callback function for when files are successfully uploaded.
+     * @param {onError?: () => void} onError Callback function for when an error occurs.
      */
     addFile(filepath, files, onSuccess, onError){
       for (let i = 0; i < files.length; i++) {
@@ -86,9 +93,9 @@ export default class StorageManager {
 
     /**
      * Delete the specified file
-     * @param {string} filepath Filepath of the file in the Cloud Storage
-     * @param {onSuccess?: () => void} onSuccess 
-     * @param {onError?: () => void} onError 
+     * @param {string} filepath Filepath of the file in the Cloud Storage.
+     * @param {onSuccess?: () => void} onSuccess Callback function for when the file is successfully deleted.
+     * @param {onError?: () => void} onError Callback function for when a failure occurs.
      */
   deleteFile = (filepath, onSuccess, onError) => {
       let fileRef = this.storage.ref().child(filepath);
