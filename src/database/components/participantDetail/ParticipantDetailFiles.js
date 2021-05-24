@@ -42,6 +42,8 @@ export const ParticipantDetailFiles = inject('participantStore')(
     
     let storagePath = `Application/${currentParticipant.id}`;
 
+    let storagePath = `Applications/${currentParticipant.id}`;
+
     /**
      * OnChange handler for file field
      * @param {Object} event
