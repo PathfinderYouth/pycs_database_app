@@ -21,7 +21,8 @@ import {
   LocationCity,
   LocalCafe,
   PauseCircleFilled,
-  School
+  School,
+  Backup
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
 import { collectionType, status, location, viewModes } from '../../../constants';
@@ -109,6 +110,7 @@ export const ListViewDrawer = inject(
             onClick={() => {
               onParticipantViewChanged(collectionType.PERMANENT, null, null);
               handleListItemClick();
+              
             }}
           >
             <ListItemIcon>
@@ -221,9 +223,30 @@ export const ListViewDrawer = inject(
               <ListItemText primary="Staff Management" />
             </StyledListItem>
           )}
+
           <Divider />
-        </List>
+            {currentSignedInUser.role === 'admin' && (
+              <StyledListItem
+                button
+                selected={currentViewMode === viewModes.FILE_BACKUP}
+                onClick={() => {
+                  // Here we invoke our download function upon the tab being clicked
+                  // addFile();
+                  setCurrentViewMode(viewModes.FILE_BACKUP);
+                  handleDrawerClose();
+                }}
+              >
+                <ListItemIcon>
+                  <Backup />
+                </ListItemIcon>
+                <ListItemText primary="Backup Files" />
+              </StyledListItem>
+            )}
+            <Divider />
+
+          </List>
       </div>
     );
   }),
 );
+

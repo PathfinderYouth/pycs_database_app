@@ -4,6 +4,7 @@ export const viewModes = {
   STAFF_LIST: 'staffList',
   STAFF_DETAIL: 'staffDetail',
   STATISTICS: 'statistics',
+  FILE_BACKUP: 'backUpFiles',
 };
 
 export const participantDetailViewModes = {
