@@ -31,7 +31,7 @@ export const ParticipantDetailFiles = inject('participantStore')(
 
     // if currentParticipant is defined, extract the name, status, and get the storage path, else leave undefined
     let participantName;
-    let storagePath = `Application/${currentParticipant.id}`;
+    let storagePath = `Applications/${currentParticipant.id}`;
 
     if (!!currentParticipant) {
       const {
