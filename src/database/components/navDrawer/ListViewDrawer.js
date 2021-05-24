@@ -22,7 +22,6 @@ import {
   LocalCafe,
   PauseCircleFilled,
   School,
-  FolderOpen,
   Backup
 } from '@material-ui/icons';
 import { participantStore, uiStore, userStore } from '../../../injectables';
@@ -251,11 +250,3 @@ export const ListViewDrawer = inject(
   }),
 );
 
-
-const addFile = () => {
-  // warning window.confirm message. not ideal but i think it's a good start. 
-  // Here we need to invoke the mass download function inside of the [if] statement. if window confirm closes, nothing will happen and the window simply closes (expected)
-  if (window.confirm('WARNING\nClicking OK will download ALL files that have been uploaded.')) {
-    console.log("confirm for mass download pressed")
-  }
-};

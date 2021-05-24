@@ -225,7 +225,7 @@ Description last edited: 2021_05_23
 			applicantData = ['[missing]', '[missing]', '[missing]'];
 		} else {
 			for (let i = 0; i < 3; i++) {
-				if (applicantData[i] === undefined || applicantData[i].length == 0) {
+				if (applicantData[i] === undefined || applicantData[i].length === 0) {
 					applicantData[i] = '[missing]';
 				}
 			}
