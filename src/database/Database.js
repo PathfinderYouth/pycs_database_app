@@ -18,6 +18,7 @@ import { viewModes } from '../constants';
 import { participantStore, uiStore, userStore } from '../injectables';
 import './Database.css';
 import service from '../facade/service';
+import AdminBackupFiles  from '../database/components/backupFiles/AdminBackupFiles';
 
 const authService = service.getAuthentication();
 
@@ -177,6 +178,8 @@ export const Database = inject(
         // list modes
         case viewModes.PARTICIPANT_LIST:
         case viewModes.STAFF_LIST:
+        case viewModes.FILE_BACKUP:
+
         default:
           return (
             <ListViewDrawer
@@ -233,8 +236,11 @@ export const Database = inject(
         case viewModes.STATISTICS:
           return <StatisticsView />;
 
+        case viewModes.FILE_BACKUP:
+          return <AdminBackupFiles />; 
         case viewModes.STAFF_LIST:
         case viewModes.PARTICIPANT_LIST:
+
         default:
           return getListView();
       }
@@ -274,6 +280,8 @@ export const Database = inject(
         </NavDrawer>
 
         <div className={`${classes.content} database-content`}>{getContent()}</div>
+
+          {/* <AdminBackupFiles /> */}
         <IdleDialog isOpen={idleDialogOpen} setIdleDialogOpen={setIdleDialogOpen} />
       </div>
     );
