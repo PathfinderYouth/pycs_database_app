@@ -125,16 +125,12 @@ const UploadFiles = () => {
         let storageRef = app.storage().ref();
         let listRef = storageRef.child(filepath);
 
-        let ulListing = document.getElementById("listing");
-        ulListing.innerHTML = "";
-
         // Find all the prefixes and items.
         listRef.listAll()
             .then((res) => {
 
-                console.log("Retriving files from path " + filepath + ":")
                 res.items.forEach((itemRef) => {
-                    console.log(itemRef["name"]);
+                    console.log(itemRef);
 
                     addDownload(filepath, itemRef['name']);
                 });
@@ -160,8 +156,6 @@ const UploadFiles = () => {
             console.log("Error while deleting file: " + filename);
             console.log(error);
         })
-
-
     }
 
     /**

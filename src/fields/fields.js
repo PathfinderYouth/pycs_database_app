@@ -1035,8 +1035,21 @@ export const historyStep = {
   fields: [historyField],
 };
 
+export const fileField = {
+  name: 'files',
+  label: 'Files',
+  description: 'Participant files',
+  type: 'files',
+  size: 12,
+}
+
+export const fileStep = {
+  stepName: 'Files',
+  fields: [fileField],
+};
+
 // Participant detail steps containing all of the form steps from the intake form as well as the noteStep and the historyStep
-export const participantDetailSteps = [...formSteps, noteStep, actionPlanStep, historyStep];
+export const participantDetailSteps = [...formSteps, noteStep, actionPlanStep, historyStep, fileStep];
 
 // Initial values of the intake form extracted from formSteps used to initialize the Formik form
 export const initialValues = formSteps.reduce((values, step) => {

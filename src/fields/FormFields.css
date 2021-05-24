@@ -31,3 +31,33 @@
   justify-content: center;
   align-items: center;
 }
+
+.field-files-addButton {
+  margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.field-files-historyContainer {
+  margin-top: 2em;
+}
+
+.field-files-fileContainer {
+  padding: 1em;
+}
+
+.field-files-fileHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.field-files-fileBody {
+  white-space: pre-line;
+}
+
+.field-files-emptyHistory {
+  height: 10em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

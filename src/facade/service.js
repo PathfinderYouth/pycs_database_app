@@ -2,7 +2,12 @@ import * as firebase from 'firebase/app';
 import DatabaseManager from './DatabaseManager';
 import AuthenticationManager from './AuthenticationManager';
 import UserListManager from './UserListManager';
+import StorageManager from './StorageManager';
 
+/*
+ * Config for the real firebase used by PYCS.
+ * It is best not to make submissions when using this config or Pathfinder staff will see them, even when running on localhost.
+ */
 const CONFIG = {
   apiKey: "AIzaSyDDYYHzgfZh5XCBLgEaPSHaI1RnBYAanrw",
   authDomain: "pycs-database-app.firebaseapp.com",
@@ -14,6 +19,9 @@ const CONFIG = {
   measurementId: "G-MHTVV1X9ZH"
 };
 
+/*
+ * Dummy firebase set up for testing purposes. No measurementId is setup so Statistics is unavailable.
+ */
 const testCONFIG = {
   apiKey: "AIzaSyBYrEGT3ocS4VIdd_YxC3raWQJ_vf2m2IQ",
   authDomain: "pycs-development-project.firebaseapp.com",
@@ -30,7 +38,7 @@ let initialized = false;
  */
 function init() {
   if (!initialized) {
-    firebase.initializeApp(testCONFIG);
+    firebase.initializeApp(CONFIG);
     initialized = true;
   }
 }
@@ -65,8 +73,19 @@ export function getUserList() {
   return UserListManager.getInstance();
 }
 
+/**
+ * Gets an instance of StorageManager
+ * @returns {StorageManager}
+ * Instance of StorageManager
+ */
+export function getStorage() {
+  init();
+  return StorageManager.getInstance();
+}
+
 export default {
   getDatabase: getDatabase,
   getAuthentication: getAuthentication,
   getUserList: getUserList,
+  getStorage: getStorage,
 };
