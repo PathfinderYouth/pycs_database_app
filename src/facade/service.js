@@ -38,7 +38,7 @@ let initialized = false;
  */
 function init() {
   if (!initialized) {
-    firebase.initializeApp(CONFIG);
+    firebase.initializeApp(testCONFIG);
     initialized = true;
   }
 }
