@@ -39,6 +39,8 @@ export const ParticipantDetailFiles = inject('participantStore')(
       } = currentParticipant;
       participantName = nameLast !== '' ? `${nameGiven} ${nameLast}` : undefined;
     }
+    
+    let storagePath = `Application/${currentParticipant.id}`;
 
     let storagePath = `Applications/${currentParticipant.id}`;
 
