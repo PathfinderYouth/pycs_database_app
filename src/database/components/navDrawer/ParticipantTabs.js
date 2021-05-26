@@ -15,7 +15,7 @@ export const ParticipantTabs = ({ handleClick, viewMode, stepIndex, collection }
   let steps;
   if (collection === collectionType.NEW) {
     steps = participantDetailStepNames.filter(
-      (stepName) => !['Action Plan', 'Notes'].includes(stepName),
+      (stepName) => !['Action Plan'].includes(stepName),
     );
   } else {
     steps = viewMode !== participantDetailViewModes.VIEW ? stepNames : participantDetailStepNames;
