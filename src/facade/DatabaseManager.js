@@ -340,6 +340,7 @@ export default class DatabaseManager {
    */
   updateNew(oldData, newData, userName, onSuccess, onError) {
     this._updateDocument(this.newRef, oldData, newData, userName, onSuccess, onError);
+    this.newRef.doc(oldData.id).update({status: status.NEW});
   }
 
   /**
